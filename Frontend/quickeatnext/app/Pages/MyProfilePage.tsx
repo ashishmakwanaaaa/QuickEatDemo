@@ -27,9 +27,9 @@ const MyProfilePage = () => {
       const file = e.target.files?.[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = (event) => {
-          if (event.target?.result) {
-            setImage(event.target?.result.toString());
+        reader.onload = () => {
+          if (reader.result) {
+            setImage(reader.result.toString());
           }
         };
         reader.readAsDataURL(file);
@@ -41,14 +41,17 @@ const MyProfilePage = () => {
   const updateProfile = async () => {
     const requestData = {
       ...owner,
-      image: image, // Include the image state in the request data
+      image: image,
     };
-    console.log(requestData)
+    console.log(requestData);
     try {
       const response = await fetch(
         `http://localhost:5000/auth/updateProfile/${owner._id}`,
         {
           method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(requestData),
         }
       );
@@ -84,9 +87,10 @@ const MyProfilePage = () => {
     <>
       <Navbar />
       <div className="flex flex-col justify-center p-2">
-        <h1 className="text-2xl font-bold font-[Poppins] text-center mt-5">
+        <h1 className="text-2xl font-bold font-[Poppins] text-center">
           My Profile
         </h1>
+        <hr className="border mt-3" />
         <div className="flex flex-row gap-16 mx-auto justify-start items-start">
           <div className="flex flex-row gap-6 w-2/3 mt-10 justify-start">
             {/* Upload Photo Section */}

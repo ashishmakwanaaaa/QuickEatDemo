@@ -57,6 +57,7 @@ export interface OrderDataType {
 }
 
 const Orders = ({ id }: { id: string }) => {
+  console.log(id);
   useEffect(() => {
     AOS.init({
       offset: 200,
@@ -67,7 +68,6 @@ const Orders = ({ id }: { id: string }) => {
   }, []);
   const router = useRouter();
   const customerID = id;
-  //   console.log(customerID);
   const [customer, setCustomer] = useState<Customer>({});
   const [items, setItems] = useState<ItemType[]>([]);
   const [selectedItem, setSelectedItem] = useState<SelectedItemType[]>([]);

@@ -36,7 +36,6 @@ const Login = (): React.JSX.Element => {
   const handleClose: () => void = () => {
     setOpen(false);
     router.push("/signup");
-    
   };
 
   async function validateUser(): Promise<void> {
@@ -63,6 +62,7 @@ const Login = (): React.JSX.Element => {
       });
       StateContext.restaurantname = data.user.restaurantname;
       StateContext.ownername = data.user.ownername;
+      StateContext.userid = data.user._id;
       console.log(StateContext);
       {
         StateContext.login && router.push("/dashboard");

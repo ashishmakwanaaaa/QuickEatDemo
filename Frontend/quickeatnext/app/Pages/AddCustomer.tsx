@@ -10,7 +10,9 @@ const AddCustomer = () => {
   const router = useRouter();
   const StateContext = useContext(StateLogin);
   const [email, setEmail] = useState(false);
+  const userId = StateContext.userid;
   const [CustomerData, setCustomerData] = useState<Customer>({
+    userId,
     firstname: "",
     lastname: "",
     emailid: "",

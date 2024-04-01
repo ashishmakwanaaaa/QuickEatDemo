@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import Button from "@mui/material/Button";
@@ -10,12 +10,15 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Swal from "sweetalert2";
 import "aos/dist/aos.css";
+import StateLogin from "../LoginState/logincontext";
+
 import AOS from "aos";
 import { useRouter } from "next/navigation";
 import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
 
 export interface Customer {
   _id?: string;
+  userId: string;
   firstname: string;
   lastname: string;
   emailid: string;
@@ -45,6 +48,8 @@ const CustomerList = () => {
   const getRandomColor = (): string => {
     return "#" + Math.floor(Math.random() * 16777215).toString(16);
   };
+  const StateContext = useContext(StateLogin);
+  const userId = StateContext.userid;
 
   const handleClickOpen = async (id: string) => {
     console.log(id);
@@ -168,7 +173,7 @@ const CustomerList = () => {
 
   async function FetchData() {
     const response = await fetch(
-      "http://localhost:5000/customer/getAllCustomer"
+      `http://localhost:5000/customer/getAllCustomer/${userId}`
     );
     const data = await response.json();
     console.log(data);
@@ -205,7 +210,9 @@ const CustomerList = () => {
             >
               <span
                 onClick={() => {
-                  router.push(`customerprofile/${params.row._id}`);
+                  router.push(
+                    `/customerlist/customerprofile/${params.row._id}`
+                  );
                 }}
                 className="text-white font-bold text-sm"
               >
@@ -279,22 +286,25 @@ const CustomerList = () => {
       ),
     },
   ];
-  const rows = customerData
-    .filter((customer) => customer.firstname.toLowerCase().includes(query))
-    .map((customer, index) => ({
-      _id: customer._id,
-      id: index + 1,
-      Profile:
-        customer.firstname[0].toUpperCase() +
-        "" +
-        customer.lastname[0].toUpperCase(),
-      firstname: customer.firstname,
-      lastname: customer.lastname,
-      contact: customer.phoneno,
-      takeorder: "Order",
-      edit: "Edit",
-      delete: "Delete",
-    }));
+  const rows =
+    customerData &&
+    customerData.length > 0 &&
+    customerData
+      .filter((customer) => customer.firstname.toLowerCase().includes(query))
+      .map((customer, index) => ({
+        _id: customer._id,
+        id: index + 1,
+        Profile:
+          customer.firstname[0].toUpperCase() +
+          "" +
+          customer.lastname[0].toUpperCase(),
+        firstname: customer.firstname,
+        lastname: customer.lastname,
+        contact: customer.phoneno,
+        takeorder: "Order",
+        edit: "Edit",
+        delete: "Delete",
+      }));
   console.log(customerData);
 
   return (
@@ -313,20 +323,30 @@ const CustomerList = () => {
         />
       </div>
       <div className="w-[900px] h-[600px]" data-aos="fade-right">
-        <DataGrid
-          style={{ fontFamily: "Poppins" }}
-          rows={rows}
-          columns={columns}
-          pagination
-          pageSizeOptions={[
-            10,
-            20,
-            30,
-            40,
-            100,
-            { value: 1000, label: "1,000" },
-          ]}
-        />
+        {customerData && customerData.length > 0 ? (
+          <DataGrid
+            style={{ fontFamily: "Poppins" }}
+            rows={rows}
+            columns={columns}
+            pagination
+            pageSizeOptions={[
+              10,
+              20,
+              30,
+              40,
+              100,
+              { value: 1000, label: "1,000" },
+            ]}
+          />
+        ) : (
+          <>
+            <div className="m-auto flex flex-col w-1/2 h-1/2 ">
+              <h1 className="text-center mt-48 text-2xl text-bold text-orange-600">
+                No Data
+              </h1>
+            </div>
+          </>
+        )}
       </div>
       <Dialog
         style={{ borderRadius: "20px" }}

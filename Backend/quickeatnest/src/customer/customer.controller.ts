@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CustomerDto } from './dto/customer.dto';
+import { ObjectId } from 'mongoose';
 
 @Controller('customer')
 export class CustomerController {
@@ -19,9 +20,9 @@ export class CustomerController {
     return this.customerservice.AddCustomer(customerdto);
   }
 
-  @Get('/getAllCustomer')
-  GetAllCustomer() {
-    return this.customerservice.getAllCustomer();
+  @Get('/getAllCustomer/:userid')
+  GetAllCustomer(@Param('userid') userid: string) {
+    return this.customerservice.getAllCustomer(userid);
   }
 
   @Patch('/editCustomer/:id')

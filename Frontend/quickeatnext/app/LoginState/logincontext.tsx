@@ -4,8 +4,9 @@ import { createContext, Context } from "react";
 
 interface LoginContextType {
   login: boolean;
-  restaurantname: string;   
+  restaurantname: string;
   ownername: string;
+  userid: string;
 }
 
 const LoginContext: Context<LoginContextType> = createContext<LoginContextType>(
@@ -13,6 +14,7 @@ const LoginContext: Context<LoginContextType> = createContext<LoginContextType>(
     login: false,
     restaurantname: "",
     ownername: "",
+    userid: "",
   }
 );
 

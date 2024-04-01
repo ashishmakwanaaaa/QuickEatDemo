@@ -21,7 +21,7 @@ export class UserSignUpDto {
   @IsNotEmpty()
   confirmpassowrd: string;
 
-  @IsNotEmpty()
+  // @IsNotEmpty()
   image: Multer.File;
 }
 

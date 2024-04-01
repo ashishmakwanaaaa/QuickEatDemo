@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { Customer } from './customer.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { CustomerDto } from './dto/customer.dto';
@@ -18,6 +18,7 @@ export class CustomerService {
   async AddCustomer(customerdto: CustomerDto) {
     try {
       const {
+        userId,
         firstname,
         lastname,
         emailid,
@@ -32,6 +33,7 @@ export class CustomerService {
         return { message: 'Customer Has ALready Exists' };
       }
       customer = await this.customermodel.create({
+        userId,
         firstname,
         lastname,
         emailid,
@@ -48,9 +50,9 @@ export class CustomerService {
     }
   }
 
-  async getAllCustomer() {
+  async getAllCustomer(userId: string) {
     try {
-      let customers = await this.customermodel.find();
+      let customers = await this.customermodel.find({ userId });
       if (customers.length === 0) {
         throw new NotFoundException();
       }

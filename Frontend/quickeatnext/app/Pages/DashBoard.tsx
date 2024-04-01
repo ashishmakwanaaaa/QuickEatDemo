@@ -43,6 +43,11 @@ const DashBoard = ({ children }: any) => {
       src: "https://cdn0.iconfinder.com/data/icons/ecommerce-elements-line/120/My_orders-64.png",
       redirect: "/orderlist",
     },
+    {
+      title: "Book A Table",
+      src: "https://www.svgrepo.com/show/65745/restaurant-table-and-chairs.svg",
+      redirect: "/tablebooking",
+    },
   ];
   return (
     <>

@@ -5,9 +5,11 @@ import { IoFastFood } from "react-icons/io5";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import MoneyIcon from "@mui/icons-material/Money";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Customer } from "./CustomerList";
 import { ItemType } from "./ItemList";
+import StateLogin from "../LoginState/logincontext";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -77,10 +79,11 @@ const AdminDashboard = () => {
   >([]);
 
   let data: ItemDataTypeForChart[] = [];
-
+  const StateContext = useContext(StateLogin);
+  const userId = StateContext.userid;
   async function FetchData() {
     const response = await fetch(
-      "http://localhost:5000/customer/getAllCustomer"
+      `http://localhost:5000/customer/getAllCustomer/${userId}`
     );
     const data = await response.json();
     console.log(data);
@@ -277,7 +280,11 @@ const AdminDashboard = () => {
             <h4 className="text-md text-red-600">Customers</h4>
             <IoPeople color="red" />
             <p className="text-3xl text-red-600">
-              <Counter targetValue={customers.length} />
+              <Counter
+                targetValue={
+                  customers && customers.length > 0 && customers.length
+                }
+              />
             </p>
           </div>
           <div

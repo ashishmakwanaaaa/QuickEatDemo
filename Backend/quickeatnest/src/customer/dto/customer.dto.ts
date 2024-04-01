@@ -5,8 +5,12 @@ import {
   MaxLength,
   isNumber,
 } from 'class-validator';
+import { ObjectId } from 'mongoose';
 
 export class CustomerDto {
+  @IsNotEmpty()
+  userId: ObjectId;
+
   @IsNotEmpty()
   firstname: string;
 
