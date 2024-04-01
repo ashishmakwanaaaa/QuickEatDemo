@@ -1,0 +1,21 @@
+"use client";
+
+import Dashboard from "../Pages/DashBoard";
+import LoginContext from "../LoginState/logincontext";
+import { useContext } from "react";
+import OrderListPage from "../Admin/OrderList";
+
+const ItemData = () => {
+  const StateContext = useContext(LoginContext);
+
+  return (
+    <>
+      {StateContext.login && (
+        <Dashboard>
+          <OrderListPage />
+        </Dashboard>
+      )}
+    </>
+  );
+};
+export default ItemData;
