@@ -36,6 +36,7 @@ const Login = (): React.JSX.Element => {
   const handleClose: () => void = () => {
     setOpen(false);
     router.push("/signup");
+    
   };
 
   async function validateUser(): Promise<void> {
