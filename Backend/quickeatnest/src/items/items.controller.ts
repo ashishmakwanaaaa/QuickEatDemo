@@ -19,9 +19,11 @@ export class ItemsController {
     return this.itemsservice.AddItem(itemdto);
   }
 
-  @Get('/getAllItems')
-  getAllItems() {
-    return this.itemsservice.getAllItems();
+  @Get('/getAllItems/:userId')
+  getAllItems(@Param('userId') userId:string) {
+      console.log(userId)
+   
+    return this.itemsservice.getAllItems(userId);
   }
 
   @Patch('/updateItem/:id')

@@ -30,7 +30,7 @@ const OrderListPage = () => {
     async function FetchAllPayment() {
       try {
         const response = await fetch(
-          "http://localhost:5000/orders/getAllOrders"
+          `http://localhost:5000/orders/getAllOrders/${StateContext.userid}`
         );
         const data = await response.json();
         console.log(data);

@@ -11,9 +11,9 @@ export class CategoryController {
     return this.categoryservice.AddCategory(categorydto);
   }
 
-  @Get('/getAllCategories')
-  getAllCatories() {
-    return this.categoryservice.getAllCatories();
+  @Get('/getAllCategories/:userid')
+  getAllCatories(@Param('userid') userid:string) {
+    return this.categoryservice.getAllCatories(userid);
   }
 
   @Delete('/delete/:id')

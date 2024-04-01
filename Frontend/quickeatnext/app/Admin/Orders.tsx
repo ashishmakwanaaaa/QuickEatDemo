@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Badge from "@mui/material/Badge";
 import "aos/dist/aos.css";
@@ -19,6 +19,8 @@ import { useRouter } from "next/navigation";
 import { TransitionProps } from "@mui/material/transitions";
 import { Customer } from "@/app/Admin/CustomerList";
 import { ItemType } from "@/app/Admin/ItemList";
+import StateLogin from "../LoginState/logincontext";
+
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -46,6 +48,7 @@ interface SelectedItemType {
 
 export interface OrderDataType {
   _id: any;
+  userId:string
   customerID: string | undefined;
   customerfirstname: string;
   customerlastname: string;
@@ -73,7 +76,8 @@ const Orders = ({ id }: { id: string }) => {
   const [selectedItem, setSelectedItem] = useState<SelectedItemType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [open2, setOpen2] = useState<boolean>(false);
-
+  const StateContext = useContext(StateLogin);
+  const userId = StateContext.userid;
   const TotalAmount = selectedItem.reduce(
     (total: any, item: { totalPrice: any }) =>
       Number(total) + Number(item.totalPrice),
@@ -91,8 +95,9 @@ const Orders = ({ id }: { id: string }) => {
     }
     FetchCustomer(customerID);
   }, []);
-
+  console.log(customer)
   const OrderData: OrderDataType = {
+    userId,
     customerID: customer._id,
     customerfirstname: customer.firstname,
     customerlastname: customer.lastname,
@@ -104,6 +109,8 @@ const Orders = ({ id }: { id: string }) => {
   };
 
   const CashData = {
+    userId,
+    customerID:OrderData.customerID,
     email: OrderData.customeremailid,
     cardHoldername:
       OrderData.customerfirstname + " " + OrderData.customerlastname,
@@ -117,8 +124,10 @@ const Orders = ({ id }: { id: string }) => {
     paymentMethod: "cash",
   };
 
+  console.log(typeof customer.userId)
+
   async function FetchItems() {
-    const response = await fetch("http://localhost:5000/items/getAllItems");
+    const response = await fetch(`http://localhost:5000/items/getAllItems/${userId}`);
     const data = await response.json();
     console.log(data);
     setItems(data.items);
@@ -398,7 +407,7 @@ const Orders = ({ id }: { id: string }) => {
           </p>
         </div>
         <div className="grid grid-cols-5 gap-4">
-          {items.map((item, index) => (
+          {items && items.length > 0 && items.map((item, index) => (
             <div
               key={index}
               className="relative flex flex-col gap-2 items-center drop-shadow-2xl rounded-2xl p-2 h-full"

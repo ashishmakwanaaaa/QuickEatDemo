@@ -15,6 +15,7 @@ const PaymentSuccess = ({ params }: { params: { slug: string } }) => {
   const [paymentproceed, setPaymentProceed] = useState<boolean>(false);
   const customerID = customerid;
   const StateLogin = useContext(LoginContext);
+  const userId = StateLogin.userid;
   console.log(StateLogin);
 
   async function FetchCustomer(customerId: string) {
@@ -30,6 +31,8 @@ const PaymentSuccess = ({ params }: { params: { slug: string } }) => {
     FetchCustomer(customerID);
   }, []);
   const CardData = {
+    userId:customer.userId,
+    customerID:customerID,
     email: customer?.emailid,
     cardHoldername: customer?.firstname + " " + customer?.lastname,
     billingaddress: {
@@ -43,18 +46,18 @@ const PaymentSuccess = ({ params }: { params: { slug: string } }) => {
   console.log(CardData);
   useEffect(() => {
     if (customer.emailid && !paymentproceed) {
-      const CardData = {
-        email: customer.emailid,
-        cardHoldername: customer.firstname + " " + customer.lastname,
-        billingaddress: {
-          city: customer.city,
-          pincode: customer.pincode,
-          state: customer.state,
-        },
-        amount: amount,
-        paymentMethod: "card",
-      };
-      console.log(CardData);
+      // const CardData = {
+      //   email: customer.emailid,
+      //   cardHoldername: customer.firstname + " " + customer.lastname,
+      //   billingaddress: {
+      //     city: customer.city,
+      //     pincode: customer.pincode,
+      //     state: customer.state,
+      //   },
+      //   amount: amount,
+      //   paymentMethod: "card",
+      // };
+      // console.log(CardData);
 
       const storePayment = async () => {
         try {
@@ -85,7 +88,7 @@ const PaymentSuccess = ({ params }: { params: { slug: string } }) => {
       };
       storePayment();
     }
-  }, [customer]);
+  }, [customer,paymentproceed]);
 
   return (
     <>

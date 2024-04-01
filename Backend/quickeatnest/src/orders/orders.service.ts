@@ -18,6 +18,7 @@ export class OrdersService {
     // console.log(orderdto);
     try {
       const {
+        userId,
         customerID,
         customerfirstname,
         customerlastname,
@@ -27,6 +28,7 @@ export class OrdersService {
         totalAmount,
       } = orderdto;
       let order = await this.ordermode.create({
+        userId,
         customerID,
         customerfirstname,
         customerlastname,
@@ -43,9 +45,12 @@ export class OrdersService {
     }
   }
 
-  async getTop5Items() {
+  async getTop5Items(userid:string) {
     try {
       let top5items = await this.ordermode.aggregate([
+        {
+          $match:{userId:userid}
+        },
         {
           $unwind: '$selectedItem',
         },
@@ -61,6 +66,7 @@ export class OrdersService {
           },
         }
       ]);
+      console.log(top5items)
       return { message: 'top 5 selling items', top5items };
     } catch (error) {
       console.log(error);
@@ -100,9 +106,9 @@ export class OrdersService {
     }
   }
 
-  async getAllOrders() {
+  async getAllOrders(userid:string) {
     try {
-      let orders = await this.ordermode.find();
+      let orders = await this.ordermode.find({userId:userid});
       if (orders.length === 0) {
         throw new NotFoundException();
       }

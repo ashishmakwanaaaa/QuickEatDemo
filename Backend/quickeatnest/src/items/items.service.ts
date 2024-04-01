@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -14,6 +15,7 @@ export class ItemsService {
 
   async AddItem(itemdto: ItemDto) {
     const {
+      userId,
       itemname,
       itemdescription,
       price,
@@ -25,9 +27,10 @@ export class ItemsService {
     try {
       let item = await this.itemsmodel.findOne({ itemname });
       if (item) {
-        return { message: 'Item Has Already Exists' };
+        throw new ConflictException({message:"Item Has Already Exists"})
       }
       item = await this.itemsmodel.create({
+        userId,
         itemdescription,
         itemname,
         price,
@@ -43,9 +46,9 @@ export class ItemsService {
     }
   }
 
-  async getAllItems() {
+  async getAllItems(userId:string) {
     try {
-      let items = await this.itemsmodel.find();
+      let items = await this.itemsmodel.find({userId});
       if (items.length === 0) {
         throw new NotFoundException();
       }

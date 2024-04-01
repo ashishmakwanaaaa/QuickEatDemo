@@ -16,13 +16,15 @@ const stripe = require('stripe')(process.env.stripesecretkey);
 export class PaymentService {
   constructor(
     @InjectModel('payments') private readonly paymentmodel: Model<Payment>,
-  ) {}
+  ) { }
 
   async createPayment(paymentdto: PaymentDto) {
     try {
-      const { email, cardHoldername, billingaddress, amount, paymentMethod } =
+      const { userId, customerID, email, cardHoldername, billingaddress, amount, paymentMethod } =
         paymentdto;
       let payment = await this.paymentmodel.create({
+        userId,
+        customerID,
         email,
         cardHoldername,
         billingaddress,
@@ -68,15 +70,19 @@ export class PaymentService {
     }
   }
 
-  async getALLPayment() {
+  async getALLPayment(userid: string) {
     try {
-      let payments = await this.paymentmodel.find();
+      let payments = await this.paymentmodel.find({ userId: userid });
       let cardPayment = await this.paymentmodel.find({
         paymentMethod: 'card',
+        userId: userid
       });
       let cashPayment = await this.paymentmodel.find({
-        paymentMethod: 'cash',
+        paymentMethod: { $in: "cash" },
+        userId: userid
+
       });
+      console.log(cardPayment)
       if (
         payments.length === 0 ||
         cardPayment.length === 0 ||
@@ -91,7 +97,8 @@ export class PaymentService {
         cashPayment,
       };
     } catch (error) {
-      throw new InternalServerErrorException(0);
+      console.log(error)
+      throw new InternalServerErrorException();
     }
   }
 }

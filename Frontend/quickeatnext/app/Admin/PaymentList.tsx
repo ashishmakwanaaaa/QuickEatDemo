@@ -81,7 +81,7 @@ const PaymentList = () => {
     async function FetchAllPayment() {
       try {
         const response = await fetch(
-          "http://localhost:5000/payment/allpayment"
+          `http://localhost:5000/payment/allpayment/${StateContext.userid}`
         );
         const data = await response.json();
         console.log(data);
@@ -98,7 +98,7 @@ const PaymentList = () => {
       setData([]);
       return;
     }
-    const rowsArray = payments.map((payment, index) => ({
+    const rowsArray =payments.map((payment, index) => ({
       id: index + 1,
       Date: payment.Date.split("T")[0],
       customername: payment.cardHoldername,
@@ -112,6 +112,7 @@ const PaymentList = () => {
     setRows(rowsArray);
     setData(rowsArray);
   }, [payments]);
+  console.log(payments)
   const handleClickOpen = async (row: any) => {
     setOpen(true);
     setInvoiceId(row.id);
@@ -161,64 +162,64 @@ const PaymentList = () => {
     cellClassName?: string;
     renderCell?: (params: GridRowSelectionApi) => Element;
   }[] = [
-    {
-      field: "id",
+      {
+        field: "id",
 
-      headerName: "ID",
-      width: 90,
-    },
-    {
-      field: "Date",
+        headerName: "ID",
+        width: 90,
+      },
+      {
+        field: "Date",
 
-      headerName: "Date Of Payment",
-      width: 170,
-    },
-    {
-      field: "customername",
+        headerName: "Date Of Payment",
+        width: 170,
+      },
+      {
+        field: "customername",
 
-      headerName: "Customer Name",
-      width: 150,
-    },
-    {
-      field: "customeremail",
+        headerName: "Customer Name",
+        width: 150,
+      },
+      {
+        field: "customeremail",
 
-      headerName: "Email",
-      width: 240,
-    },
-    {
-      field: "amount",
+        headerName: "Email",
+        width: 240,
+      },
+      {
+        field: "amount",
 
-      headerName: "Total Amount",
-      width: 120,
-    },
-    {
-      field: "city",
+        headerName: "Total Amount",
+        width: 120,
+      },
+      {
+        field: "city",
 
-      headerName: "City",
-      width: 100,
-    },
-    {
-      field: "method",
+        headerName: "City",
+        width: 100,
+      },
+      {
+        field: "method",
 
-      headerName: "Payment Method",
-      cellClassName: "text-green-800 font-bold text-center capitalize",
-      width: 120,
-    },
-    {
-      field: "invoice",
+        headerName: "Payment Method",
+        cellClassName: "text-green-800 font-bold text-center capitalize",
+        width: 120,
+      },
+      {
+        field: "invoice",
 
-      headerName: "Generate Invoice",
-      width: 120,
-      renderCell: (params: GridRowSelectionApi) => (
-        <Button
-          onClick={() => handleClickOpen(params.row)}
-          style={{ color: "red", padding: "2px" }}
-        >
-          Invoice
-        </Button>
-      ),
-    },
-  ];
+        headerName: "Generate Invoice",
+        width: 120,
+        renderCell: (params: GridRowSelectionApi) => (
+          <Button
+            onClick={() => handleClickOpen(params.row)}
+            style={{ color: "red", padding: "2px" }}
+          >
+            Invoice
+          </Button>
+        ),
+      },
+    ];
 
   // console.log("Hello" + JSON.stringify(rowsArray));
   // setRows(rowsArray);

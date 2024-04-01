@@ -2,27 +2,34 @@
 
 import { Button } from "@mui/material";
 import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
+import StateLogin from "../LoginState/logincontext";
 
 export interface CategoryType {
+  _id?: string;
   categoryname: string;
   image: string;
+  userId?:string;
 }
 
 const CategoriesList = () => {
+  const StateContext = useContext(StateLogin);
+  const userId = StateContext.userid;
+  console.log(userId)
   const [categories, setCategories] = useState<CategoryType[]>([]);
-  const [input, setInput] = useState<{ categoryname: string; image: string }>({
+  const [input, setInput] = useState<CategoryType>({
     categoryname: "",
     image:
       "https://user-images.githubusercontent.com/11474775/72835684-ffb03180-3cac-11ea-88d7-82d5229c47ac.png",
+      userId,
   });
 
   async function FetchCategories() {
     try {
       const response = await fetch(
-        "http://localhost:5000/category/getAllCategories"
+        `http://localhost:5000/category/getAllCategories/${userId}`
       );
       const data = await response.json();
       console.log(data);
@@ -64,8 +71,8 @@ const CategoriesList = () => {
   const handleAddCatogory = async () => {
     try {
       const imageUrl = await GenerateImage(); // Wait for image generation
-      const categoryData = { ...input, image: imageUrl }; // Combine category data with generated image URL
-      console.log(input);
+      const categoryData = { ...input, image: imageUrl,userId }; // Combine category data with generated image URL
+      console.log(categoryData);
       const response = await fetch(
         "http://localhost:5000/category/addcategory",
         {

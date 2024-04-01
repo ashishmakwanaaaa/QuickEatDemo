@@ -2,6 +2,9 @@ import { IsNotEmpty } from 'class-validator';
 
 export class OrderDto {
   @IsNotEmpty()
+  userId: string;
+
+  @IsNotEmpty()
   customerID: string;
 
   @IsNotEmpty()

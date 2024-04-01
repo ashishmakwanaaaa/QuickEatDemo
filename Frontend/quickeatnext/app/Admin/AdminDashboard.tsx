@@ -92,7 +92,7 @@ const AdminDashboard = () => {
 
   async function fetchItems() {
     try {
-      const response = await fetch("http://localhost:5000/items/getAllItems");
+      const response = await fetch(`http://localhost:5000/items/getAllItems/${userId}`);
       const data = await response.json();
       setItems(data.items);
     } catch (error) {
@@ -101,7 +101,7 @@ const AdminDashboard = () => {
   }
   async function fetchPayments() {
     try {
-      const response = await fetch("http://localhost:5000/payment/allpayment");
+      const response = await fetch(`http://localhost:5000/payment/allpayment/${userId}`);
       const data = await response.json();
       setPayments(data.payments);
       setCardPayment(data.cardPayment);
@@ -139,7 +139,7 @@ const AdminDashboard = () => {
     async function top5sellingitems() {
       try {
         const response = await fetch(
-          "http://localhost:5000/orders/top5sellingitems"
+          `http://localhost:5000/orders/top5sellingitems/${userId}`
         );
         const data = await response.json();
         setTop5sellingItems(data.top5items);
@@ -294,7 +294,7 @@ const AdminDashboard = () => {
             <h4 className="text-md text-green-800">FoodItems</h4>
             <IoFastFood color="green" />
             <p className="text-3xl text-green-800">
-              <Counter targetValue={items.length} />
+              <Counter targetValue={items && items.length > 0 && items.length} />
             </p>
           </div>
           <div

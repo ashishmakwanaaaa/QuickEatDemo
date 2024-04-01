@@ -16,11 +16,12 @@ export class CategoryService {
 
   async AddCategory(categorydto: CategoryDto) {
     try {
-      const { categoryname, image } = categorydto;
-      console.log(categoryname, image);
+      const { categoryname, image,userId } = categorydto;
+      console.log(categoryname, image,userId);
       let catogory = await this.categorymodel.findOne({
         categoryname,
         image,
+        userId
       });
       if (catogory) {
         return {
@@ -31,6 +32,7 @@ export class CategoryService {
       let newcategory = await this.categorymodel.create({
         categoryname,
         image,
+        userId
       });
       newcategory.save();
       return { message: 'category Added Succesfully', newcategory };
@@ -39,9 +41,9 @@ export class CategoryService {
     }
   }
 
-  async getAllCatories() {
+  async getAllCatories(userid:string) {
     try {
-      let categories = await this.categorymodel.find();
+      let categories = await this.categorymodel.find({userId:userid});
       if (categories.length === 0) {
         return { message: 'Empty Data' };
       }

@@ -9,8 +9,10 @@ import { CategoryType } from "../Admin/CategoryList";
 const AddItem = () => {
   const router = useRouter();
   const StateContext = useContext(StateLogin);
+  const userId = StateContext.userid;
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [Fooddata, setFooddata] = useState<{
+    userId:string;
     itemname: string;
     itemcategory: string;
     itemdescription: string;
@@ -19,6 +21,7 @@ const AddItem = () => {
     image: string;
     upToOffer: number;
   }>({
+    userId,
     itemname: "",
     itemcategory: "",
     itemdescription: "",
@@ -27,12 +30,11 @@ const AddItem = () => {
     image: "https://user-images.githubusercontent.com/11474775/72835684-ffb03180-3cac-11ea-88d7-82d5229c47ac.png",
     upToOffer: 0,
   });
-
   useEffect(() => {
     async function FetchCategories() {
       try {
         const response = await fetch(
-          "http://localhost:5000/category/getAllCategories"
+          `http://localhost:5000/category/getAllCategories/${userId}`
         );
         const data = await response.json();
         console.log(data);
@@ -154,7 +156,7 @@ const AddItem = () => {
                 <option value="" disabled selected>
                   Select Item Category
                 </option>
-                {categories.map((category, index) => {
+                {categories && categories.length > 0  && categories.map((category, index) => {
                   return (
                     <>
                       <option value={category.categoryname}>

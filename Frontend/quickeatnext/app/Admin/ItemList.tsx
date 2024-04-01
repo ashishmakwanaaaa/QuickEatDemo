@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import Button from "@mui/material/Button";
@@ -13,13 +13,14 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Swal from "sweetalert2";
+import StateLogin from "../LoginState/logincontext";
+
 import "aos/dist/aos.css";
 import AOS from "aos";
 import Carousel from "@itseasy21/react-elastic-carousel";
 import { CategoryType } from "./CategoryList";
 
 export interface ItemType {
-  reduce(arg0: (total: any, item: any) => number, arg1: number): unknown;
   _id: string;
   itemname: string;
   itemdescription: string;
@@ -38,6 +39,8 @@ const ItemList = () => {
       once: true,
     });
   }, []);
+  const StateContext = useContext(StateLogin);
+  const userId = StateContext.userid;
   const [itemdata, setItemdata] = useState<ItemType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [edititemdata, setEditItem] = useState<ItemType>({});
@@ -48,7 +51,7 @@ const ItemList = () => {
 
   async function fetchItems() {
     try {
-      const response = await fetch("http://localhost:5000/items/getAllItems");
+      const response = await fetch(`http://localhost:5000/items/getAllItems/${userId}`);
       const data = await response.json();
       setItemdata(data.items);
     } catch (error) {
@@ -197,14 +200,11 @@ const ItemList = () => {
   useEffect(() => {
     fetchItems();
   }, []);
-  console.log(typeof selectedCategory);
-  const filteredItems: ItemType[] = itemdata
-    .filter((item) => item.itemname.toLowerCase().includes(query))
-    .filter(
-      (item) =>
-        selectedCategory === "" ||
-        item.itemcategory === selectedCategory.toLowerCase()
-    )
+  console.log(selectedCategory);
+  const filteredItems: ItemType[] = itemdata && itemdata.length > 0 ? itemdata.filter((item) => item.itemname.toLowerCase().includes(query)).filter((item) =>
+    selectedCategory === "" ||
+    item.itemcategory === selectedCategory
+  )
     .sort((a, b) => {
       switch (option) {
         case "Price Highest":
@@ -218,13 +218,13 @@ const ItemList = () => {
         default:
           return 0;
       }
-    });
-  console.log(filteredItems);
+    }):[];
+  console.log(itemdata);
   useEffect(() => {
     async function FetchCategories() {
       try {
         const response = await fetch(
-          "http://localhost:5000/category/getAllCategories"
+          `http://localhost:5000/category/getAllCategories/${userId}`
         );
         const data = await response.json();
         console.log(data);
@@ -292,7 +292,7 @@ const ItemList = () => {
           itemsToShow={5}
           itemsToScroll={5}
         >
-          {categories.map((category, index) => {
+          {categories && categories.length > 0 && categories.map((category, index) => {
             return (
               <>
                 <div className="flex  flex-col gap-2 justify-center  items-center ">
@@ -313,18 +313,18 @@ const ItemList = () => {
           })}
         </Carousel>
       </div>
-      {filteredItems.length > 0 ? (
+      {filteredItems && filteredItems.length > 0 ? (
         <div className="overflow-y-auto h-[550px] p-3 mt-5">
           {filteredItems.map((item, index) => {
             return (
               <div
                 className="grid grid-cols-12 mt-5 gap-4 p-2 rounded-2xl"
                 style={{ boxShadow: "0 0 0.5em orange" }}
-                // data-aos="fade-right"
+              // data-aos="fade-right"
               >
                 <div
                   className="col-span-2 overflow-hidden rounded-lg relative"
-                  // data-aos="fade-right"
+                // data-aos="fade-right"
                 >
                   <img
                     src={item.image}
