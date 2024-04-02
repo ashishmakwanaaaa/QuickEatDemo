@@ -11,27 +11,21 @@ import DialogTitle from "@mui/material/DialogTitle";
 import LoginContext from "../LoginState/logincontext";
 import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
 import { Counter } from "./AdminDashboard";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCustomerById } from "@/lib/actions/customerAction";
+import { initialStateTypeForCustomer } from "@/lib/reducers/customerSlice/customerReducers";
 
 const CustomerProfile = ({ id }: { id: string }) => {
-  const [customer, setCustomer] = useState<Customer>({});
   const [customerorder, setCustomerOrder] = useState<OrderDataType[]>([]);
   const [specificorder, setSpecificOrder] = useState<OrderDataType>({});
   const [open, setOpen] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const customer: Customer = useSelector(
+    (state: initialStateTypeForCustomer) => state.customer.specificcustomer
+  );
   useEffect(() => {
-    async function FetchCustomer(id: string) {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/customer/getCustomer/${id}`
-        );
-        const data = await response.json();
-        console.log(data);
-        setCustomer(data.customer);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    FetchCustomer(id);
-  }, []);
+    dispatch(fetchCustomerById(id));
+  }, [dispatch, id]);
 
   useEffect(() => {
     async function CustomerOrderFetch(id: string) {

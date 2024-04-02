@@ -18,9 +18,10 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPayments } from "@/lib/actions/paymentAction";
 
 const PaymentList = () => {
-  const [payments, setPayments] = useState([]);
   const [rows, setRows] = useState([]);
   const [data, setData] = useState([]);
   const [open, setOpen] = useState<boolean>(false);
@@ -28,11 +29,12 @@ const PaymentList = () => {
   const [filteredRow, setFilteredRows] = useState([]);
   const [invoiceid, setInvoiceId] = useState<number>(0);
   const StateContext = useContext(LoginContext);
-
+  const dispatch = useDispatch();
+  const payments = useSelector((state) => state.payment.payments);
   const [selectedDates, setSelectedDates] = useState<
     [Dayjs | null, Dayjs | null]
   >([null, null]);
-  console.log("SelectDate" + selectedDates);
+  const userId = StateContext.userid;
   const handleDateRangeChange = (dates: [Dayjs | null, Dayjs | null]) => {
     if (dates[0]) {
       dates[0] = dates[0].startOf("day");
@@ -78,27 +80,15 @@ const PaymentList = () => {
   console.log(StateContext);
   let currentDate = new Date().toJSON().slice(0, 10);
   useEffect(() => {
-    async function FetchAllPayment() {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/payment/allpayment/${StateContext.userid}`
-        );
-        const data = await response.json();
-        console.log(data);
-        setPayments(data.payments);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    FetchAllPayment();
-  }, []);
+    dispatch(fetchPayments(userId));
+  }, [dispatch, userId]);
   useEffect(() => {
     if (!payments || payments.length === 0) {
       setRows([]);
       setData([]);
       return;
     }
-    const rowsArray =payments.map((payment, index) => ({
+    const rowsArray = payments.map((payment, index) => ({
       id: index + 1,
       Date: payment.Date.split("T")[0],
       customername: payment.cardHoldername,
@@ -112,7 +102,7 @@ const PaymentList = () => {
     setRows(rowsArray);
     setData(rowsArray);
   }, [payments]);
-  console.log(payments)
+  console.log(payments);
   const handleClickOpen = async (row: any) => {
     setOpen(true);
     setInvoiceId(row.id);
@@ -162,64 +152,64 @@ const PaymentList = () => {
     cellClassName?: string;
     renderCell?: (params: GridRowSelectionApi) => Element;
   }[] = [
-      {
-        field: "id",
+    {
+      field: "id",
 
-        headerName: "ID",
-        width: 90,
-      },
-      {
-        field: "Date",
+      headerName: "ID",
+      width: 90,
+    },
+    {
+      field: "Date",
 
-        headerName: "Date Of Payment",
-        width: 170,
-      },
-      {
-        field: "customername",
+      headerName: "Date Of Payment",
+      width: 170,
+    },
+    {
+      field: "customername",
 
-        headerName: "Customer Name",
-        width: 150,
-      },
-      {
-        field: "customeremail",
+      headerName: "Customer Name",
+      width: 150,
+    },
+    {
+      field: "customeremail",
 
-        headerName: "Email",
-        width: 240,
-      },
-      {
-        field: "amount",
+      headerName: "Email",
+      width: 240,
+    },
+    {
+      field: "amount",
 
-        headerName: "Total Amount",
-        width: 120,
-      },
-      {
-        field: "city",
+      headerName: "Total Amount",
+      width: 120,
+    },
+    {
+      field: "city",
 
-        headerName: "City",
-        width: 100,
-      },
-      {
-        field: "method",
+      headerName: "City",
+      width: 100,
+    },
+    {
+      field: "method",
 
-        headerName: "Payment Method",
-        cellClassName: "text-green-800 font-bold text-center capitalize",
-        width: 120,
-      },
-      {
-        field: "invoice",
+      headerName: "Payment Method",
+      cellClassName: "text-green-800 font-bold text-center capitalize",
+      width: 120,
+    },
+    {
+      field: "invoice",
 
-        headerName: "Generate Invoice",
-        width: 120,
-        renderCell: (params: GridRowSelectionApi) => (
-          <Button
-            onClick={() => handleClickOpen(params.row)}
-            style={{ color: "red", padding: "2px" }}
-          >
-            Invoice
-          </Button>
-        ),
-      },
-    ];
+      headerName: "Generate Invoice",
+      width: 120,
+      renderCell: (params: GridRowSelectionApi) => (
+        <Button
+          onClick={() => handleClickOpen(params.row)}
+          style={{ color: "red", padding: "2px" }}
+        >
+          Invoice
+        </Button>
+      ),
+    },
+  ];
 
   // console.log("Hello" + JSON.stringify(rowsArray));
   // setRows(rowsArray);

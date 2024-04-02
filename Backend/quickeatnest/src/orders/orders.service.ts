@@ -45,11 +45,12 @@ export class OrdersService {
     }
   }
 
-  async getTop5Items(userid:string) {
+  async getTop5Items(userid: string) {
     try {
+      console.log(userid);
       let top5items = await this.ordermode.aggregate([
         {
-          $match:{userId:userid}
+          $match: { $expr: { $eq: ['$userId', { $toObjectId: userid }] } },
         },
         {
           $unwind: '$selectedItem',
@@ -64,9 +65,9 @@ export class OrdersService {
           $sort: {
             count: -1,
           },
-        }
+        },
       ]);
-      console.log(top5items)
+      console.log('Top 5 Items: ', top5items);
       return { message: 'top 5 selling items', top5items };
     } catch (error) {
       console.log(error);
@@ -106,9 +107,9 @@ export class OrdersService {
     }
   }
 
-  async getAllOrders(userid:string) {
+  async getAllOrders(userid: string) {
     try {
-      let orders = await this.ordermode.find({userId:userid});
+      let orders = await this.ordermode.find({ userId: userid });
       if (orders.length === 0) {
         throw new NotFoundException();
       }

@@ -21,6 +21,12 @@ import {
   Legend,
 } from "chart.js";
 import { Bar, Doughnut } from "react-chartjs-2";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchItems } from "@/lib/actions/itemAction";
+import { fetchCustomer } from "@/lib/actions/customerAction";
+import { initialStateTypeForCustomer } from "@/lib/reducers/customerSlice/customerReducers";
+import { initialStateTypeForItems } from "@/lib/reducers/ItemSlice/itemReducers";
+import { fetchPayments } from "@/lib/actions/paymentAction";
 
 ChartJS.register(
   CategoryScale,
@@ -68,9 +74,6 @@ export const Counter = ({ targetValue }: { targetValue: any }) => {
 };
 
 const AdminDashboard = () => {
-  const [customers, setcustomers] = useState<Customer[]>([]);
-  const [items, setItems] = useState<ItemType[]>([]);
-  const [payments, setPayments] = useState([]);
   const [cardPayment, setCardPayment] = useState([]);
   const [cashPayment, setCashPayment] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
@@ -81,40 +84,21 @@ const AdminDashboard = () => {
   let data: ItemDataTypeForChart[] = [];
   const StateContext = useContext(StateLogin);
   const userId = StateContext.userid;
-  async function FetchData() {
-    const response = await fetch(
-      `http://localhost:5000/customer/getAllCustomer/${userId}`
-    );
-    const data = await response.json();
-    console.log(data);
-    setcustomers(data.customers);
-  }
-
-  async function fetchItems() {
-    try {
-      const response = await fetch(`http://localhost:5000/items/getAllItems/${userId}`);
-      const data = await response.json();
-      setItems(data.items);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async function fetchPayments() {
-    try {
-      const response = await fetch(`http://localhost:5000/payment/allpayment/${userId}`);
-      const data = await response.json();
-      setPayments(data.payments);
-      setCardPayment(data.cardPayment);
-      setCashPayment(data.cashPayment);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const dispatch = useDispatch();
+  const items = useSelector(
+    (state: initialStateTypeForItems) => state.item.items
+  );
+  const customers: Customer[] = useSelector(
+    (state: initialStateTypeForCustomer) => state.customer.customer
+  );
+  const payments = useSelector((state) => state.payment.payments);
+  console.log(payments);
   const totalAmount =
     payments &&
     payments
       .reduce((total, item) => total + parseFloat(item.amount), 0)
       .toFixed(2);
+  console.log(totalAmount);
   const totalCardAmount =
     cardPayment &&
     cardPayment
@@ -127,14 +111,14 @@ const AdminDashboard = () => {
       .toFixed(2);
   console.log(typeof totalAmount);
   useEffect(() => {
-    FetchData();
-  }, []);
+    dispatch(fetchCustomer(userId));
+  }, [dispatch, userId]);
   useEffect(() => {
-    fetchItems();
-  }, []);
+    dispatch(fetchItems(userId));
+  }, [dispatch, userId]);
   useEffect(() => {
-    fetchPayments();
-  }, []);
+    dispatch(fetchPayments(userId));
+  }, [dispatch, userId]);
   useEffect(() => {
     async function top5sellingitems() {
       try {
@@ -294,7 +278,7 @@ const AdminDashboard = () => {
             <h4 className="text-md text-green-800">FoodItems</h4>
             <IoFastFood color="green" />
             <p className="text-3xl text-green-800">
-              <Counter targetValue={items && items.length > 0 && items.length} />
+              <Counter targetValue={items.length} />
             </p>
           </div>
           <div

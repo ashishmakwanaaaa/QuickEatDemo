@@ -14,11 +14,13 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Swal from "sweetalert2";
 import StateLogin from "../LoginState/logincontext";
-
+import { useSelector, useDispatch } from "react-redux";
 import "aos/dist/aos.css";
 import AOS from "aos";
 import Carousel from "@itseasy21/react-elastic-carousel";
 import { CategoryType } from "./CategoryList";
+import { fetchItems } from "@/lib/actions/itemAction";
+import { fetchCategories } from "@/lib/actions/categoryAction";
 
 export interface ItemType {
   _id: string;
@@ -41,24 +43,17 @@ const ItemList = () => {
   }, []);
   const StateContext = useContext(StateLogin);
   const userId = StateContext.userid;
-  const [itemdata, setItemdata] = useState<ItemType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [edititemdata, setEditItem] = useState<ItemType>({});
   const [query, setQuery] = useState<string>("");
   const [option, setOption] = useState<string>("");
-  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const dispatch = useDispatch();
+  const items: ItemType[] = useSelector((state) => state.item.items);
+  const categories: CategoryType[] = useSelector(
+    (state) => state.category.categories
+  );
 
-  async function fetchItems() {
-    try {
-      const response = await fetch(`http://localhost:5000/items/getAllItems/${userId}`);
-      const data = await response.json();
-      setItemdata(data.items);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  console.log(itemdata);
   const handleClickOpen = (item: React.SetStateAction<ItemType>) => {
     setOpen(true);
     setEditItem(item);
@@ -69,27 +64,6 @@ const ItemList = () => {
   };
 
   const handleEditItem = async (edititemdata: ItemType) => {
-    if (
-      !edititemdata.itemname ||
-      !edititemdata.itemdescription ||
-      !edititemdata.quantity ||
-      !edititemdata.price ||
-      !edititemdata.image ||
-      !edititemdata.upToOffer
-    ) {
-      Swal.fire({
-        title: "Please Fill All Field",
-        icon: "warning",
-        timer: 1000,
-      });
-    }
-    if (edititemdata.quantity === 0) {
-      Swal.fire({
-        title: "Please Enter Valid Quantity",
-        icon: "warning",
-        timer: 1000,
-      });
-    }
     setOpen(false);
     const confirm = await Swal.fire({
       title: "Do you want to save the changes?",
@@ -119,7 +93,7 @@ const ItemList = () => {
             icon: "success",
             timer: 2000,
           });
-          fetchItems();
+          dispatch(fetchItems(userId));
         }
       } catch (error) {
         console.log(error);
@@ -153,7 +127,7 @@ const ItemList = () => {
             icon: "success",
             timer: 1000,
           });
-          fetchItems(); // Assuming fetchItems() fetches the updated list of items
+          dispatch(fetchItems(userId));
         } else {
           Swal.fire({
             title: "Delete Failed",
@@ -198,43 +172,34 @@ const ItemList = () => {
   };
 
   useEffect(() => {
-    fetchItems();
-  }, []);
-  console.log(selectedCategory);
-  const filteredItems: ItemType[] = itemdata && itemdata.length > 0 ? itemdata.filter((item) => item.itemname.toLowerCase().includes(query)).filter((item) =>
-    selectedCategory === "" ||
-    item.itemcategory === selectedCategory
-  )
-    .sort((a, b) => {
-      switch (option) {
-        case "Price Highest":
-          return b.price - a.price;
-        case "Price Lowest":
-          return a.price - b.price;
-        case "Qty Highest":
-          return b.quantity - a.quantity;
-        case "Qty Lowest":
-          return a.quantity - b.quantity;
-        default:
-          return 0;
-      }
-    }):[];
-  console.log(itemdata);
+    dispatch(fetchItems(userId));
+  }, [dispatch, userId]);
   useEffect(() => {
-    async function FetchCategories() {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/category/getAllCategories/${userId}`
-        );
-        const data = await response.json();
-        console.log(data);
-        setCategories(data.categories);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    FetchCategories();
-  }, []);
+    dispatch(fetchCategories(userId));
+  }, [dispatch, userId]);
+  const filteredItems: ItemType[] =
+    items && items.length > 0
+      ? items
+          .filter((item) => item.itemname.toLowerCase().includes(query))
+          .filter(
+            (item) =>
+              selectedCategory === "" || item.itemcategory === selectedCategory
+          )
+          .sort((a, b) => {
+            switch (option) {
+              case "Price Highest":
+                return b.price - a.price;
+              case "Price Lowest":
+                return a.price - b.price;
+              case "Qty Highest":
+                return b.quantity - a.quantity;
+              case "Qty Lowest":
+                return a.quantity - b.quantity;
+              default:
+                return 0;
+            }
+          })
+      : [];
 
   return (
     <div className="font-[Poppins] flex flex-col gap-6">
@@ -292,25 +257,27 @@ const ItemList = () => {
           itemsToShow={5}
           itemsToScroll={5}
         >
-          {categories && categories.length > 0 && categories.map((category, index) => {
-            return (
-              <>
-                <div className="flex  flex-col gap-2 justify-center  items-center ">
-                  <img
-                    className="w-16 focus:outline-none focus:ring focus:ring-black  cursor-pointer h-16 rounded-full drop-shadow-2xl"
-                    src={category.image}
-                    alt=""
-                  />
-                  <button
-                    onClick={() => setSelectedCategory(category.categoryname)}
-                    className="focus:underline focus:underline-offset-4"
-                  >
-                    {category.categoryname}
-                  </button>
-                </div>
-              </>
-            );
-          })}
+          {categories &&
+            categories.length > 0 &&
+            categories.map((category, index) => {
+              return (
+                <>
+                  <div className="flex  flex-col gap-2 justify-center  items-center ">
+                    <img
+                      className="w-16 focus:outline-none focus:ring focus:ring-black  cursor-pointer h-16 rounded-full drop-shadow-2xl"
+                      src={category.image}
+                      alt=""
+                    />
+                    <button
+                      onClick={() => setSelectedCategory(category.categoryname)}
+                      className="focus:underline focus:underline-offset-4"
+                    >
+                      {category.categoryname}
+                    </button>
+                  </div>
+                </>
+              );
+            })}
         </Carousel>
       </div>
       {filteredItems && filteredItems.length > 0 ? (
@@ -320,11 +287,11 @@ const ItemList = () => {
               <div
                 className="grid grid-cols-12 mt-5 gap-4 p-2 rounded-2xl"
                 style={{ boxShadow: "0 0 0.5em orange" }}
-              // data-aos="fade-right"
+                // data-aos="fade-right"
               >
                 <div
                   className="col-span-2 overflow-hidden rounded-lg relative"
-                // data-aos="fade-right"
+                  // data-aos="fade-right"
                 >
                   <img
                     src={item.image}

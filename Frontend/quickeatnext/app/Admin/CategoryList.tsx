@@ -6,41 +6,31 @@ import { useContext, useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import StateLogin from "../LoginState/logincontext";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "@/lib/actions/categoryAction";
 
 export interface CategoryType {
   _id?: string;
   categoryname: string;
   image: string;
-  userId?:string;
+  userId?: string;
 }
 
 const CategoriesList = () => {
   const StateContext = useContext(StateLogin);
   const userId = StateContext.userid;
-  console.log(userId)
-  const [categories, setCategories] = useState<CategoryType[]>([]);
+  console.log(userId);
   const [input, setInput] = useState<CategoryType>({
     categoryname: "",
     image:
       "https://user-images.githubusercontent.com/11474775/72835684-ffb03180-3cac-11ea-88d7-82d5229c47ac.png",
-      userId,
+    userId,
   });
-
-  async function FetchCategories() {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/category/getAllCategories/${userId}`
-      );
-      const data = await response.json();
-      console.log(data);
-      setCategories(data.categories);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const dispatch = useDispatch();
+  const categories = useSelector((state) => state.category.categories);
   useEffect(() => {
-    FetchCategories();
-  }, []);
+    dispatch(fetchCategories(userId));
+  }, [dispatch, userId]);
   console.log(categories);
   const handelDeleteCategory = async (id: string) => {
     try {
@@ -56,7 +46,7 @@ const CategoriesList = () => {
           icon: "success",
           timer: 1000,
         });
-        FetchCategories();
+        dispatch(fetchCategories(userId));
       } else {
         Swal.fire({
           title: "Error : " + data.message,
@@ -71,7 +61,7 @@ const CategoriesList = () => {
   const handleAddCatogory = async () => {
     try {
       const imageUrl = await GenerateImage(); // Wait for image generation
-      const categoryData = { ...input, image: imageUrl,userId }; // Combine category data with generated image URL
+      const categoryData = { ...input, image: imageUrl, userId }; // Combine category data with generated image URL
       console.log(categoryData);
       const response = await fetch(
         "http://localhost:5000/category/addcategory",
@@ -92,7 +82,7 @@ const CategoriesList = () => {
           timer: 1000,
         });
         setInput({ categoryname: "", image: "" });
-        FetchCategories();
+        dispatch(fetchCategories(userId));
       } else {
         Swal.fire({
           title: "Error: " + data.message,

@@ -20,7 +20,9 @@ import { TransitionProps } from "@mui/material/transitions";
 import { Customer } from "@/app/Admin/CustomerList";
 import { ItemType } from "@/app/Admin/ItemList";
 import StateLogin from "../LoginState/logincontext";
-
+import { useSelector, useDispatch } from "react-redux";
+import { fetchItems } from "@/lib/actions/itemAction";
+import { fetchCustomerById } from "@/lib/actions/customerAction";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -40,6 +42,7 @@ interface SelectedItemType {
   itemname: string;
   itemdescription: string;
   price: number;
+  qty: number;
   quantity: number;
   totalPrice: number;
   upToOffer: number;
@@ -48,7 +51,7 @@ interface SelectedItemType {
 
 export interface OrderDataType {
   _id: any;
-  userId:string
+  userId: string;
   customerID: string | undefined;
   customerfirstname: string;
   customerlastname: string;
@@ -69,15 +72,18 @@ const Orders = ({ id }: { id: string }) => {
       once: true,
     });
   }, []);
-  const router = useRouter();
-  const customerID = id;
-  const [customer, setCustomer] = useState<Customer>({});
-  const [items, setItems] = useState<ItemType[]>([]);
+
   const [selectedItem, setSelectedItem] = useState<SelectedItemType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [open2, setOpen2] = useState<boolean>(false);
   const StateContext = useContext(StateLogin);
   const userId = StateContext.userid;
+  const dispatch = useDispatch();
+  const items: ItemType[] = useSelector((state) => state.item.items);
+  const customer: Customer = useSelector(
+    (state) => state.customer.specificcustomer
+  );
+  console.log(customer);
   const TotalAmount = selectedItem.reduce(
     (total: any, item: { totalPrice: any }) =>
       Number(total) + Number(item.totalPrice),
@@ -85,17 +91,9 @@ const Orders = ({ id }: { id: string }) => {
   );
 
   useEffect(() => {
-    async function FetchCustomer(customerId: string) {
-      const response = await fetch(
-        `http://localhost:5000/customer/getCustomer/${customerId}`
-      );
-      const data = await response.json();
-      console.log(data);
-      setCustomer(data.customer);
-    }
-    FetchCustomer(customerID);
-  }, []);
-  console.log(customer)
+    dispatch(fetchCustomerById(id));
+  }, [dispatch, userId]);
+
   const OrderData: OrderDataType = {
     userId,
     customerID: customer._id,
@@ -110,7 +108,7 @@ const Orders = ({ id }: { id: string }) => {
 
   const CashData = {
     userId,
-    customerID:OrderData.customerID,
+    customerID: OrderData.customerID,
     email: OrderData.customeremailid,
     cardHoldername:
       OrderData.customerfirstname + " " + OrderData.customerlastname,
@@ -124,47 +122,34 @@ const Orders = ({ id }: { id: string }) => {
     paymentMethod: "cash",
   };
 
-  console.log(typeof customer.userId)
-
-  async function FetchItems() {
-    const response = await fetch(`http://localhost:5000/items/getAllItems/${userId}`);
-    const data = await response.json();
-    console.log(data);
-    setItems(data.items);
-  }
+  console.log(typeof customer.userId);
 
   useEffect(() => {
-    FetchItems();
-  }, []);
+    dispatch(fetchItems(userId));
+  }, [dispatch, userId]);
 
-  const handleRemoveItem = async (
-    item: ItemType,
-    index: string | number | any
-  ) => {
-    setOpen(false);
-    const confirm = await Swal.fire({
-      title: "Are You Sure You Want to Delete This Item From Your Cart?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    });
+  const handleRemoveItem = async (item: SelectedItemType) => {
+    try {
+      let updatedItems: SelectedItemType[] = [];
+      if (item.qty > 1) {
+        updatedItems = selectedItem.map((selected) => {
+          if (selected.itemname === item.itemname) {
+            const updatedQuantity = selected.qty - 1;
+            const updatedPrice =
+              selected.price - (selected.upToOffer * selected.price) / 100;
+            const updatedTotalPrice = updatedQuantity * updatedPrice;
+            return {
+              ...selected,
+              qty: updatedQuantity,
+              totalPrice: updatedTotalPrice,
+            };
+          }
+          return selected;
+        });
 
-    if (confirm.isConfirmed) {
-      const removeQuantity = selectedItem[index].quantity;
+        setSelectedItem(updatedItems);
 
-      const updateItems = items.map((original) =>
-        original.itemname === item.itemname
-          ? { ...original, quantity: original.quantity + removeQuantity }
-          : original
-      );
-      const updateSelectedItem = selectedItem.filter((_, i) => i !== index);
-      setItems(updateItems);
-      setSelectedItem(updateSelectedItem);
-
-      try {
+        // Call your API to decrease the actual quantity of the item by 1 on the backend
         const response = await fetch(
           "http://localhost:5000/items/updateQuantity",
           {
@@ -173,64 +158,75 @@ const Orders = ({ id }: { id: string }) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              quantity: updateItems.find((i) => i.itemname === item.itemname)
-                .quantity,
+              quantity: item.quantity - 1, // Decrease the actual quantity by 1
               itemname: item.itemname,
             }),
           }
         );
+
         const data = await response.json();
-        if (response.ok) {
-          Swal.fire({
-            title: "Delete Successfully Item From Cart",
-            icon: "success",
-            timer: 1000,
-          });
-        } else {
-          Swal.fire({
-            title: "Delete Failed",
-            text:
-              data.message || "Failed to delete Item. Please try again later.",
-            icon: "error",
-          });
-        }
         console.log(data);
-      } catch (error) {
-        console.log(error.message);
+        dispatch(fetchItems(userId));
+      } else {
+        // If item quantity is 1, remove the item from the cart
+        updatedItems = selectedItem.filter(
+          (selected) => selected._id !== item._id
+        );
+        // Call your API to increase the actual quantity of the item by 1 on the backend
+        setSelectedItem(updatedItems);
+        const response = await fetch(
+          "http://localhost:5000/items/updateQuantity",
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              quantity: item.quantity, // Increase the actual quantity by 1
+              itemname: item.itemname,
+            }),
+          }
+        );
+
+        const data = await response.json();
+        console.log(data);
+        dispatch(fetchItems(userId));
       }
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
   const handleAddItem = async (item: ItemType) => {
-    item.quantity = item.quantity - 1;
+    const updatedQuantity = item.quantity - 1;
+
     const existingItem = selectedItem.find(
       (selected) => selected.itemname === item.itemname
     );
+
     if (existingItem) {
-      const updateItems: SelectedItemType[] = selectedItem.map((selected) => {
+      const updatedItems: SelectedItemType[] = selectedItem.map((selected) => {
         if (selected.itemname === item.itemname) {
-          const updateQuntity: number = selected.quantity + 1;
-          const updatedPrice: number =
-            item.price - (item.upToOffer * item.price) / 100;
-          const updateTotalPrice: number = updateQuntity * updatedPrice;
+          const updatedQuantity = selected.qty + 1;
+          const updatedPrice = item.price - (item.upToOffer * item.price) / 100;
+          const updatedTotalPrice = updatedQuantity * updatedPrice;
           return {
             ...selected,
-            quantity: updateQuntity,
-            totalPrice: updateTotalPrice,
+            qty: updatedQuantity,
+            totalPrice: updatedTotalPrice,
           };
         }
         return selected;
       });
-      setSelectedItem(updateItems);
+
+      setSelectedItem(updatedItems);
     } else {
-      const updatedPrice: number =
-        item.price - (item.upToOffer * item.price) / 100;
+      const updatedPrice = item.price - (item.upToOffer * item.price) / 100;
       setSelectedItem([
         ...selectedItem,
-        { ...item, quantity: 1, totalPrice: updatedPrice },
+        { ...item, qty: 1, totalPrice: updatedPrice },
       ]);
     }
-
     try {
       const response = await fetch(
         "http://localhost:5000/items/updateQuantity",
@@ -240,12 +236,15 @@ const Orders = ({ id }: { id: string }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            quantity: item.quantity,
+            quantity: updatedQuantity,
             itemname: item.itemname,
           }),
         }
       );
+
       const data = await response.json();
+      console.log(data);
+      dispatch(fetchItems(userId));
       console.log(data);
     } catch (error) {
       console.log(error.message);
@@ -407,67 +406,69 @@ const Orders = ({ id }: { id: string }) => {
           </p>
         </div>
         <div className="grid grid-cols-5 gap-4">
-          {items && items.length > 0 && items.map((item, index) => (
-            <div
-              key={index}
-              className="relative flex flex-col gap-2 items-center drop-shadow-2xl rounded-2xl p-2 h-full"
-              data-aos="fade-right"
-              style={{ boxShadow: "0 0 0.5em gray" }}
-            >
+          {items &&
+            items.length > 0 &&
+            items.map((item, index) => (
               <div
-                className="rounded-2xl  overflow-hidden drop-shadow-2xl"
-                style={{ width: "100%", height: "150px", overflow: "hidden" }}
+                key={index}
+                className="relative flex flex-col gap-2 items-center drop-shadow-2xl rounded-2xl p-2 h-full"
+                data-aos="fade-right"
+                style={{ boxShadow: "0 0 0.5em gray" }}
               >
-                <img
-                  src={item.image}
-                  className="w-full h-[150px] rounded-lg cursor-pointer object-cover"
-                />
-                <div className="absolute bottom-0 left-0 w-full">
-                  <div className="relative z-20 p-2">
-                    <p className="text-white text-lg font-bold ">Up To</p>
-                    <p className="text-orange-500 text-lg font-bold  ">
-                      {item.upToOffer}% Off
-                    </p>
+                <div
+                  className="rounded-2xl  overflow-hidden drop-shadow-2xl"
+                  style={{ width: "100%", height: "150px", overflow: "hidden" }}
+                >
+                  <img
+                    src={item.image}
+                    className="w-full h-[150px] rounded-lg cursor-pointer object-cover"
+                  />
+                  <div className="absolute bottom-0 left-0 w-full">
+                    <div className="relative z-20 p-2">
+                      <p className="text-white text-lg font-bold ">Up To</p>
+                      <p className="text-orange-500 text-lg font-bold  ">
+                        {item.upToOffer}% Off
+                      </p>
+                    </div>
+                    <div className="absolute bottom-0 left-0 w-full h-28 bg-gradient-to-t from-black"></div>
                   </div>
-                  <div className="absolute bottom-0 left-0 w-full h-28 bg-gradient-to-t from-black"></div>
                 </div>
-              </div>
-              <button
-                disabled={item.quantity === 0}
-                className={`bg-white text-orange-500  p-2 w-[110px] mx-auto text-sm z-10 mt-[-20px] mb-2 font-bold 
+                <button
+                  disabled={item.quantity === 0}
+                  className={`bg-white text-orange-500  p-2 w-[110px] mx-auto text-sm z-10 mt-[-20px] mb-2 font-bold 
     ${item.quantity === 0 ? "opacity-50 cursor-not-allowed" : "rounded-md"}`}
-                onClick={() => handleAddItem(item)}
-              >
-                Add To Cart
-              </button>
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-row justify-start items-start gap-2">
-                  <span className="text-sm  font-bold  text-orange-500">
-                    Name:
-                  </span>
-                  <span className="font-bold  text-black text-sm">
-                    {item.itemname}
-                  </span>
-                </div>
-                <div className="flex flex-row justify-start items-start gap-2">
-                  <span className="text-sm font-bold  text-orange-500">
-                    Quantity:
-                  </span>
-                  <span className="font-bold  text-black text-sm">
-                    {item.quantity}
-                  </span>
-                </div>
-                <div className="flex flex-row justify-start items-start gap-8">
-                  <span className="text-sm font-bold  text-orange-500">
-                    Price:
-                  </span>
-                  <span className="font-bold  text-black text-sm">
-                    &#8377;{item.price}
-                  </span>
+                  onClick={() => handleAddItem(item)}
+                >
+                  Add To Cart
+                </button>
+                <div className="flex flex-col gap-2">
+                  <div className="flex flex-row justify-start items-start gap-2">
+                    <span className="text-sm  font-bold  text-orange-500">
+                      Name:
+                    </span>
+                    <span className="font-bold  text-black text-sm">
+                      {item.itemname}
+                    </span>
+                  </div>
+                  <div className="flex flex-row justify-start items-start gap-2">
+                    <span className="text-sm font-bold  text-orange-500">
+                      Quantity:
+                    </span>
+                    <span className="font-bold  text-black text-sm">
+                      {item.quantity}
+                    </span>
+                  </div>
+                  <div className="flex flex-row justify-start items-start gap-8">
+                    <span className="text-sm font-bold  text-orange-500">
+                      Price:
+                    </span>
+                    <span className="font-bold  text-black text-sm">
+                      &#8377;{item.price}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
       <Dialog
@@ -519,7 +520,7 @@ const Orders = ({ id }: { id: string }) => {
                               Quantity:
                             </span>
                             <span className="font-bold  text-black text-sm w-full">
-                              {selected.quantity}
+                              {selected.qty}
                             </span>
                           </div>
                           <div className="flex items-center gap-4">
