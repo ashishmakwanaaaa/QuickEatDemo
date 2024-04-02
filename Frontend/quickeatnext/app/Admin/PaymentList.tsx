@@ -341,7 +341,7 @@ const PaymentList = () => {
                       {item.selectedItem.map((key, index) => (
                         <tr key={index} className="border-b">
                           <td className="px-4 py-2">{key.itemname}</td>
-                          <td className="px-4 py-2">{key.quantity}</td>
+                          <td className="px-4 py-2">{key.qty}</td>
                           <td className="px-4 py-2">{key.totalPrice}</td>
                         </tr>
                       ))}

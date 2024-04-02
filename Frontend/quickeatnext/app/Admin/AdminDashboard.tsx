@@ -9,7 +9,7 @@ import { useContext, useEffect, useState } from "react";
 import { Customer } from "./CustomerList";
 import { ItemType } from "./ItemList";
 import StateLogin from "../LoginState/logincontext";
-
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -74,9 +74,11 @@ export const Counter = ({ targetValue }: { targetValue: any }) => {
 };
 
 const AdminDashboard = () => {
-  const [cardPayment, setCardPayment] = useState([]);
-  const [cashPayment, setCashPayment] = useState([]);
+
   const [monthlyData, setMonthlyData] = useState([]);
+  const [filterdata,setfilterdata]=useState([]);
+  const [selectedMonth, setSelectedMonth] = useState<number | string>(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState<number | string>(new Date().getFullYear());
   const [top5sellingItems, setTop5sellingItems] = useState<
     Top5sellingItemType[]
   >([]);
@@ -92,6 +94,8 @@ const AdminDashboard = () => {
     (state: initialStateTypeForCustomer) => state.customer.customer
   );
   const payments = useSelector((state) => state.payment.payments);
+  const cardPayment = useSelector((state) => state.payment.cardpayments);
+  const cashPayment = useSelector((state) => state.payment.cashpayments);
   console.log(payments);
   const totalAmount =
     payments &&
@@ -197,28 +201,22 @@ const AdminDashboard = () => {
       intersect: true,
     },
   };
-  const lables = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+  const lables = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+  const dailyAmounts = new Array(daysInMonth).fill(0);
+  console.log(filterdata)
+  filterdata.forEach(payment => {
+    const paymentDate = new Date(payment.Date);
+    const dayOfMonth = paymentDate.getDate();
+    dailyAmounts[dayOfMonth - 1] += parseFloat(payment.amount);
+  });
+  const labels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   const dataforbarchart = {
-    labels: lables,
+    labels,
     datasets: [
       {
         label: "Monthly Amount",
-        data: monthlyData.map(({ month, totalAmount }) => {
-          const foundData = monthlyData.find((data) => data.month === month);
-          return foundData ? foundData.totalAmount : "0";
-        }),
+        data: dailyAmounts,
         backgroundColor: "rgba(255, 140, 0, 0.7)",
         borderColor: "rgba(255, 140, 0, 1)",
         borderWidth: 2,
@@ -228,29 +226,34 @@ const AdminDashboard = () => {
     ],
   };
 
+
+
   useEffect(() => {
     const calculatedMonthlydata = () => {
-      const monthlytotals = Object.fromEntries(
-        lables.map((month, index) => [index + 1, 0])
-      );
-      payments &&
-        payments.forEach((payment) => {
-          const date = new Date(payment.Date);
-          const month = date.getMonth() + 1;
-          monthlytotals[month] += parseFloat(payment.amount);
-          console.log(monthlytotals);
-        });
-      const monthlyData = Object.entries(monthlytotals).map(
-        ([month, totalAmount]) => ({
-          month: parseInt(month),
-          totalAmount: totalAmount.toFixed(2),
-        })
-      );
+      const filteredData = payments.filter(payment => {
+        console.log(selectedMonth, selectedYear)
+        const paymentDate = new Date(payment.Date);
+        return paymentDate.getMonth() === selectedMonth - 1 && paymentDate.getFullYear() === selectedYear;
+      });
+   
+      setfilterdata(filteredData)
+      const dailyData = filteredData.reduce((acc, payment) => {
+        const paymentDate = new Date(payment.Date);
+        const day = paymentDate.getDate();
+        acc[day] = (acc[day] || 0) + parseFloat(payment.amount);
+        return acc;
+      }, {});
+      const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+      console.log(daysInMonth)
+      const monthlyData = Array.from({ length: daysInMonth }, (_, i) => ({
+        day: i + 1,
+        totalAmount: dailyData[i + 1] || 0
+      }));
 
       setMonthlyData(monthlyData);
     };
     calculatedMonthlydata();
-  }, [payments]);
+  }, [payments, selectedMonth, selectedYear]);
   console.log(monthlyData);
 
   return (
@@ -319,8 +322,45 @@ const AdminDashboard = () => {
               Categories Wise Data
             </h1>
           </div>
-          <div className="flex flex-col items-center  justify-center gap-6 h-[300px] w-[500px]">
+          <div className="flex flex-col items-center  justify-center mt-3 ">
+            <div className="flex flex-row gap-2 justify-center items-center">
+              <div>
+                <FormControl variant="standard" style={{ width: "160px" }}>
+                  <InputLabel id="demo-simple-select-label" style={{ color: "black" }}>Select A Month</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={selectedMonth}
+                    label="select"
+                    onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                  >
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <MenuItem key={i + 1} value={i + 1}>{lables[i]}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              <div>
+                <FormControl variant="standard" style={{ width: "160px" }}>
+                  <InputLabel id="demo-simple-select-label" style={{ color: "black" }}>Select A Month</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={selectedYear}
+                    label="select"
+                    onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                  >
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <MenuItem key={i + 1} value={2024 + i}>{2024 + i}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+
+            </div>
+            <div className="w-[500px] h-[700px] mr-16">
             <Bar data={dataforbarchart} options={optionsforbarchart} />
+            </div>
             <h1 className="text-center  capitalize text-orange-600 font-bold">
               Monthly Sales Record
             </h1>

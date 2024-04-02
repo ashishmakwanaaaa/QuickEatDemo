@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchCustomer = createAsyncThunk(
-  "fetchCategories",
+  "fetchCustomer",
   async (userId) => {
     const response = await fetch(
       `http://localhost:5000/customer/getAllCustomer/${userId}`

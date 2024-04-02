@@ -65,7 +65,7 @@ const Login = (): React.JSX.Element => {
       StateContext.userid = data.user._id;
       console.log(StateContext);
       {
-        StateContext.login && router.push("/dashboard");
+        StateContext.login && router.push("/customerlist");
       }
     } else {
       Swal.fire({

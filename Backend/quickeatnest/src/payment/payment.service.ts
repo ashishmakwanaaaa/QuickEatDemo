@@ -50,7 +50,7 @@ export class PaymentService {
           },
           unit_amount: (item.price - (item.price * item.upToOffer) / 100) * 100,
         },
-        quantity: item.quantity,
+        quantity: item.qty,
       }));
 
       const session = await stripe.checkout.sessions.create({

@@ -42,4 +42,5 @@ export class SelectedDto {
   price: number;
   upToOffer: number;
   quantity: any;
+  qty:number;
 }

@@ -266,7 +266,7 @@ const OrderListPage = () => {
                         {order.itemname}
                       </p>
                       <p className="text-black font-bold text-lg">
-                        Qty: {order.quantity}
+                        Qty: {order.qty}
                       </p>
                       <p className="text-black font-bold text-lg">
                         Price: {order.price}

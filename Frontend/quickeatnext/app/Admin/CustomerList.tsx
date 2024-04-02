@@ -55,6 +55,7 @@ const CustomerList = () => {
   const customerData: Customer[] = useSelector(
     (state) => state.customer.customer
   );
+  console.log(customerData)
   const handleClickOpen = async (id: string) => {
     console.log(id);
     try {
@@ -117,7 +118,7 @@ const CustomerList = () => {
             timer: 1000,
           });
         }
-        FetchData();
+        dispatch(fetchCustomer(userId))
       }
     } catch (error) {
       window.alert(error);
@@ -155,7 +156,8 @@ const CustomerList = () => {
             icon: "success",
             timer: 1000,
           });
-          FetchData();
+          dispatch(fetchCustomer(userId))
+
         } else {
           Swal.fire({
             title: "Delete Failed",
@@ -283,23 +285,23 @@ const CustomerList = () => {
   ];
   const rows =
     customerData &&
-    customerData.length > 0 &&
-    customerData
-      .filter((customer) => customer.firstname.toLowerCase().includes(query))
-      .map((customer, index) => ({
-        _id: customer._id,
-        id: index + 1,
-        Profile:
-          customer.firstname[0].toUpperCase() +
-          "" +
-          customer.lastname[0].toUpperCase(),
-        firstname: customer.firstname,
-        lastname: customer.lastname,
-        contact: customer.phoneno,
-        takeorder: "Order",
-        edit: "Edit",
-        delete: "Delete",
-      }));
+      customerData.length > 0 ?
+      customerData
+        .filter((customer) => customer.firstname.toLowerCase().includes(query))
+        .map((customer, index) => ({
+          _id: customer._id,
+          id: index + 1,
+          Profile:
+            customer.firstname[0].toUpperCase() +
+            "" +
+            customer.lastname[0].toUpperCase(),
+          firstname: customer.firstname,
+          lastname: customer.lastname,
+          contact: customer.phoneno,
+          takeorder: "Order",
+          edit: "Edit",
+          delete: "Delete",
+        })) : [];
   console.log(customerData);
 
   return (

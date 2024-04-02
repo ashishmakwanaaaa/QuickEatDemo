@@ -58,7 +58,7 @@ export class OrdersService {
         {
           $group: {
             _id: '$selectedItem.itemcategory',
-            count: { $sum: '$selectedItem.quantity' },
+            count: { $sum: '$selectedItem.qty' },
           },
         },
         {

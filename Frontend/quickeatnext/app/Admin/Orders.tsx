@@ -13,6 +13,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import Swal from "sweetalert2";
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
 import { MdDelete } from "react-icons/md";
 import TextField from "@mui/material/TextField";
 import { useRouter } from "next/navigation";
@@ -515,14 +517,15 @@ const Orders = ({ id }: { id: string }) => {
                               {selected.itemname}
                             </span>
                           </div>
-                          <div className="flex items-center gap-4">
-                            <span className="text-sm font-bold  text-orange-500 w-36">
-                              Quantity:
-                            </span>
-                            <span className="font-bold  text-black text-sm w-full">
-                              {selected.qty}
-                            </span>
+                          <div className="flex items-center ">
+                            <span className="text-sm font-bold text-orange-500 w-20">Qty:</span>
+                            <div className="flex flex-row items-center gap-2 justify-start">
+                              <button onClick={()=>handleAddItem(selected)} className="border border-orange-600 text-orange-600 rounded-md hover:bg-orange-600 hover:text-white transform duration-300"><AddIcon/></button>
+                              <span className="font-bold text-sm w-full bg-orange-600 text-white px-2 py-1 rounded-md">{selected.qty}</span>
+                              <button onClick={()=>handleRemoveItem(selected)} className=" border border-orange-600 text-orange-600 rounded-md hover:bg-orange-600 hover:text-white transform duration-300"><RemoveIcon/></button>
+                            </div>
                           </div>
+
                           <div className="flex items-center gap-4">
                             <span className="text-sm font-bold  text-orange-500 w-36">
                               Price:
