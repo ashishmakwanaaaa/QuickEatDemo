@@ -13,8 +13,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import Swal from "sweetalert2";
-import RemoveIcon from '@mui/icons-material/Remove';
-import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
 import { MdDelete } from "react-icons/md";
 import TextField from "@mui/material/TextField";
 import { useRouter } from "next/navigation";
@@ -143,6 +143,7 @@ const Orders = ({ id }: { id: string }) => {
             return {
               ...selected,
               qty: updatedQuantity,
+              quantity: item.quantity + 1,
               totalPrice: updatedTotalPrice,
             };
           }
@@ -160,8 +161,8 @@ const Orders = ({ id }: { id: string }) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              quantity: item.quantity - 1, // Decrease the actual quantity by 1
-              itemname: item.itemname,
+              quantity: updatedItems.map((item) => item.quantity),
+              itemname: updatedItems.map((item) => item.itemname),
             }),
           }
         );
@@ -184,8 +185,8 @@ const Orders = ({ id }: { id: string }) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              quantity: item.quantity, // Increase the actual quantity by 1
-              itemname: item.itemname,
+              quantity: [item.quantity + 1],
+              itemname: [item.itemname],
             }),
           }
         );
@@ -200,14 +201,12 @@ const Orders = ({ id }: { id: string }) => {
   };
 
   const handleAddItem = async (item: ItemType) => {
-    const updatedQuantity = item.quantity - 1;
-
     const existingItem = selectedItem.find(
       (selected) => selected.itemname === item.itemname
     );
-
+    let updatedItems: SelectedItemType[] = [];
     if (existingItem) {
-      const updatedItems: SelectedItemType[] = selectedItem.map((selected) => {
+      updatedItems = selectedItem.map((selected) => {
         if (selected.itemname === item.itemname) {
           const updatedQuantity = selected.qty + 1;
           const updatedPrice = item.price - (item.upToOffer * item.price) / 100;
@@ -215,20 +214,27 @@ const Orders = ({ id }: { id: string }) => {
           return {
             ...selected,
             qty: updatedQuantity,
+            quantity: item.quantity - 1,
             totalPrice: updatedTotalPrice,
           };
         }
         return selected;
       });
-
       setSelectedItem(updatedItems);
     } else {
       const updatedPrice = item.price - (item.upToOffer * item.price) / 100;
-      setSelectedItem([
+      updatedItems = [
         ...selectedItem,
-        { ...item, qty: 1, totalPrice: updatedPrice },
-      ]);
+        {
+          ...item,
+          qty: 1,
+          quantity: item.quantity - 1,
+          totalPrice: updatedPrice,
+        },
+      ];
+      setSelectedItem(updatedItems);
     }
+    console.log(updatedItems);
     try {
       const response = await fetch(
         "http://localhost:5000/items/updateQuantity",
@@ -238,8 +244,8 @@ const Orders = ({ id }: { id: string }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            quantity: updatedQuantity,
-            itemname: item.itemname,
+            quantity: updatedItems.map((item) => item.quantity),
+            itemname: updatedItems.map((item) => item.itemname),
           }),
         }
       );
@@ -252,6 +258,7 @@ const Orders = ({ id }: { id: string }) => {
       console.log(error.message);
     }
   };
+  console.log(selectedItem);
   const CreateOrder = async () => {
     try {
       console.log(OrderData);
@@ -387,8 +394,6 @@ const Orders = ({ id }: { id: string }) => {
     }
   };
 
-  console.log(selectedItem);
-
   return (
     <>
       <div className="font-[Poppins]  p-2 flex flex-col gap-4 w-full h-full">
@@ -518,11 +523,25 @@ const Orders = ({ id }: { id: string }) => {
                             </span>
                           </div>
                           <div className="flex items-center ">
-                            <span className="text-sm font-bold text-orange-500 w-20">Qty:</span>
+                            <span className="text-sm font-bold text-orange-500 w-20">
+                              Qty:
+                            </span>
                             <div className="flex flex-row items-center gap-2 justify-start">
-                              <button onClick={()=>handleAddItem(selected)} className="border border-orange-600 text-orange-600 rounded-md hover:bg-orange-600 hover:text-white transform duration-300"><AddIcon/></button>
-                              <span className="font-bold text-sm w-full bg-orange-600 text-white px-2 py-1 rounded-md">{selected.qty}</span>
-                              <button onClick={()=>handleRemoveItem(selected)} className=" border border-orange-600 text-orange-600 rounded-md hover:bg-orange-600 hover:text-white transform duration-300"><RemoveIcon/></button>
+                              <button
+                                onClick={() => handleAddItem(selected)}
+                                className="border border-orange-600 text-orange-600 rounded-md hover:bg-orange-600 hover:text-white transform duration-300"
+                              >
+                                <AddIcon />
+                              </button>
+                              <span className="font-bold text-sm w-full bg-orange-600 text-white px-2 py-1 rounded-md">
+                                {selected.qty}
+                              </span>
+                              <button
+                                onClick={() => handleRemoveItem(selected)}
+                                className=" border border-orange-600 text-orange-600 rounded-md hover:bg-orange-600 hover:text-white transform duration-300"
+                              >
+                                <RemoveIcon />
+                              </button>
                             </div>
                           </div>
 

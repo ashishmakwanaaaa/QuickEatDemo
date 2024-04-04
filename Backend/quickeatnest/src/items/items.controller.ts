@@ -38,8 +38,8 @@ export class ItemsController {
 
   @Patch('/updateQuantity')
   updateQuantity(
-    @Body('quantity') quantity: number,
-    @Body('itemname') itemname: string,
+    @Body('quantity') quantity: [number],
+    @Body('itemname') itemname: [string],
   ) {
     return this.itemsservice.updateQuantity(quantity, itemname);
   }

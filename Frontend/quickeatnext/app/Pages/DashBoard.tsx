@@ -9,10 +9,11 @@ import { useRouter } from "next/navigation";
 const DashBoard = ({ children }: any) => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
+  const role = localStorage.getItem("role") || "";
   const handleClick = (moduleName: string) => {
     router.push(moduleName);
   };
-  const Menus = [
+  const MenusForUser = [
     {
       title: "Dashboard",
       src: "https://cdn0.iconfinder.com/data/icons/essentials-9/128/__Home-64.png",
@@ -49,6 +50,19 @@ const DashBoard = ({ children }: any) => {
       redirect: "/tablebooking",
     },
   ];
+
+  const MenusForAdmin = [
+    {
+      title: "Admin Dashboard",
+      src: "https://cdn0.iconfinder.com/data/icons/essentials-9/128/__Home-64.png",
+      redirect: "/admin",
+    },
+    {
+      title: "View All Restrurant",
+      src: "https://www.shutterstock.com/image-vector/16-map-pins-sign-location-260nw-211650847.jpg",
+      redirect: "/allrestrurant",
+    },
+  ];
   return (
     <>
       <Navbar />
@@ -56,7 +70,7 @@ const DashBoard = ({ children }: any) => {
         <Sidebar
           open={open}
           setOpen={setOpen}
-          menus={Menus}
+          menus={role !== "true" ? MenusForUser : MenusForAdmin}
           onModuleClick={handleClick}
         />
         <div className="p-7 text-2xl font-semibold flex-1 h-screen">

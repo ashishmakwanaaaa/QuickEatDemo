@@ -43,16 +43,14 @@ const Login = (): React.JSX.Element => {
     const url = "http://localhost:5000/auth/login";
     const res = await fetch(url, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
       },
       body: JSON.stringify(formData),
     });
     const data = await res.json();
     console.log(res);
-    console.log(data);
-
     if (res.status === 201) {
       StateContext.login = true;
       Swal.fire({
@@ -64,8 +62,9 @@ const Login = (): React.JSX.Element => {
       StateContext.ownername = data.user.ownername;
       StateContext.userid = data.user._id;
       console.log(StateContext);
+      localStorage.setItem("token", data.token);
       {
-        StateContext.login && router.push("/customerlist");
+        StateContext.login && router.push("/dashboard");
       }
     } else {
       Swal.fire({

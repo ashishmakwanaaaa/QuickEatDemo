@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Customer } from "./CustomerList";
 import { OrderDataType } from "./Orders";
 import Button from "@mui/material/Button";
@@ -8,18 +8,19 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import LoginContext from "../LoginState/logincontext";
-import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
+
+import { DataGrid } from "@mui/x-data-grid";
 import { Counter } from "./AdminDashboard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomerById } from "@/lib/actions/customerAction";
 import { initialStateTypeForCustomer } from "@/lib/reducers/customerSlice/customerReducers";
+import { fetchSpecificOrder } from "@/lib/actions/orderAction";
 
 const CustomerProfile = ({ id }: { id: string }) => {
   const [customerorder, setCustomerOrder] = useState<OrderDataType[]>([]);
-  const [specificorder, setSpecificOrder] = useState<OrderDataType>({});
   const [open, setOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
+  const specificorder = useSelector((state) => state.order.orders);
   const customer: Customer = useSelector(
     (state: initialStateTypeForCustomer) => state.customer.specificcustomer
   );
@@ -52,16 +53,8 @@ const CustomerProfile = ({ id }: { id: string }) => {
   console.log(sumoftotalAmount);
   const handleClickOpen = async (row: any) => {
     setOpen(true);
-    try {
-      const response = await fetch(
-        `http://localhost:5000/orders/getOneOrder/${row._id}`
-      );
-      const data = await response.json();
-      console.log(data);
-      setSpecificOrder(data.order);
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(fetchSpecificOrder(row._id));
+
     console.log(row);
   };
   const handleClose = () => {

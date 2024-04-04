@@ -15,16 +15,18 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import CancelIcon from "@mui/icons-material/Cancel";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSpecificOrder } from "@/lib/actions/orderAction";
 
 const OrderListPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [orders, setOrders] = useState<OrderDataType[]>([]);
-  const [specificorder, setSpecificOrder] = useState<OrderDataType>({});
   const [filteredRow, setFilteredRows] = useState([]);
   const [rows, setRows] = useState([]);
   const [data, setData] = useState([]);
   const StateContext = useContext(LoginContext);
-
+  const dispatch = useDispatch();
+  const specificorder = useSelector((state) => state.order.orders);
   console.log(StateContext);
   useEffect(() => {
     async function FetchAllPayment() {
@@ -77,16 +79,7 @@ const OrderListPage = () => {
   };
   const handleClickOpen = async (row: any) => {
     setOpen(true);
-    try {
-      const response = await fetch(
-        `http://localhost:5000/orders/getOneOrder/${row._id}`
-      );
-      const data = await response.json();
-      console.log(data);
-      setSpecificOrder(data.order);
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(fetchSpecificOrder(row._id));
     console.log(row);
   };
   console.log(specificorder);

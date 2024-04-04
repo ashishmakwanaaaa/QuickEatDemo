@@ -1,6 +1,18 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Res,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ChangePassworDto, UserLoginDto, UserSignUpDto } from './dto/auth.dto';
+import { Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('auth')
 export class AuthController {
@@ -12,8 +24,22 @@ export class AuthController {
   }
 
   @Post('/login')
-  login(@Body() userlogindto: UserLoginDto) {
-    return this.userservice.login(userlogindto);
+  async login(@Body() userlogindto: UserLoginDto, @Res() res: Response) {
+    const token = await this.userservice.login(userlogindto, res);
+
+    res
+      .cookie('token', token.token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+      })
+      .send({
+        status: 'ok',
+        message: token.message,
+        user: token.user,
+        token: token.token,
+      });
   }
 
   @Post('/forgotPassword')
@@ -55,7 +81,20 @@ export class AuthController {
   }
 
   @Patch('/updateProfile/:id')
-  updateProfile(@Body() usersignupdto: UserSignUpDto, @Param('id') id: string) {
-    return this.userservice.updateProfile(usersignupdto,id);
+  @UseInterceptors(FileInterceptor('image'))
+  updateProfile(
+    @UploadedFile() file,
+    @Body() usersignupdto,
+    @Body() base64Dto,
+    @Param('id') id: string,
+  ) {
+    console.log(file);
+
+    try {
+      const { base64 } = base64Dto;
+      const imagePath = `uploads/${id}-profile.jpg`; 
+      return this.userservice.updateProfile(usersignupdto, id,imagePath);
+    } catch (error) {}
+
   }
 }

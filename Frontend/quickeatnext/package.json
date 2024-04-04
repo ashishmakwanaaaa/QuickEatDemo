@@ -25,6 +25,8 @@
     "emailjs": "^4.0.3",
     "emailjs-com": "^3.2.0",
     "faker": "^6.6.6",
+    "jose": "^5.2.3",
+    "js-cookie": "^3.0.5",
     "jspdf": "^2.5.1",
     "next": "14.1.4",
     "react": "^18.2.0",
@@ -36,11 +38,12 @@
     "react-simple-typewriter": "^5.0.1",
     "react-typed": "^2.0.12",
     "redux": "^5.0.1",
-    "styled-components": "^6.1.8",
     "sweetalert2": "^11.10.6"
   },
   "devDependencies": {
     "@types/aos": "^3.0.7",
+    "@types/js-cookie": "^3.0.6",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

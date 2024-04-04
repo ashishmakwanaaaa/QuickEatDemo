@@ -48,7 +48,7 @@ const Navbar = () => {
 
   const [dropdown, setDropDown] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-
+  const role = localStorage.getItem("role") || "";
   const handleDropDown: () => void = () => {
     setDropDown(!dropdown);
   };
@@ -129,7 +129,9 @@ const Navbar = () => {
           <span className="text-black  font-bold text-3xl">
             Welcome ,
             <span className="text-orange-500 shadow-orange text-3xl">
-              {StateContext.restaurantname}
+              {role !== "true"
+                ? StateContext.restaurantname
+                : StateContext.ownername}
             </span>
           </span>
         </div>
@@ -224,16 +226,20 @@ const Navbar = () => {
           className="flex flex-row items-center space-x-4 ml-[-70px]"
           data-aos="fade-right"
         >
-          <Link href="/addcustomer">
-            <button className="bg-orange-500 border-2 border-orange-500 w-44  text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
-              Add Customer +
-            </button>
-          </Link>
-          <Link href="/additem">
-            <button className="bg-orange-500 border-2 border-orange-500 text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
-              Add Food +
-            </button>
-          </Link>
+          {role !== "true" && (
+            <>
+              <Link href="/addcustomer">
+                <button className="bg-orange-500 border-2 border-orange-500 w-44  text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
+                  Add Customer +
+                </button>
+              </Link>
+              <Link href="/additem">
+                <button className="bg-orange-500 border-2 border-orange-500 text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
+                  Add Food +
+                </button>
+              </Link>
+            </>
+          )}
           <div className="w-12 h-12 rounded-full ml-[36] bg-black text-white">
             <p
               onClick={handleDropDown}

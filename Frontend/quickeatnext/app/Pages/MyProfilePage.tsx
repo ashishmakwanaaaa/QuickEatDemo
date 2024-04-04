@@ -25,47 +25,46 @@ const MyProfilePage = () => {
   const handleImageChange = (e: { target: { files: any[] } }) => {
     try {
       const file = e.target.files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (reader.result) {
-            setImage(reader.result.toString());
-          }
-        };
-        reader.readAsDataURL(file);
-      }
+      setImage(file);
     } catch (error) {
       console.log(error);
     }
   };
   const updateProfile = async () => {
-    const requestData = {
-      ...owner,
-      image: image,
-    };
-    console.log(requestData);
-    try {
-      const response = await fetch(
-        `http://localhost:5000/auth/updateProfile/${owner._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestData),
-        }
-      );
-      const data = await response.json();
+    const reader = new FileReader();
+    reader.readAsDataURL(image);
+    reader.onload = async () => {
+      const base64Image = reader.result.split(",")[1];
 
-      if (response.ok) {
-        alert("success");
-      } else {
-        alert("error");
-        console.log(data.message);
+      // Include the base64 image string in the request data
+      const requestData = {
+        ...owner,
+        image: base64Image,
+      };
+      console.log(requestData )
+      try {
+        const response = await fetch(
+          `http://localhost:5000/auth/updateProfile/${owner._id}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+          }
+        );
+        const data = await response.json();
+
+        if (response.ok) {
+          alert("success");
+        } else {
+          alert("error");
+          console.log(data.message);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    };
   };
   useEffect(() => {
     async function fetchOwner() {
@@ -105,7 +104,7 @@ const MyProfilePage = () => {
               <div className="w-72 h-72 p-2 items-center">
                 <img
                   className="rounded-full w-72 h-72"
-                  src={image}
+                  src={owner.image}
                   alt="Profile"
                 />
               </div>

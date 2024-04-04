@@ -9,6 +9,7 @@ import customerReducers, {
   initialStateTypeForCustomer,
 } from "./customerSlice/customerReducers";
 import paymentReducers from "./paymentSlice/paymentReducers";
+import orderReducers from "./orderSlice/orderReducers";
 
 const rootReducers: Reducer<{
   item: initialStateTypeForItems;
@@ -20,6 +21,7 @@ const rootReducers: Reducer<{
   category: categoryReducers,
   customer: customerReducers,
   payment: paymentReducers,
+  order: orderReducers,
 });
 
 export default rootReducers;

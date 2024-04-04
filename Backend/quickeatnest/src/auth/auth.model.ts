@@ -24,6 +24,8 @@ export class User {
   })
   image: string;
 
+  @Prop({ default: false })
+  isAdmin: boolean;
 
   @Prop({ default: Date.now })
   date: Date;

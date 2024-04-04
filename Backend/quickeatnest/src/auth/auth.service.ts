@@ -15,7 +15,7 @@ import * as nodemailer from 'nodemailer';
 import { JwtService } from '@nestjs/jwt';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +40,7 @@ export class AuthService {
         ownername,
         emailid,
         password,
-        confirmpassowrd,
+        confirmpassword,
         address,
       } = signupdto;
       let user = await this.usermodel.findOne({ emailid });
@@ -53,7 +53,7 @@ export class AuthService {
         ownername,
         emailid,
         password: hashedpassword,
-        confirmpassword: confirmpassowrd,
+        confirmpassword: confirmpassword,
         address,
       });
       await user.save();
@@ -64,7 +64,7 @@ export class AuthService {
     }
   }
 
-  async login(logindto: UserLoginDto) {
+  async login(logindto: UserLoginDto, res: Response) {
     try {
       const { emailid, password } = logindto;
       let user = await this.usermodel.findOne({ emailid });
@@ -76,7 +76,11 @@ export class AuthService {
       if (!decode) {
         throw new HttpException('Wrong Password', HttpStatus.UNAUTHORIZED);
       }
-      const token = await this.jwtService.sign({ id: user._id });
+      const token = await this.jwtService.sign({
+        id: user._id,
+        isadmin: user.isAdmin,
+      });
+
       return { message: 'Login Successfully', user, token };
     } catch (error) {
       console.log(error);
@@ -182,45 +186,28 @@ export class AuthService {
     }
   }
 
-  async updateProfile(usersignupdto: UserSignUpDto, id: string) {
-    console.log(usersignupdto);
+  async updateProfile(usersignupdto: UserSignUpDto, id: string, imagePath) {
+    console.log('User SignUP DTO', usersignupdto);
     try {
-      const { image } = usersignupdto;
+
       let user = await this.usermodel.findById(id);
       if (!user) {
         throw new NotFoundException();
       }
 
-      // Handle file uploads
-      if (image) {
-        usersignupdto.image = this.handleFileUpload(image);
-      }
-
-      // Update user document
-      const updatedUser = await this.usermodel.findByIdAndUpdate(
+      let updateuser = await this.usermodel.findByIdAndUpdate(
         id,
-        usersignupdto,
+        {
+          ...usersignupdto,
+          image: imagePath,
+        },
         { new: true },
       );
-
-      return { message: 'Profile Updated Successfully', user: updatedUser };
+      await updateuser.save();
+      return { message: 'Profile Updated Successfully', updateuser };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('Failed to update profile');
     }
-  }
-
-  private handleFileUpload(file: File): string {
-    const randomName = Array(32)
-      .fill(null)
-      .map(() => Math.round(Math.random() * 16).toString(16))
-      .join('');
-    return `${randomName}${this.editFileName(file.originalname)}`;
-  }
-
-  private editFileName(filename: string): string {
-    const name = filename.split('.')[0];
-    const fileExtName = extname(filename);
-    return `${name}${fileExtName}`;
   }
 }

@@ -122,6 +122,7 @@ export class OrdersService {
 
   async getSingleOrder(id: string) {
     try {
+      console.log(id);
       let order = await this.ordermode.findById(id);
       if (!order) {
         throw new NotFoundException();

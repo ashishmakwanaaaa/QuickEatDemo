@@ -76,7 +76,7 @@ const Sidebar = ({
               />
               <span
                 onClick={() => handlemoduleClick(menu.redirect)}
-                className={`text-xl font-[Poppins] ${!open && "hidden"} ${
+                className={`text-md font-[Poppins] ${!open && "hidden"} ${
                   Location === menu.redirect && " text-black"
                 } origin-left duration-200 ${!open && "scale-0"}`}
               >
