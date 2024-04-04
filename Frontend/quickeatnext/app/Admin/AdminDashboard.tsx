@@ -358,12 +358,12 @@ const AdminDashboard = () => {
               </div>
 
             </div>
-            <div className="w-[500px] h-[700px] mr-16">
+            <div className=" flex flex-col gap-2 w-[500px] h-[700px] mr-16">
             <Bar data={dataforbarchart} options={optionsforbarchart} />
-            </div>
             <h1 className="text-center  capitalize text-orange-600 font-bold">
               Monthly Sales Record
             </h1>
+            </div>
           </div>
         </div>
       </div>

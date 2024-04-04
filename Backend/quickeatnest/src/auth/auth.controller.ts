@@ -13,6 +13,17 @@ import { AuthService } from './auth.service';
 import { ChangePassworDto, UserLoginDto, UserSignUpDto } from './dto/auth.dto';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+
+
+const storage = diskStorage({
+  destination: './uploads',
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
+});
+
 
 @Controller('auth')
 export class AuthController {
@@ -79,22 +90,21 @@ export class AuthController {
   getUser(@Param('name') name: string) {
     return this.userservice.getUser(name);
   }
+  @Post('/upload')
+  @UseInterceptors(FileInterceptor('file', { storage }))
+  uploadFile(@UploadedFile() file) {
+    console.log(file);
+    return { message: 'File uploaded successfully!', filename: file.filename };
+  }
+
 
   @Patch('/updateProfile/:id')
-  @UseInterceptors(FileInterceptor('image'))
   updateProfile(
-    @UploadedFile() file,
     @Body() usersignupdto,
-    @Body() base64Dto,
     @Param('id') id: string,
   ) {
-    console.log(file);
-
-    try {
-      const { base64 } = base64Dto;
-      const imagePath = `uploads/${id}-profile.jpg`; 
-      return this.userservice.updateProfile(usersignupdto, id,imagePath);
+      return this.userservice.updateProfile(usersignupdto, id);
     } catch (error) {}
 
-  }
+  
 }

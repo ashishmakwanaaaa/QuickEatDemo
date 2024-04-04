@@ -186,7 +186,7 @@ export class AuthService {
     }
   }
 
-  async updateProfile(usersignupdto: UserSignUpDto, id: string, imagePath) {
+  async updateProfile(usersignupdto: UserSignUpDto, id: string) {
     console.log('User SignUP DTO', usersignupdto);
     try {
 
@@ -198,8 +198,7 @@ export class AuthService {
       let updateuser = await this.usermodel.findByIdAndUpdate(
         id,
         {
-          ...usersignupdto,
-          image: imagePath,
+          usersignupdto
         },
         { new: true },
       );

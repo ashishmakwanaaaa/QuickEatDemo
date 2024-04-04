@@ -17,6 +17,7 @@ const Login = (): React.JSX.Element => {
   const router = useRouter();
 
   const StateContext = useContext(LoginContext);
+  const { dispatch } = StateContext;
 
   const [formData, setFormData] = useState<{
     emailid: string;
@@ -52,15 +53,31 @@ const Login = (): React.JSX.Element => {
     const data = await res.json();
     console.log(res);
     if (res.status === 201) {
+      dispatch({
+        type: "LOGIN", payload: {
+          login: true,
+          restaurantname: data.user.restaurantname,
+          ownername: data.user.ownername,
+          userid: data.user._id,
+          image: data.user.image,
+        }
+      })
       StateContext.login = true;
       Swal.fire({
         icon: "success",
         title: "Successfully Login",
         timer: 3000,
       });
-      StateContext.restaurantname = data.user.restaurantname;
-      StateContext.ownername = data.user.ownername;
-      StateContext.userid = data.user._id;
+      console.log("data", data)
+      //
+
+
+      // StateContext.restaurantname = data.user.restaurantname;
+      // StateContext.ownername = data.user.ownername;
+      // StateContext.userid = data.user._id;
+      // StateContext.image = data.user.image;
+
+
       console.log(StateContext);
       localStorage.setItem("token", data.token);
       {

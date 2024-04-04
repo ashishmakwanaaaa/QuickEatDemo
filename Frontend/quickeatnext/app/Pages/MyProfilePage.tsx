@@ -2,13 +2,15 @@
 
 import Navbar from "../components/Navbar";
 import { useContext, useEffect, useState } from "react";
-import StateLogin from "../LoginState/logincontext";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Swal from "sweetalert2";
+import LoginContext from "../LoginState/logincontext";
+
+
 const MyProfilePage = () => {
-  const [image, setImage] = useState<string>(
-    "https://as1.ftcdn.net/v2/jpg/06/33/54/78/1000_F_633547842_AugYzexTpMJ9z1YcpTKUBoqBF0CUCk10.jpg"
+  const [image, setImage] = useState<File | null>(
+    null
   );
   const [owner, setOwner] = useState<{
     _id: string;
@@ -21,7 +23,9 @@ const MyProfilePage = () => {
     image: string;
   }>({});
   console.log(typeof image);
-  const StateContext = useContext(StateLogin);
+  const StateContext = useContext(LoginContext);
+  const { dispatch } = StateContext;
+  console.log("stateContext", StateContext);
   const handleImageChange = (e: { target: { files: any[] } }) => {
     try {
       const file = e.target.files?.[0];
@@ -30,41 +34,47 @@ const MyProfilePage = () => {
       console.log(error);
     }
   };
-  const updateProfile = async () => {
-    const reader = new FileReader();
-    reader.readAsDataURL(image);
-    reader.onload = async () => {
-      const base64Image = reader.result.split(",")[1];
+  const updateProfile = async (e) => {
+    e.preventDefault()
+    console.log(image)
+    if (image) {
+      const formData = new FormData();
+      const filename = Date.now() + image.name;
+      formData.append("name", filename);
+      formData.append("file", image);
+      const response = await fetch('http://localhost:5000/auth/upload', {
+        method: 'POST',
+        body: formData
+      })
+      owner.image = filename;
+      const data = await response.json();
+    }
 
-      // Include the base64 image string in the request data
-      const requestData = {
-        ...owner,
-        image: base64Image,
-      };
-      console.log(requestData )
-      try {
-        const response = await fetch(
-          `http://localhost:5000/auth/updateProfile/${owner._id}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-          }
-        );
-        const data = await response.json();
-
-        if (response.ok) {
-          alert("success");
-        } else {
-          alert("error");
-          console.log(data.message);
+    try {
+      const response = await fetch(
+        `http://localhost:5000/auth/updateProfile/${owner._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(owner),
         }
-      } catch (error) {
-        console.log(error);
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("success");
+        // StateContext.image = owner.image;
+        dispatch({ type: "UPDATE_IMAGE", payload: owner.image })
+      } else {
+        alert("error");
+        console.log(data.message);
       }
-    };
+    } catch (error) {
+      console.log(error);
+    }
+
   };
   useEffect(() => {
     async function fetchOwner() {
@@ -102,11 +112,21 @@ const MyProfilePage = () => {
                 name=""
               />
               <div className="w-72 h-72 p-2 items-center">
-                <img
-                  className="rounded-full w-72 h-72"
-                  src={owner.image}
-                  alt="Profile"
-                />
+                {
+                  StateContext.image && !image
+                    ?
+
+                    <img className="rounded-full" src={`http://localhost:5000/uploads/` + StateContext.image} alt="" />
+
+                    : <>
+
+                      <img
+                        className="rounded-full w-72 h-72"
+                        src={URL.createObjectURL(image)}
+                        alt="Profile"
+                      />
+                    </>
+                }
               </div>
               <label
                 htmlFor="file-upload"
@@ -208,3 +228,4 @@ const MyProfilePage = () => {
 };
 
 export default MyProfilePage;
+

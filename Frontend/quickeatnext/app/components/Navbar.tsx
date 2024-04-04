@@ -240,15 +240,24 @@ const Navbar = () => {
               </Link>
             </>
           )}
-          <div className="w-12 h-12 rounded-full ml-[36] bg-black text-white">
+          {
+            StateContext.image ?
+            <div className="w-12 h-12 rounded-full ml-[36]  text-white" onClick={handleDropDown}
+            >
+
+              <img src={`http://localhost:5000/uploads/` + StateContext.image} alt=""/>
+            </div>:
+
+            <div className="w-12 h-12 rounded-full ml-[36] bg-black text-white">
             <p
               onClick={handleDropDown}
               className="text-center text-2xl  mt-2 cursor-pointer"
-            >
+              >
               {StateContext.ownername[0]}
             </p>
           </div>
-          {dropdown && (
+            }
+          {dropdown &&  StateContext.image && (
             <div className="absolute top-full bg-white border border-gray-300 rounded-md shadow-lg mt-4 z-10 left-[220px] transform -translate-x-1/2">
               <div className="w-72 h-full flex flex-col p-1 ">
                 <div className=" w-full h-12 ">
@@ -258,12 +267,12 @@ const Navbar = () => {
                     alt=""
                   />
                 </div>
-                <div className="w-16 h-16 rounded-full ml-[36] mt-[-14px] bg-black m-auto text-white">
+                <div className="w-16 h-16 rounded-full ml-[36] mt-[-20px] m-auto text-white">
                   <p
                     onClick={handleDropDown}
-                    className=" text-center text-2xl  mt-4 cursor-pointer"
+                    className=" text-center text-2xl mt-1 cursor-pointer"
                   >
-                    {StateContext.ownername[0]}
+                    <img className="rounded-full" src={`http://localhost:5000/uploads/` + StateContext.image} alt=""/>
                   </p>
                 </div>
 
