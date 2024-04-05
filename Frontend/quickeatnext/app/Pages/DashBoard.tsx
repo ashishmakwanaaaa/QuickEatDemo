@@ -10,6 +10,7 @@ const DashBoard = ({ children }: any) => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const role = localStorage.getItem("role") || "";
+  console.log(role);
   const handleClick = (moduleName: string) => {
     router.push(moduleName);
   };
@@ -59,7 +60,7 @@ const DashBoard = ({ children }: any) => {
     },
     {
       title: "View All Restrurant",
-      src: "https://www.shutterstock.com/image-vector/16-map-pins-sign-location-260nw-211650847.jpg",
+      src: "https://cdn3.iconfinder.com/data/icons/mail-useful-icons/32/location-512.png",
       redirect: "/allrestrurant",
     },
   ];
@@ -70,7 +71,7 @@ const DashBoard = ({ children }: any) => {
         <Sidebar
           open={open}
           setOpen={setOpen}
-          menus={role !== "true" ? MenusForUser : MenusForAdmin}
+          menus={role === "User" ? MenusForUser : MenusForAdmin}
           onModuleClick={handleClick}
         />
         <div className="p-7 text-2xl font-semibold flex-1 h-screen">

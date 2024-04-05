@@ -11,6 +11,7 @@ export async function middleware(request: NextRequest) {
     algorithms: ["HS256"],
   });
   const role = decode.payload.isadmin;
+  console.log("role", role);
   localStorage.setItem("role", `${role}`);
   if (role) {
     return NextResponse.redirect(new URL("/dashboard", request.url));

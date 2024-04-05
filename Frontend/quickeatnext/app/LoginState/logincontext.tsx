@@ -2,49 +2,57 @@
 
 import { createContext, Context, useReducer, ReactNode } from "react";
 
-
 interface LoginContextType {
   login: boolean;
   restaurantname: string;
   ownername: string;
   userid: string;
   image?: string;
+  resimage?: string;
 }
-
 
 interface LoginProviderProps {
   children: ReactNode;
 }
 type Action =
-  | { type: 'LOGIN'; payload: LoginContextType }
-  | { type: 'LOGOUT' }
-  | { type: 'UPDATE_IMAGE'; payload: string };
+  | { type: "LOGIN"; payload: LoginContextType }
+  | { type: "LOGOUT" }
+  | {
+      type: "UPDATE_IMAGE";
+      payload: { ownerimage: string; restrurantimage: string };
+    };
 
 const initialState: LoginContextType = {
   login: false,
   restaurantname: "",
   ownername: "",
   userid: "",
-  image: ""
+  image: "",
+  resimage: "",
 };
 
-const loginReducer = (state: LoginContextType, action: Action): LoginContextType => {
+const loginReducer = (
+  state: LoginContextType,
+  action: Action
+): LoginContextType => {
   switch (action.type) {
-    case 'LOGIN':
+    case "LOGIN":
       return action.payload;
-    case 'LOGOUT':
+    case "LOGOUT":
       return initialState;
-    case 'UPDATE_IMAGE':
+    case "UPDATE_IMAGE":
       return {
         ...state,
-        image: action.payload
+        image: action.payload.ownerimage,
+        resimage: action.payload.restrurantimage,
       };
     default:
       return state;
   }
 };
 
-const LoginContext: Context<LoginContextType> = createContext<LoginContextType>(initialState);
+const LoginContext: Context<LoginContextType> =
+  createContext<LoginContextType>(initialState);
 
 export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(loginReducer, initialState);

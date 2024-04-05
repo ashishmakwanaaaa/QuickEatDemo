@@ -49,6 +49,7 @@ const Navbar = () => {
   const [dropdown, setDropDown] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const role = localStorage.getItem("role") || "";
+  console.log(role);
   const handleDropDown: () => void = () => {
     setDropDown(!dropdown);
   };
@@ -129,7 +130,7 @@ const Navbar = () => {
           <span className="text-black  font-bold text-3xl">
             Welcome ,
             <span className="text-orange-500 shadow-orange text-3xl">
-              {role !== "true"
+              {role === "User"
                 ? StateContext.restaurantname
                 : StateContext.ownername}
             </span>
@@ -226,7 +227,7 @@ const Navbar = () => {
           className="flex flex-row items-center space-x-4 ml-[-70px]"
           data-aos="fade-right"
         >
-          {role !== "true" && (
+          {role !== "Admin" && (
             <>
               <Link href="/addcustomer">
                 <button className="bg-orange-500 border-2 border-orange-500 w-44  text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
@@ -240,25 +241,33 @@ const Navbar = () => {
               </Link>
             </>
           )}
-          {
-            StateContext.image ?
-            <div className="w-12 h-12 rounded-full ml-[36]  text-white" onClick={handleDropDown}
-            >
-
-              <img src={`http://localhost:5000/uploads/` + StateContext.image} alt=""/>
-            </div>:
-
-            <div className="w-12 h-12 rounded-full ml-[36] bg-black text-white">
-            <p
+          {StateContext.image ? (
+            <div
+              className="w-12 h-12 rounded-full ml-[36] cursor-pointer "
               onClick={handleDropDown}
-              className="text-center text-2xl  mt-2 cursor-pointer"
+            >
+              <img
+                className="rounded-full"
+                src={`http://localhost:5000/uploads/` + StateContext.image}
+                alt=""
+              />
+            </div>
+          ) : (
+            <div className="w-12 h-12 cursor-pointer rounded-full ml-[36] bg-black text-white">
+              <p
+                onClick={handleDropDown}
+                className="text-center text-2xl  mt-2 cursor-pointer"
               >
-              {StateContext.ownername[0]}
-            </p>
-          </div>
-            }
-          {dropdown &&  StateContext.image && (
-            <div className="absolute top-full bg-white border border-gray-300 rounded-md shadow-lg mt-4 z-10 left-[220px] transform -translate-x-1/2">
+                {StateContext.ownername[0]}
+              </p>
+            </div>
+          )}
+          {dropdown && StateContext.image && (
+            <div
+              className={`absolute top-full bg-white border border-gray-300 rounded-md shadow-lg mt-6 z-10 ${
+                role === "Admin" ? "left-[-110px]" : "left-[221px]"
+              } transform -translate-x-1/2`}
+            >
               <div className="w-72 h-full flex flex-col p-1 ">
                 <div className=" w-full h-12 ">
                   <img
@@ -272,7 +281,13 @@ const Navbar = () => {
                     onClick={handleDropDown}
                     className=" text-center text-2xl mt-1 cursor-pointer"
                   >
-                    <img className="rounded-full" src={`http://localhost:5000/uploads/` + StateContext.image} alt=""/>
+                    <img
+                      className="rounded-full"
+                      src={
+                        `http://localhost:5000/uploads/` + StateContext.image
+                      }
+                      alt=""
+                    />
                   </p>
                 </div>
 

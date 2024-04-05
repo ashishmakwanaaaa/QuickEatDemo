@@ -187,9 +187,9 @@ export class AuthService {
   }
 
   async updateProfile(usersignupdto: UserSignUpDto, id: string) {
-    console.log('User SignUP DTO', usersignupdto);
+    // console.log('User SignUP DTO', usersignupdto);
+    const { image, resimage } = usersignupdto;
     try {
-
       let user = await this.usermodel.findById(id);
       if (!user) {
         throw new NotFoundException();
@@ -198,11 +198,14 @@ export class AuthService {
       let updateuser = await this.usermodel.findByIdAndUpdate(
         id,
         {
-          usersignupdto
+          ...usersignupdto,
+          image,
+          resimage,
         },
         { new: true },
       );
       await updateuser.save();
+      console.log(updateuser);
       return { message: 'Profile Updated Successfully', updateuser };
     } catch (error) {
       console.log(error);

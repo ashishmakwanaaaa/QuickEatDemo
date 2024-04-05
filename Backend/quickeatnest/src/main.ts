@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import * as express from 'express';
+import * as bodyparser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   dotenv.config();
@@ -14,7 +15,8 @@ async function bootstrap() {
   });
   // Increase payload size limit
   app.use(express.json({ limit: '50mb' }));
-
+  app.use(bodyparser.urlencoded({ extended: true }));
+  app.use(bodyparser.json());
   app.use(cookieParser());
   const port = process.env.PORT;
   await app.listen(port);

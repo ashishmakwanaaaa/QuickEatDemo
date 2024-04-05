@@ -24,6 +24,8 @@ export class UserSignUpDto {
   // @IsNotEmpty()
   image: Multer.File;
 
+  resimage: Multer.File;
+
   isAdmin: boolean;
 }
 

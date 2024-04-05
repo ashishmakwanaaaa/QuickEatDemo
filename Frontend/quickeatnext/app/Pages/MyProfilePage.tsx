@@ -6,12 +6,13 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Swal from "sweetalert2";
 import LoginContext from "../LoginState/logincontext";
-
+import { useRouter } from "next/navigation";
 
 const MyProfilePage = () => {
-  const [image, setImage] = useState<File | null>(
-    null
-  );
+  const [image, setImage] = useState<File | null>(null);
+  const role = localStorage.getItem("role") || "";
+
+  const [resimage, setresImage] = useState<File | null>(null);
   const [owner, setOwner] = useState<{
     _id: string;
     restaurantname: string;
@@ -21,11 +22,13 @@ const MyProfilePage = () => {
     password: string;
     confirmpassowrd: string;
     image: string;
+    resimage: string;
   }>({});
   console.log(typeof image);
   const StateContext = useContext(LoginContext);
   const { dispatch } = StateContext;
   console.log("stateContext", StateContext);
+  const router = useRouter();
   const handleImageChange = (e: { target: { files: any[] } }) => {
     try {
       const file = e.target.files?.[0];
@@ -34,20 +37,38 @@ const MyProfilePage = () => {
       console.log(error);
     }
   };
-  const updateProfile = async (e) => {
-    e.preventDefault()
-    console.log(image)
-    if (image) {
+  const handleImageChange1 = (e: { target: { files: any[] } }) => {
+    try {
+      const file1 = e.target.files?.[0];
+      setresImage(file1);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const updateProfile = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    console.log(image, resimage);
+    if (image || resimage) {
       const formData = new FormData();
-      const filename = Date.now() + image.name;
-      formData.append("name", filename);
-      formData.append("file", image);
-      const response = await fetch('http://localhost:5000/auth/upload', {
-        method: 'POST',
-        body: formData
-      })
-      owner.image = filename;
+      if (image) {
+        const filename = Date.now() + image.name;
+        console.log(filename);
+        formData.append("name", filename);
+        formData.append("files", image);
+      }
+      if (resimage) {
+        const filename1 = Date.now() + resimage.name;
+        formData.append("name1", filename1);
+        formData.append("files", resimage);
+      }
+      const response = await fetch("http://localhost:5000/auth/upload", {
+        method: "POST",
+        body: formData,
+      });
       const data = await response.json();
+      owner.image = data.filenames[0];
+      owner.resimage = data.filenames[1];
+      console.log(data);
     }
 
     try {
@@ -64,9 +85,20 @@ const MyProfilePage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert("success");
-        // StateContext.image = owner.image;
-        dispatch({ type: "UPDATE_IMAGE", payload: owner.image })
+        Swal.fire({
+          title: "Profile Update Successfully",
+          icon: "success",
+          timer: 1000,
+        });
+        {
+          StateContext.login && role === "User"
+            ? router.push("/dashboard")
+            : router.push("/admin");
+        }
+        dispatch({
+          type: "UPDATE_IMAGE",
+          payload: { ownerimage: owner.image, restrurantimage: owner.resimage },
+        });
       } else {
         alert("error");
         console.log(data.message);
@@ -74,7 +106,6 @@ const MyProfilePage = () => {
     } catch (error) {
       console.log(error);
     }
-
   };
   useEffect(() => {
     async function fetchOwner() {
@@ -100,40 +131,82 @@ const MyProfilePage = () => {
           My Profile
         </h1>
         <hr className="border mt-3" />
-        <div className="flex flex-row gap-16 mx-auto justify-start items-start">
-          <div className="flex flex-row gap-6 w-2/3 mt-10 justify-start">
+        <div className="flex flex-row border border-gray-300 rounded-md gap-6 justify-center items-center">
+          <div className="flex flex-row  w-[250px] justify-center items-center">
             {/* Upload Photo Section */}
-            <div className="flex flex-col gap-6">
-              <input
-                onChange={handleImageChange}
-                id="file-upload"
-                className="hidden"
-                type="file"
-                name=""
-              />
-              <div className="w-72 h-72 p-2 items-center">
-                {
-                  StateContext.image && !image
-                    ?
-
-                    <img className="rounded-full" src={`http://localhost:5000/uploads/` + StateContext.image} alt="" />
-
-                    : <>
-
-                      <img
-                        className="rounded-full w-72 h-72"
-                        src={URL.createObjectURL(image)}
-                        alt="Profile"
-                      />
+            <div className="flex flex-col justify-center items-center gap-16">
+              <div className="flex flex-col w-[150px] h-[150px]">
+                {/* Image 1 */}
+                <input
+                  onChange={handleImageChange}
+                  id="file-upload"
+                  className="hidden"
+                  type="file"
+                  name=""
+                />
+                <div className="w-full h-full p-2 items-center">
+                  {StateContext.image && !image ? (
+                    <img
+                      className="rounded-full"
+                      src={`http://localhost:5000/uploads/${StateContext.image}`}
+                      alt=""
+                    />
+                  ) : (
+                    <>
+                      {image && (
+                        <img
+                          className="rounded-full"
+                          src={URL.createObjectURL(image)}
+                          alt="Profile"
+                        />
+                      )}
                     </>
-                }
+                  )}
+                </div>
+                <label
+                  htmlFor="file-upload"
+                  className="bg-blue-500 font-[Poppins] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+                >
+                  Upload Photo
+                </label>
               </div>
-              <label
-                htmlFor="file-upload"
-                className="bg-blue-500 font-[Poppins] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
-              >
-                Upload Photo
-              </label>
+              {role === "User" && (
+                <div className="flex flex-col w-[250px] h-[220px]">
+                  {/* Image 2 */}
+                  <input
+                    onChange={handleImageChange1}
+                    id="file-upload-1"
+                    className="hidden"
+                    type="file"
+                    name=""
+                  />
+                  <div className="w-full h-full p-2 items-center">
+                    {StateContext.resimage && !resimage ? (
+                      <img
+                        className="rounded-md"
+                        src={`http://localhost:5000/uploads/${StateContext.resimage}`}
+                        alt=""
+                      />
+                    ) : (
+                      <>
+                        {resimage && (
+                          <img
+                            className="rounded-md"
+                            src={URL.createObjectURL(resimage)}
+                            alt="Profile"
+                          />
+                        )}
+                      </>
+                    )}
+                  </div>
+                  <label
+                    htmlFor="file-upload-1"
+                    className="bg-blue-500 font-[Poppins] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+                  >
+                    Upload Restaurant Image
+                  </label>
+                </div>
+              )}
             </div>
           </div>
           {/* Profile Details Section */}
@@ -228,4 +301,3 @@ const MyProfilePage = () => {
 };
 
 export default MyProfilePage;
-

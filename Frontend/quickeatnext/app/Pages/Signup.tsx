@@ -18,14 +18,14 @@ const SignUp = (): React.JSX.Element => {
     address: string;
     emailid: string;
     password: string;
-    confirmpassowrd: string;
+    confirmpassword: string;
   }>({
     restaurantname: "",
     ownername: "",
     address: "",
     emailid: "",
     password: "",
-    confirmpassowrd: "",
+    confirmpassword: "",
   });
   useEffect(() => {
     AOS.init({
@@ -71,7 +71,7 @@ const SignUp = (): React.JSX.Element => {
         address: "",
         emailid: "",
         password: "",
-        confirmpassowrd: "",
+        confirmpassword: "",
       });
       router.push("/login");
     } else {
@@ -91,7 +91,7 @@ const SignUp = (): React.JSX.Element => {
     e.preventDefault();
     try {
       let password = formData.password;
-      let confirmpassword = formData.confirmpassowrd;
+      let confirmpassword = formData.confirmpassword;
 
       if (password !== confirmpassword) {
         Swal.fire({
@@ -271,9 +271,9 @@ const SignUp = (): React.JSX.Element => {
                 type="password"
                 id="restaurantPsw"
                 name="restaurantPsw"
-                value={formData.confirmpassowrd}
+                value={formData.confirmpassword}
                 onChange={(e) =>
-                  setFormData({ ...formData, confirmpassowrd: e.target.value })
+                  setFormData({ ...formData, confirmpassword: e.target.value })
                 }
                 placeholder="Enter Confirm Password"
                 className="p-2 rounded-md border-2 border-orange-500 w-full"

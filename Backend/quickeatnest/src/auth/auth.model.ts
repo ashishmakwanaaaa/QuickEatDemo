@@ -24,6 +24,12 @@ export class User {
   })
   image: string;
 
+  @Prop({
+    default:
+      'https://as1.ftcdn.net/v2/jpg/06/33/54/78/1000_F_633547842_AugYzexTpMJ9z1YcpTKUBoqBF0CUCk10.jpg',
+  })
+  resimage: string;
+
   @Prop({ default: false })
   isAdmin: boolean;
 

@@ -54,35 +54,33 @@ const Login = (): React.JSX.Element => {
     console.log(res);
     if (res.status === 201) {
       dispatch({
-        type: "LOGIN", payload: {
+        type: "LOGIN",
+        payload: {
           login: true,
           restaurantname: data.user.restaurantname,
           ownername: data.user.ownername,
           userid: data.user._id,
           image: data.user.image,
-        }
-      })
+          resimage: data.user.resimage,
+        },
+      });
       StateContext.login = true;
       Swal.fire({
         icon: "success",
         title: "Successfully Login",
         timer: 3000,
       });
-      console.log("data", data)
+      console.log("data", data);
       //
-
 
       // StateContext.restaurantname = data.user.restaurantname;
       // StateContext.ownername = data.user.ownername;
       // StateContext.userid = data.user._id;
       // StateContext.image = data.user.image;
 
-
       console.log(StateContext);
-      localStorage.setItem("token", data.token);
-      {
-        StateContext.login && router.push("/dashboard");
-      }
+      localStorage.setItem("role", data.user.isAdmin ? "Admin" : "User");
+      router.push("/");
     } else {
       Swal.fire({
         icon: "error",

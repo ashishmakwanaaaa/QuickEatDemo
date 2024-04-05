@@ -7,23 +7,24 @@ import {
   Post,
   Res,
   UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ChangePassworDto, UserLoginDto, UserSignUpDto } from './dto/auth.dto';
 import { Response } from 'express';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-
+import { Multer } from 'multer';
 
 const storage = diskStorage({
   destination: './uploads',
   filename: (req, file, cb) => {
-    cb(null, req.body.name);
+    const uniqueFilename = Date.now() + extname(file.originalname);
+    cb(null, uniqueFilename);
   },
 });
-
 
 @Controller('auth')
 export class AuthController {
@@ -91,20 +92,20 @@ export class AuthController {
     return this.userservice.getUser(name);
   }
   @Post('/upload')
-  @UseInterceptors(FileInterceptor('file', { storage }))
-  uploadFile(@UploadedFile() file) {
-    console.log(file);
-    return { message: 'File uploaded successfully!', filename: file.filename };
+  @UseInterceptors(
+    FilesInterceptor('files', 2, {
+      storage,
+    }),
+  )
+  uploadFile(@UploadedFiles() files: Multer.File[]) {
+    console.log(files);
+    const filenames = files.map((file) => file.filename);
+    return { message: 'File uploaded successfully!', filenames };
   }
 
-
   @Patch('/updateProfile/:id')
-  updateProfile(
-    @Body() usersignupdto,
-    @Param('id') id: string,
-  ) {
-      return this.userservice.updateProfile(usersignupdto, id);
-    } catch (error) {}
-
-  
+  updateProfile(@Body() usersignupdto, @Param('id') id: string) {
+    return this.userservice.updateProfile(usersignupdto, id);
+  }
+  catch(error) {}
 }
