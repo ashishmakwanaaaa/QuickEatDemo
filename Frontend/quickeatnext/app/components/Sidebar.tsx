@@ -24,6 +24,7 @@ const Sidebar = ({
     onModuleClick(route);
   };
   const Location = usePathname();
+  const role = localStorage.getItem("role");
   console.log(Location);
   return (
     <div
@@ -76,7 +77,9 @@ const Sidebar = ({
               />
               <span
                 onClick={() => handlemoduleClick(menu.redirect)}
-                className={`text-md font-[Poppins] ${!open && "hidden"} ${
+                className={`${
+                  role !== "Admin" ? "text-md" : "text-sm"
+                } font-[Poppins] ${!open && "hidden"} ${
                   Location === menu.redirect && " text-black"
                 } origin-left duration-200 ${!open && "scale-0"}`}
               >

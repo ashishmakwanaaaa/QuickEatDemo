@@ -15,15 +15,17 @@ const SignUp = (): React.JSX.Element => {
   const [formData, setFormData] = useState<{
     restaurantname: string;
     ownername: string;
-    address: string;
     emailid: string;
+    lat: string;
+    long: string;
     password: string;
     confirmpassword: string;
   }>({
     restaurantname: "",
     ownername: "",
-    address: "",
     emailid: "",
+    lat: "",
+    long: "",
     password: "",
     confirmpassword: "",
   });
@@ -65,15 +67,18 @@ const SignUp = (): React.JSX.Element => {
         timer: 1000,
       });
 
-      setFormData({
-        restaurantname: "",
-        ownername: "",
-        address: "",
-        emailid: "",
-        password: "",
-        confirmpassword: "",
-      });
-      router.push("/login");
+      // setFormData({
+      //   restaurantname: "",
+      //   ownername: "",
+      //   address: "",
+      //   emailid: "",
+      //   password: "",
+      //   city: "",
+      //   lat: "",
+      //   long: "",
+      //   confirmpassword: "",
+      // });
+      // router.push("/login");
     } else {
       Swal.fire({
         icon: "error",
@@ -101,7 +106,21 @@ const SignUp = (): React.JSX.Element => {
           timer: 3000,
         });
       } else {
-        addUser();
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            const { latitude, longitude } = pos.coords;
+            console.log(typeof latitude, typeof longitude);
+            setFormData({
+              ...formData,
+              lat: latitude.toString(),
+              long: longitude.toString(),
+            });
+            addUser();
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
       }
     } catch (error) {
       window.alert(error);
@@ -114,13 +133,13 @@ const SignUp = (): React.JSX.Element => {
       <div className="fixed inset-0 z-0">
         <video
           ref={videoRef}
-          className="w-full h-full object-cover opacity-90 "
+          className="w-full h-full  object-cover opacity-90 "
           autoPlay
           loop
           muted
         >
           <source
-            src="https://player.vimeo.com/external/392581454.sd.mp4?s=21f79ea157a661627f9850c1b17e53b537f5fb32&profile_id=164&oauth2_token_id=57447761"
+            src="https://media.istockphoto.com/id/1162153594/video/cook-sprinkling-salt-on-skillet.mp4?s=mp4-640x640-is&k=20&c=k7LOi6u2Z5-YzHikFhbF2e0FqtpwUVWEEkwtMCMiCSM="
             type="video/mp4"
           />
         </video>
@@ -179,26 +198,9 @@ const SignUp = (): React.JSX.Element => {
               />
             </div>
           </div>
+
           <div
-            className="flex flex-col gap-2 items-start w-full"
-            data-aos="fade-right"
-          >
-            <label htmlFor="address" className="font-bold">
-              Address:
-            </label>
-            <textarea
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={(e) =>
-                setFormData({ ...formData, address: e.target.value })
-              }
-              placeholder="Enter Restaurant Address"
-              className="p-2 rounded-md border-2 border-orange-500 w-full h-32"
-            />
-          </div>
-          <div
-            className="flex flex-col gap-2 items-start w-full"
+            className="flex flex-col gap-2 items-start w-1/2"
             data-aos="fade-right"
           >
             <label htmlFor="restaurantName" className="font-bold">

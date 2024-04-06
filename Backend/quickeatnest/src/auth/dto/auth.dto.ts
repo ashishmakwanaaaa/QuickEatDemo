@@ -16,9 +16,6 @@ export class UserSignUpDto {
   password: string;
 
   @IsNotEmpty()
-  address: string;
-
-  @IsNotEmpty()
   confirmpassword: string;
 
   // @IsNotEmpty()
@@ -28,7 +25,11 @@ export class UserSignUpDto {
 
   isAdmin: boolean;
 
-  isActive:boolean;
+  isActive: boolean;
+
+  lat: string;
+
+  long: string;
 }
 
 export class UserLoginDto {

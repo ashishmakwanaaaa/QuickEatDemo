@@ -16,12 +16,19 @@ const stripe = require('stripe')(process.env.stripesecretkey);
 export class PaymentService {
   constructor(
     @InjectModel('payments') private readonly paymentmodel: Model<Payment>,
-  ) { }
+  ) {}
 
   async createPayment(paymentdto: PaymentDto) {
     try {
-      const { userId, customerID, email, cardHoldername, billingaddress, amount, paymentMethod } =
-        paymentdto;
+      const {
+        userId,
+        customerID,
+        email,
+        cardHoldername,
+        billingaddress,
+        amount,
+        paymentMethod,
+      } = paymentdto;
       let payment = await this.paymentmodel.create({
         userId,
         customerID,
@@ -40,7 +47,9 @@ export class PaymentService {
   }
 
   async cardPayment(orderdto: OrderDto) {
+    console.log('OrderDto', orderdto);
     try {
+      console.log('created session');
       const lineItems = orderdto.selectedItem.map((item) => ({
         price_data: {
           currency: 'inr',
@@ -48,11 +57,13 @@ export class PaymentService {
             name: item.itemname,
             images: [item.image],
           },
-          unit_amount: (item.price - (item.price * item.upToOffer) / 100) * 100,
+          unit_amount: Math.round(
+            item.price * (1 - item.upToOffer / 100) * 100,
+          ),
         },
         quantity: item.qty,
       }));
-
+      console.log(lineItems);
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: lineItems,
@@ -62,7 +73,6 @@ export class PaymentService {
         customer_email: orderdto.customeremailid,
       });
 
-      console.log('created session');
       return { url: session.url };
     } catch (error) {
       console.error(error);
@@ -75,14 +85,13 @@ export class PaymentService {
       let payments = await this.paymentmodel.find({ userId: userid });
       let cardPayment = await this.paymentmodel.find({
         paymentMethod: 'card',
-        userId: userid
+        userId: userid,
       });
       let cashPayment = await this.paymentmodel.find({
-        paymentMethod: { $in: "cash" },
-        userId: userid
-
+        paymentMethod: { $in: 'cash' },
+        userId: userid,
       });
-      console.log(cardPayment)
+      console.log(cardPayment);
       if (
         payments.length === 0 ||
         cardPayment.length === 0 ||
@@ -97,18 +106,18 @@ export class PaymentService {
         cashPayment,
       };
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw new InternalServerErrorException();
     }
   }
 
-  async getAllSales(){
+  async getAllSales() {
     try {
       let payments = await this.paymentmodel.find();
-      if(payments.length === 0){
+      if (payments.length === 0) {
         throw new NotFoundException();
       }
-      return {message:"Total Sales",payments}
+      return { message: 'Total Sales', payments };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException();

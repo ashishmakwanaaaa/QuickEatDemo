@@ -146,7 +146,7 @@ const Login = (): React.JSX.Element => {
           muted
         >
           <source
-            src="https://player.vimeo.com/external/376213205.sd.mp4?s=ee88744690535ad6c6598cfed6f940ef03fa3f49&profile_id=164&oauth2_token_id=57447761"
+            src="https://videos.pexels.com/video-files/852122/852122-sd_640_360_30fps.mp4"
             type="video/mp4"
           />
         </video>

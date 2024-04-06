@@ -60,7 +60,7 @@ const Navbar = () => {
     setOpen(false);
   };
   //   const navigate = useNavigate();
-  const handleLogout =async (id) => {
+  const handleLogout =async (id: string) => {
     StateContext.login = false;
     try {
       const response = await fetch(`http://localhost:5000/auth/logout/${id}`)

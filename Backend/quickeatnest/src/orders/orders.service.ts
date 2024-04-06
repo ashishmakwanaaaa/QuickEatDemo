@@ -146,11 +146,16 @@ export class OrdersService {
     }
   }
 
-  async getAllOrder(){
+  async getAllOrder() {
     try {
-      const orders = await this.ordermode.find();
-      if(orders.length === 0){throw new NotFoundException()}
-      return {message:"All Orders",orders}
+      const orders = await this.ordermode
+        .find()
+        .populate('userId')
+        .sort({ Date: -1 });
+      if (orders.length === 0) {
+        throw new NotFoundException();
+      }
+      return { message: 'All Orders', orders };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException();

@@ -40,8 +40,10 @@ export class AuthService {
         ownername,
         emailid,
         password,
+
+        lat,
+        long,
         confirmpassword,
-        address,
       } = signupdto;
       let user = await this.usermodel.findOne({ emailid });
       if (user) {
@@ -53,8 +55,10 @@ export class AuthService {
         ownername,
         emailid,
         password: hashedpassword,
+
+        lat,
+        long,
         confirmpassword: confirmpassword,
-        address,
       });
       await user.save();
       return { user, message: 'User Signup Successfully' };
@@ -215,34 +219,37 @@ export class AuthService {
     }
   }
 
-  async getAllUser(){
+  async getAllUser() {
     try {
-      const users = await this.usermodel.find({isAdmin:false});
-      if(users.length === 0){
+      const users = await this.usermodel.find({ isAdmin: false });
+      if (users.length === 0) {
         throw new NotFoundException();
       }
-      const activeusers = await this.usermodel.find({isActive:true,isAdmin:false});
-      if(activeusers.length === 0){
-        throw new NotFoundException()
+      const activeusers = await this.usermodel.find({
+        isActive: true,
+        isAdmin: false,
+      });
+      if (activeusers.length === 0) {
+        throw new NotFoundException();
       }
-      return {message:"All User",users,activeusers}
+      return { message: 'All User', users, activeusers };
     } catch (error) {
       throw new InternalServerErrorException();
     }
   }
 
-  async logout(id:string){
+  async logout(id: string) {
     try {
       const user = await this.usermodel.findById(id);
-      if(!user){
+      if (!user) {
         throw new InternalServerErrorException();
       }
       user.isActive = false;
       await user.save();
-      return {message:"User Logout Successfully",user};
+      return { message: 'User Logout Successfully', user };
     } catch (error) {
-      console.log(error)
-      throw new InternalServerErrorException()
+      console.log(error);
+      throw new InternalServerErrorException();
     }
   }
 }

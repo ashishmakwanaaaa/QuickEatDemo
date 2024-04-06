@@ -14,9 +14,6 @@ export class User {
   password: string;
 
   @Prop()
-  address: string;
-
-  @Prop()
   confirmpassword: string;
   @Prop({
     default:
@@ -37,7 +34,12 @@ export class User {
   date: Date;
 
   @Prop()
-  isActive:boolean;
+  isActive: boolean;
+
+  @Prop()
+  lat: string;
+  @Prop()
+  long: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
