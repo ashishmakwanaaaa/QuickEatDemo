@@ -35,4 +35,9 @@ export class OrdersController {
   getCustomerOrder(@Param('id') id: string) {
     return this.ordersrices.getCustomerOrder(id);
   }
+
+  @Get('/getAllOrders')
+  getAllOrder(){
+    return this.ordersrices.getAllOrder()
+  }
 }

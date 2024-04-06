@@ -56,7 +56,7 @@ const DashBoard = ({ children }: any) => {
     {
       title: "Admin Dashboard",
       src: "https://cdn0.iconfinder.com/data/icons/essentials-9/128/__Home-64.png",
-      redirect: "/admin",
+      redirect: "/adminside",
     },
     {
       title: "View All Restrurant",

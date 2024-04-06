@@ -101,4 +101,17 @@ export class PaymentService {
       throw new InternalServerErrorException();
     }
   }
+
+  async getAllSales(){
+    try {
+      let payments = await this.paymentmodel.find();
+      if(payments.length === 0){
+        throw new NotFoundException();
+      }
+      return {message:"Total Sales",payments}
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
 }

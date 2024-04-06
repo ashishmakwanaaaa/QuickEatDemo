@@ -14,3 +14,5 @@ export const fetchPayments = createAsyncThunk("fetchPayments", async (userId) =>
     AllCashPayment: data.cashPayment,
   };
 });
+
+

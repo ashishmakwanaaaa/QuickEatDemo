@@ -20,7 +20,7 @@ import { join } from 'path';
     ConfigModule.forRoot(),
     AuthModule,
     MongooseModule.forRoot(
-      `mongodb+srv://${process.env.username}:${process.env.password}@${process.env.cluster}.69lknpi.mongodb.net/${process.env.database}?retryWrites=true&w=majority`,
+      `mongodb+srv://${process.env.user}:${process.env.password}@${process.env.cluster}.69lknpi.mongodb.net/${process.env.database}?retryWrites=true&w=majority`,
     ),
     MulterModule.register({
       dest: './imageupload',

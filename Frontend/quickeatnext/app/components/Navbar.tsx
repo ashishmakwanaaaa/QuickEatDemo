@@ -60,9 +60,23 @@ const Navbar = () => {
     setOpen(false);
   };
   //   const navigate = useNavigate();
-  const handleLogout = () => {
+  const handleLogout =async (id) => {
     StateContext.login = false;
-    router.push("/login");
+    try {
+      const response = await fetch(`http://localhost:5000/auth/logout/${id}`)
+      const data = await response.json();
+      if (response.ok) {
+        Swal.fire({
+          title: "Logout Successfully",
+          icon: "success",
+          timer: 1000,
+        })
+
+        router.push("/login");
+      }
+    } catch (error) {
+      console.log("error")
+    }
   };
   const handleChangePassword = async (e: {
     preventDefault: () => void;
@@ -153,11 +167,10 @@ const Navbar = () => {
             </span>
             <AiFillHome color="#FF8C00" />
             <span
-              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${
-                pathname[1] === undefined
+              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${pathname[1] === undefined
                   ? "scale-x-100"
                   : "group-hover:scale-x-100"
-              } group-hover:scale-x-100 transition-transform duration-300`}
+                } group-hover:scale-x-100 transition-transform duration-300`}
             ></span>
           </Link>
 
@@ -170,9 +183,8 @@ const Navbar = () => {
             </span>
             <AiFillInfoCircle color="#FF8C00" />
             <span
-              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${
-                pathname[1] === "A" ? "scale-x-100" : "group-hover:scale-x-100"
-              } group-hover:scale-x-100 transition-transform duration-300`}
+              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${pathname[1] === "A" ? "scale-x-100" : "group-hover:scale-x-100"
+                } group-hover:scale-x-100 transition-transform duration-300`}
             ></span>
           </Link>
 
@@ -185,9 +197,8 @@ const Navbar = () => {
             </span>
             <MdMiscellaneousServices color="#FF8C00" />
             <span
-              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${
-                pathname[1] === "S" ? "scale-x-100" : "group-hover:scale-x-100"
-              } group-hover:scale-x-100 transition-transform duration-300`}
+              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${pathname[1] === "S" ? "scale-x-100" : "group-hover:scale-x-100"
+                } group-hover:scale-x-100 transition-transform duration-300`}
             ></span>
           </Link>
 
@@ -200,9 +211,8 @@ const Navbar = () => {
             </span>
             <MdContactPage color="#FF8C00" />
             <span
-              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${
-                pathname[1] === "C" ? "scale-x-100" : "group-hover:scale-x-100"
-              } group-hover:scale-x-100 transition-transform duration-300`}
+              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${pathname[1] === "C" ? "scale-x-100" : "group-hover:scale-x-100"
+                } group-hover:scale-x-100 transition-transform duration-300`}
             ></span>
           </Link>
         </div>
@@ -264,9 +274,8 @@ const Navbar = () => {
           )}
           {dropdown && StateContext.image && (
             <div
-              className={`absolute top-full bg-white border border-gray-300 rounded-md shadow-lg mt-6 z-10 ${
-                role === "Admin" ? "left-[-110px]" : "left-[221px]"
-              } transform -translate-x-1/2`}
+              className={`absolute top-full bg-white border border-gray-300 rounded-md shadow-lg mt-6 z-10 ${role === "Admin" ? "left-[-110px]" : "left-[221px]"
+                } transform -translate-x-1/2`}
             >
               <div className="w-72 h-full flex flex-col p-1 ">
                 <div className=" w-full h-12 ">
@@ -316,7 +325,7 @@ const Navbar = () => {
                 <hr className="border" />
                 <ul className="p-4">
                   <li
-                    onClick={handleLogout}
+                    onClick={()=>handleLogout(StateContext.userid)}
                     className="px-4 py-2 flex items-center hover:rounded-md hover:ml-2 transform duration-300 cursor-pointer text-md hover:bg-black hover:text-white"
                   >
                     <LogoutIcon /> Logout

@@ -27,6 +27,8 @@ export class UserSignUpDto {
   resimage: Multer.File;
 
   isAdmin: boolean;
+
+  isActive:boolean;
 }
 
 export class UserLoginDto {

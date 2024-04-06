@@ -21,4 +21,9 @@ export class PaymentController {
   getALLPayment(@Param('userid') userid:string) {
     return this.paymentservice.getALLPayment(userid);
   }
+
+  @Get('/getAllSales')
+  getAllSales(){
+    return this.paymentservice.getAllSales();
+  }
 }

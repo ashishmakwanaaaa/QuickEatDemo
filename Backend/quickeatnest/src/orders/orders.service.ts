@@ -145,4 +145,15 @@ export class OrdersService {
       console.log(error);
     }
   }
+
+  async getAllOrder(){
+    try {
+      const orders = await this.ordermode.find();
+      if(orders.length === 0){throw new NotFoundException()}
+      return {message:"All Orders",orders}
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
 }

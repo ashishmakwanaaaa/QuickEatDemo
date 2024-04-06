@@ -108,4 +108,14 @@ export class AuthController {
     return this.userservice.updateProfile(usersignupdto, id);
   }
   catch(error) {}
+
+  @Get('/getalluser')
+  getAllUser(){
+    return this.userservice.getAllUser();
+  }
+
+  @Get('/logout/:id')
+  logout(@Param('id') id:string){
+    return this.userservice.logout(id);
+  }
 }

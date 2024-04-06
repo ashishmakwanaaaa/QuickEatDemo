@@ -71,6 +71,8 @@ export class AuthService {
       if (!user) {
         throw new NotFoundException();
       }
+      user.isActive = true;
+      await user.save();
       const decode = await bcrypt.compare(password, user.password);
       console.log(decode, password, user.password);
       if (!decode) {
@@ -210,6 +212,37 @@ export class AuthService {
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('Failed to update profile');
+    }
+  }
+
+  async getAllUser(){
+    try {
+      const users = await this.usermodel.find({isAdmin:false});
+      if(users.length === 0){
+        throw new NotFoundException();
+      }
+      const activeusers = await this.usermodel.find({isActive:true,isAdmin:false});
+      if(activeusers.length === 0){
+        throw new NotFoundException()
+      }
+      return {message:"All User",users,activeusers}
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async logout(id:string){
+    try {
+      const user = await this.usermodel.findById(id);
+      if(!user){
+        throw new InternalServerErrorException();
+      }
+      user.isActive = false;
+      await user.save();
+      return {message:"User Logout Successfully",user};
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException()
     }
   }
 }

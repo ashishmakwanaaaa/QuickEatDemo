@@ -112,4 +112,14 @@ export class ItemsService {
       throw new InternalServerErrorException();
     }
   }
+  async getallitems(){
+    try {
+      const items = await this.itemsmodel.find();
+      if(items.length === 0){throw new NotFoundException()}
+      return {message:"All Items",items}
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
 }

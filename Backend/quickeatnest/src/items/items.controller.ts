@@ -44,5 +44,10 @@ export class ItemsController {
     return this.itemsservice.updateQuantity(quantity, itemname);
   }
 
+
+  @Get('/getitems')
+  getallitems(){
+    return this.itemsservice.getallitems();
+  }
   
 }
