@@ -1,7 +1,7 @@
 import { fetchSpecificOrder } from "@/lib/actions/orderAction";
 import { createSlice } from "@reduxjs/toolkit";
 
-interface initialStateTypeForOrder {
+export interface initialStateTypeForOrder {
   orders: [];
   loading: boolean;
   error: null | string | undefined;
@@ -27,7 +27,7 @@ const orderSlice = createSlice({
       })
       .addCase(fetchSpecificOrder.rejected, (state, action) => {
         state.loading = true;
-        state.error = action.error;
+        state.error = action.error.message;
       });
   },
 });

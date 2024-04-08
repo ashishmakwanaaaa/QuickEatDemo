@@ -9,16 +9,18 @@ import { Counter } from "../Admin/AdminDashboard";
 import { Bar } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
+import { PaymentType } from "@/lib/reducers/paymentSlice/paymentReducers";
+import { payment } from "@/lib/reducers";
 const AdminPage = () => {
-  const [sales, setSales] = useState([]);
+  const [sales, setSales] = useState<PaymentType[]>([]);
   const [user, setUser] = useState([]);
   const [activeuser, setActiveUser] = useState([]);
   const [order, setOrder] = useState([]);
   const [items, setItems] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
   /*  ++++++++++++++++++++++ */
-  const [allCashPayment, setAllCashPayment] = useState([]);
-  const [allCardPayment, setAllCardPayment] = useState([]);
+  const [allCashPayment, setAllCashPayment] = useState<PaymentType[]>([]);
+  const [allCardPayment, setAllCardPayment] = useState<PaymentType[]>([]);
 
   useEffect(() => {
     const cashPayments = sales.filter((item) => item.paymentMethod === "cash");
@@ -30,27 +32,31 @@ const AdminPage = () => {
 
   const totalSales =
     sales && sales.reduce((acc, item) => acc + parseFloat(item.amount), 0);
-  const usersAllPayments = useSelector((state) => state.payment.payments);
+  const usersAllPayments = useSelector(
+    (state: payment) => state.payment.payments
+  );
 
-  const cardPaymentForUsers = allCardPayment.reduce((sumByUserid, payment) => {
-    const userId = payment.userId;
-    const amount = parseFloat(payment.amount);
-    sumByUserid[userId] = (sumByUserid[userId] || 0) + amount;
-    return sumByUserid;
-  }, {});
-  const cashPaymentForUsers = allCashPayment.reduce((sumByUserid, payment) => {
-    const userId = payment.userId;
-    const amount = parseFloat(payment.amount);
-    console.log("userId amount", userId, amount, "\n");
-    sumByUserid[userId] = (sumByUserid[userId] || 0) + amount;
-    return sumByUserid;
-  }, {});
-  const allPaymentForUsers = usersAllPayments.reduce((sumByUserid, payment) => {
-    const userId = payment.userId;
-    const amount = parseFloat(payment.amount);
-    sumByUserid[userId] = (sumByUserid[userId] || 0) + amount;
-    return sumByUserid;
-  }, {});
+  const cardPaymentForUsers: { [userId: string]: number } =
+    allCardPayment.reduce(
+      (sumByUserid: { [userId: string]: number }, payment) => {
+        const userId = payment.userId;
+        const amount = parseFloat(payment.amount);
+        sumByUserid[userId] = (sumByUserid[userId] || 0) + amount;
+        return sumByUserid;
+      },
+      {}
+    );
+  const cashPaymentForUsers: { [userId: string]: number } =
+    allCashPayment.reduce(
+      (sumByUserid: { [userId: string]: number }, payment) => {
+        const userId = payment.userId;
+        const amount = parseFloat(payment.amount);
+        console.log("userId amount", userId, amount, "\n");
+        sumByUserid[userId] = (sumByUserid[userId] || 0) + amount;
+        return sumByUserid;
+      },
+      {}
+    );
 
   useEffect(() => {
     async function getAllUser() {

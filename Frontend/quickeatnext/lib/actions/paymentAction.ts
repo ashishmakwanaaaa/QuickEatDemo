@@ -1,8 +1,21 @@
 "use client";
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { PaymentType } from "../reducers/paymentSlice/paymentReducers";
 
-export const fetchPayments = createAsyncThunk("fetchPayments", async (userId) => {
+export interface PaymentData {
+  AllPayments: PaymentType[];
+  AllCardPayments: PaymentType[];
+  AllCashPayment: PaymentType[];
+}
+export interface FetchPaymentsPayload {
+  userId: string;
+}
+
+export const fetchPayments = createAsyncThunk<
+  PaymentData,
+  FetchPaymentsPayload
+>("fetchPayments", async (userId) => {
   const response = await fetch(
     `http://localhost:5000/payment/allpayment/${userId}`
   );
@@ -14,5 +27,3 @@ export const fetchPayments = createAsyncThunk("fetchPayments", async (userId) =>
     AllCashPayment: data.cashPayment,
   };
 });
-
-

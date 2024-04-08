@@ -60,7 +60,7 @@ export interface OrderDataType {
   customeremailid: string;
   customerphoneno: number;
   selectedItem: SelectedItemType[];
-  totalAmount: number | unknown;
+  totalAmount: number | unknown | any;
   Date: Date;
 }
 

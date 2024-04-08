@@ -8,14 +8,19 @@ import categoryReducers, {
 import customerReducers, {
   initialStateTypeForCustomer,
 } from "./customerSlice/customerReducers";
-import paymentReducers from "./paymentSlice/paymentReducers";
-import orderReducers from "./orderSlice/orderReducers";
+import paymentReducers, {
+  initialStateTypeForPayment,
+} from "./paymentSlice/paymentReducers";
+import orderReducers, {
+  initialStateTypeForOrder,
+} from "./orderSlice/orderReducers";
 
 const rootReducers: Reducer<{
   item: initialStateTypeForItems;
   category: initialStateTypeForCategory;
   customer: initialStateTypeForCustomer;
-  payment: any;
+  payment: initialStateTypeForPayment;
+  order: initialStateTypeForOrder;
 }> = combineReducers({
   item: itemReducer,
   category: categoryReducers,
@@ -25,3 +30,4 @@ const rootReducers: Reducer<{
 });
 
 export default rootReducers;
+export type payment = ReturnType<typeof rootReducers>;

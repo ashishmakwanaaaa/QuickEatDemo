@@ -1,6 +1,6 @@
 "use client";
 
-import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
+import { DataGrid, GridRowParams, GridRowSelectionApi } from "@mui/x-data-grid";
 import { useContext, useEffect, useState } from "react";
 import { OrderDataType } from "./Orders";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
@@ -20,17 +20,29 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPayments } from "@/lib/actions/paymentAction";
+import {
+  PaymentType,
+  initialStateTypeForPayment,
+} from "@/lib/reducers/paymentSlice/paymentReducers";
+import { payment } from "@/lib/reducers";
+import { Dispatch } from "redux";
+
+interface CustomRenderCellParams extends GridRowParams {
+  row: PaymentType;
+}
 
 const PaymentList = () => {
-  const [rows, setRows] = useState([]);
-  const [data, setData] = useState([]);
+  const [rows, setRows] = useState<PaymentType[]>([]);
+  const [data, setData] = useState<PaymentType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [order, setOrder] = useState<OrderDataType[]>([]);
-  const [filteredRow, setFilteredRows] = useState([]);
+  const [filteredRow, setFilteredRows] = useState<PaymentType[]>([]);
   const [invoiceid, setInvoiceId] = useState<number>(0);
   const StateContext = useContext(LoginContext);
-  const dispatch = useDispatch();
-  const payments = useSelector((state) => state.payment.payments);
+  const dispatch = useDispatch<Dispatch>();
+  const payments: PaymentType[] = useSelector(
+    (state: payment) => state.payment.payments
+  );
   const [selectedDates, setSelectedDates] = useState<
     [Dayjs | null, Dayjs | null]
   >([null, null]);
@@ -48,7 +60,7 @@ const PaymentList = () => {
     console.log(selectedDates);
     const [startDate, endDate] = selectedDates;
 
-    const filteredData = payments.filter((payment) => {
+    const filteredData: PaymentType[] = payments.filter((payment) => {
       const paymentDate = dayjs(payment.Date.split("T")[0]);
       return (
         paymentDate.isSame(startDate, "day") ||
@@ -66,16 +78,19 @@ const PaymentList = () => {
     setRows(filteredRowsWithIds);
   }, [filteredRow]);
 
-  const filteredRowsWithIds = filteredRow.map((payment, index) => ({
-    id: index + 1,
-    Date: payment.Date.split("T")[0],
-    customername: payment.cardHoldername,
-    customeremail: payment.email,
-    amount: payment.amount,
-    city: payment.billingaddress.city,
-    method: payment.paymentMethod,
-    invoice: "Invoice",
-  }));
+  const filteredRowsWithIds: PaymentType[] = filteredRow.map(
+    (payment, index) =>
+      ({
+        id: index + 1,
+        Date: payment.Date.split("T")[0],
+        cardHoldername: payment.cardHoldername,
+        email: payment.email,
+        amount: payment.amount,
+        billingaddress: payment?.billingaddress?.city,
+        paymentMethod: payment.paymentMethod,
+        invoice: "Invoice",
+      } as PaymentType)
+  );
 
   console.log(StateContext);
   let currentDate = new Date().toJSON().slice(0, 10);
@@ -88,16 +103,19 @@ const PaymentList = () => {
       setData([]);
       return;
     }
-    const rowsArray = payments.map((payment, index) => ({
-      id: index + 1,
-      Date: payment.Date.split("T")[0],
-      customername: payment.cardHoldername,
-      customeremail: payment.email,
-      amount: payment.amount,
-      city: payment.billingaddress.city,
-      method: payment.paymentMethod,
-      invoice: "Invoice",
-    }));
+    const rowsArray: PaymentType[] = payments.map(
+      (payment, index) =>
+        ({
+          id: index + 1,
+          Date: payment.Date.split("T")[0],
+          cardHoldername: payment.cardHoldername,
+          email: payment.email,
+          amount: payment.amount,
+          city: payment?.billingaddress?.city,
+          paymentMethod: payment.paymentMethod,
+          invoice: "Invoice",
+        } as unknown as PaymentType)
+    );
 
     setRows(rowsArray);
     setData(rowsArray);
@@ -165,13 +183,13 @@ const PaymentList = () => {
       width: 170,
     },
     {
-      field: "customername",
+      field: "cardHoldername",
 
       headerName: "Customer Name",
       width: 150,
     },
     {
-      field: "customeremail",
+      field: "email",
 
       headerName: "Email",
       width: 240,
@@ -183,13 +201,13 @@ const PaymentList = () => {
       width: 120,
     },
     {
-      field: "city",
+      field: "billingaddress",
 
       headerName: "City",
       width: 100,
     },
     {
-      field: "method",
+      field: "paymentMethod",
 
       headerName: "Payment Method",
       cellClassName: "text-green-800 font-bold text-center capitalize",
@@ -200,7 +218,7 @@ const PaymentList = () => {
 
       headerName: "Generate Invoice",
       width: 120,
-      renderCell: (params: GridRowSelectionApi) => (
+      renderCell: (params: CustomRenderCellParams) => (
         <Button
           onClick={() => handleClickOpen(params.row)}
           style={{ color: "red", padding: "2px" }}
