@@ -225,13 +225,15 @@ export class AuthService {
       if (users.length === 0) {
         throw new NotFoundException();
       }
+      console.log('User List: ', users);
       const activeusers = await this.usermodel.find({
         isActive: true,
         isAdmin: false,
       });
-      if (activeusers.length === 0) {
-        throw new NotFoundException();
-      }
+      console.log(activeusers);
+      // if (activeusers.length === 0) {
+      //   throw new NotFoundException();
+      // }
       return { message: 'All User', users, activeusers };
     } catch (error) {
       throw new InternalServerErrorException();
@@ -247,6 +249,20 @@ export class AuthService {
       user.isActive = false;
       await user.save();
       return { message: 'User Logout Successfully', user };
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async deleteUser(id: string) {
+    try {
+      const user = await this.usermodel.findById(id);
+      if (!user) {
+        throw new NotFoundException();
+      }
+      await user.deleteOne();
+      return { message: 'User deleted', user };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException();

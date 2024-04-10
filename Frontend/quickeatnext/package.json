@@ -20,6 +20,7 @@
     "@mui/x-date-pickers-pro": "^7.0.0",
     "@reduxjs/toolkit": "^2.2.3",
     "aos": "^2.3.4",
+    "apexcharts": "^3.48.0",
     "chart.js": "^4.4.2",
     "dayjs": "^1.11.10",
     "emailjs": "^4.0.3",

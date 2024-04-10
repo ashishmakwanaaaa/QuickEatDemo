@@ -147,7 +147,7 @@ const SignUp = (): React.JSX.Element => {
       </div>
 
       {/* Signup Box */}
-      <div className="relative z-10 w-full md:w-[90%] lg:w-[70%] xl:w-[50%] 2xl:w-[40%] mx-auto bg-white p-8 rounded-lg text-center mt-5 opacity-90">
+      <div className="relative z-10 w-full md:w-[90%] lg:w-[70%] xl:w-[50%] 2xl:w-[40%] mx-auto bg-white p-8 rounded-lg text-center mt-32 opacity-90">
         <span
           className="text-black font-bold text-lg text-center"
           data-aos="zoom-in"
@@ -200,7 +200,7 @@ const SignUp = (): React.JSX.Element => {
           </div>
 
           <div
-            className="flex flex-col gap-2 items-start w-1/2"
+            className="flex flex-col gap-2 items-start w-full"
             data-aos="fade-right"
           >
             <label htmlFor="restaurantName" className="font-bold">

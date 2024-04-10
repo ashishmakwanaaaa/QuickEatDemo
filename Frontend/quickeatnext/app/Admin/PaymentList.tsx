@@ -111,7 +111,7 @@ const PaymentList = () => {
           cardHoldername: payment.cardHoldername,
           email: payment.email,
           amount: payment.amount,
-          city: payment?.billingaddress?.city,
+          billingaddress: payment?.billingaddress?.city,
           paymentMethod: payment.paymentMethod,
           invoice: "Invoice",
         } as unknown as PaymentType)

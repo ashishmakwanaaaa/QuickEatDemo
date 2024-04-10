@@ -1,31 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUsers } from "@/lib/actions/userAction";
+import { User } from "@/lib/reducers/userSlice/UserReducers";
 
 const ViewAllRestrurant = () => {
-  const [users, setusers] = useState([]);
   const [mapInitialized, setMapInitialized] = useState(false);
+  const users = useSelector((state) => state.user.users);
+  const dispatch = useDispatch();
+  const mapRef = useRef(null);
 
   useEffect(() => {
-    async function getAllUser() {
-      try {
-        const res = await fetch("http://localhost:5000/auth/getalluser");
-        const data = await res.json();
-        setusers(data.users);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    getAllUser();
-  }, []);
-  console.log(users);
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   useEffect(() => {
     if (!mapInitialized && users.length > 0) {
+      if (mapRef.current) {
+        mapRef.current.remove();
+      }
       const map = L.map("map").setView([0, 0], 2);
-
+      mapRef.current = map;
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors ',
@@ -37,7 +35,7 @@ const ViewAllRestrurant = () => {
         iconSize: [50, 50],
       });
 
-      users.forEach((user) => {
+      users.forEach((user: User) => {
         if (user.lat && user.long) {
           const customPopUp = `
                 <div className="p-2 border border-orange-800">

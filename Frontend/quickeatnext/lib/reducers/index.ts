@@ -14,6 +14,9 @@ import paymentReducers, {
 import orderReducers, {
   initialStateTypeForOrder,
 } from "./orderSlice/orderReducers";
+import UserReducers, {
+  initialStateTypeForUsers,
+} from "./userSlice/UserReducers";
 
 const rootReducers: Reducer<{
   item: initialStateTypeForItems;
@@ -21,12 +24,14 @@ const rootReducers: Reducer<{
   customer: initialStateTypeForCustomer;
   payment: initialStateTypeForPayment;
   order: initialStateTypeForOrder;
+  user: initialStateTypeForUsers;
 }> = combineReducers({
   item: itemReducer,
   category: categoryReducers,
   customer: customerReducers,
   payment: paymentReducers,
   order: orderReducers,
+  user: UserReducers,
 });
 
 export default rootReducers;

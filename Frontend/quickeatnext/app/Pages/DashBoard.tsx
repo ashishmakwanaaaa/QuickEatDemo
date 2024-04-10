@@ -63,6 +63,16 @@ const DashBoard = ({ children }: any) => {
       src: "https://cdn3.iconfinder.com/data/icons/mail-useful-icons/32/location-512.png",
       redirect: "/allrestrurant",
     },
+    {
+      title: "Recent Orders",
+      src: "https://cdn0.iconfinder.com/data/icons/ecommerce-elements-line/120/My_orders-64.png",
+      redirect: "/recentorder",
+    },
+    {
+      title: "Manage User",
+      src: "https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png",
+      redirect: "/manageuser",
+    },
   ];
   return (
     <>

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -117,5 +118,10 @@ export class AuthController {
   @Get('/logout/:id')
   logout(@Param('id') id:string){
     return this.userservice.logout(id);
+  }
+
+  @Delete('/deleteuser/:id')
+  deleteUser(@Param('id') id:string){
+    return this.userservice.deleteUser(id);
   }
 }

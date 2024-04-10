@@ -7,18 +7,23 @@ import { FaUsers } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { Counter } from "../Admin/AdminDashboard";
 import { Bar } from "react-chartjs-2";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
 import { PaymentType } from "@/lib/reducers/paymentSlice/paymentReducers";
 import { payment } from "@/lib/reducers";
+import { fetchUsers } from "@/lib/actions/userAction";
+import ApexCharts from "apexcharts";
+import { User } from "@/lib/reducers/userSlice/UserReducers";
 const AdminPage = () => {
   const [sales, setSales] = useState<PaymentType[]>([]);
-  const [user, setUser] = useState([]);
-  const [activeuser, setActiveUser] = useState([]);
   const [order, setOrder] = useState([]);
   const [items, setItems] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
   /*  ++++++++++++++++++++++ */
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.users);
+  const activeuser = useSelector((state) => state.user.activeusers);
+  console.log(user, activeuser);
   const [allCashPayment, setAllCashPayment] = useState<PaymentType[]>([]);
   const [allCardPayment, setAllCardPayment] = useState<PaymentType[]>([]);
 
@@ -59,19 +64,8 @@ const AdminPage = () => {
     );
 
   useEffect(() => {
-    async function getAllUser() {
-      try {
-        const response = await fetch("http://localhost:5000/auth/getalluser");
-        const data = await response.json();
-        console.log(data);
-        setUser(data.users);
-        setActiveUser(data.activeusers);
-      } catch (error) {
-        console.log(user);
-      }
-    }
-    getAllUser();
-  }, []);
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   useEffect(() => {
     async function getAllSales() {
@@ -105,7 +99,7 @@ const AdminPage = () => {
   }, []);
 
   useEffect(() => {
-    async function getAllOrder() {
+    async function getAllItems() {
       try {
         const response = await fetch("http://localhost:5000/items/getitems");
         const data = await response.json();
@@ -115,8 +109,64 @@ const AdminPage = () => {
         console.log(error);
       }
     }
-    getAllOrder();
+    getAllItems();
   }, []);
+
+  useEffect(() => {
+    const ordersByDays = order.reduce((acc, cur) => {
+      const orderDate = new Date(cur.Date).toISOString().split("T");
+      const day = orderDate[0].split("-")[2];
+      const month = orderDate[0].split("-")[1];
+      const key = `${day}-${month}`;
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+    // console.log(ordersByDays);
+    const sortedDays = Object.keys(ordersByDays).sort((a, b) => {
+      const [aMonth, aDay] = a.split("-").map(Number); // Split combined key into month and day
+      const [bMonth, bDay] = b.split("-").map(Number);
+      if (aMonth !== bMonth) {
+        return aMonth - bMonth; // Sort by month first
+      }
+      return aDay - bDay; // Then sort by day within the same month
+    });
+    // console.log(sortedDays)
+    const data = sortedDays.map((day) => ordersByDays[day]);
+    var options = {
+      series: [
+        {
+          name: "Orders",
+          data: data,
+        },
+      ],
+      chart: {
+        height: 250,
+        type: "area",
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "smooth",
+      },
+      fill: {
+        color: ["#ff7f0e"],
+      },
+      xaxis: {
+        categories: sortedDays.map((day) => {
+          const [month, date] = day.split("-");
+          return `${date}/${parseInt(month)}`; // Adjust month index to start from 1
+        }),
+      },
+      tooltip: {
+        x: {
+          format: "dd/MM",
+        },
+      },
+    };
+    const chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+  }, [order]);
   const optionsforbarchart: any = {
     responsive: true,
     plugins: {
@@ -204,106 +254,21 @@ const AdminPage = () => {
     calculatedMonthlydata();
   }, [sales]);
 
-  const columns: {
-    field: string;
-    headerName: string;
-    width: number;
-    cellClassName?: string;
-    renderCell?: (params: GridRowSelectionApi) => Element;
-  }[] = [
-    {
-      field: "id",
-      headerName: "ID",
-      width: 90,
-    },
-    {
-      field: "orderid",
-      headerName: "ORDER ID",
-      width: 120,
-    },
-    {
-      field: "date",
-      headerName: "Date Of Order",
-      width: 120,
-    },
-    {
-      field: "profile",
-
-      headerName: "Profile",
-      width: 70,
-      renderCell: (params) => {
-        return (
-          <>
-            <img
-              className="w-10 h-10 rounded-full"
-              src={`http://localhost:5000/uploads/${params.row.profile}`}
-              alt=""
-            />
-          </>
-        );
-      },
-    },
-    {
-      field: "resname",
-      headerName: "Restrurant ",
-      width: 120,
-    },
-    {
-      field: "ownername",
-      headerName: "Owner",
-      width: 150,
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      width: 240,
-    },
-    {
-      field: "customername",
-      headerName: "Customer Name",
-      width: 120,
-    },
-    {
-      field: "phoneno",
-
-      headerName: "Contact",
-      width: 100,
-    },
-    {
-      field: "amount",
-
-      headerName: "Total Amount",
-      cellClassName: "text-green-800 font-bold text-center capitalize",
-      width: 60,
-    },
-  ];
-  const rows = order.map((item, index) => ({
-    id: index + 1,
-    orderid: "OWNER" + item._id.slice(0, 5),
-    date: item.Date.split("T")[0],
-    profile: item.userId.image,
-    resname: item.userId.restaurantname,
-    ownername: item.userId.ownername,
-    email: item.userId.emailid,
-    customername: item.customerfirstname,
-    phoneno: item.customerphoneno,
-    amount: item.totalAmount,
-  }));
-
   return (
     <>
       <div className="flex flex-col gap-2 font-[Poppins] cursor-pointer">
-        <div className="flex flex-row gap-2 p-2 mt-[-35px]">
+        <div className="flex flex-row gap-2 p-2">
           <div
             data-aos="fade-down"
-            className="flex flex-row w-full h-full items-center gap-4 p-2"
+            className="flex flex-row w-full h-full items-center p-2 rounded-2xl"
+            style={{ boxShadow: "0 0 1em gray" }}
           >
             <div className="bg-orange-200 flex px-5 py-3 items-center  rounded-md ">
               <p className="text-orange-600 text-center m-auto text-md font-bold ">
                 &#x20B9;
               </p>
             </div>
-            <div className="flex flex-col gap-1 p-2 h-1/2 items-center w-1/2">
+            <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
               {" "}
               {/* Added width here */}
               <p className="text-black text-md font-bold">
@@ -315,14 +280,15 @@ const AdminPage = () => {
           </div>
           <div
             data-aos="fade-down"
-            className="flex flex-row w-full h-full items-center gap-4 p-2"
+            style={{ boxShadow: "0 0 1em gray" }}
+            className="flex flex-row w-full h-full items-center rounded-2xl p-2"
           >
             <div className="bg-cyan-200 flex p-4 items-center rounded-md ">
               <p className="text-cyan-600 text-center m-auto text-md font-bold ">
                 <MdOutlineSell />
               </p>
             </div>
-            <div className="flex flex-col gap-1 p-2 h-1/2 items-center w-1/2">
+            <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
               <p className="text-black text-md font-bold">
                 <Counter
                   targetValue={order.length.toString().padStart(2, "0")}
@@ -333,14 +299,15 @@ const AdminPage = () => {
           </div>
           <div
             data-aos="fade-down"
-            className="flex flex-row w-full h-full items-center gap-4 p-2"
+            style={{ boxShadow: "0 0 1em gray" }}
+            className="flex flex-row w-full h-full items-center rounded-2xl p-2"
           >
             <div className="bg-green-200 flex p-4 items-center rounded-md ">
               <p className="text-green-600 text-md text-center m-auto font-bold ">
                 <MdNotificationsActive />
               </p>
             </div>
-            <div className="flex flex-col gap-1 p-2 h-1/2 items-center w-1/2">
+            <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
               <p className="text-black text-md font-bold">
                 <Counter
                   targetValue={activeuser.length.toString().padStart(2, "0")}
@@ -351,14 +318,15 @@ const AdminPage = () => {
           </div>
           <div
             data-aos="fade-down"
-            className="flex flex-row w-full h-full items-center gap-4 p-2"
+            style={{ boxShadow: "0 0 1em gray" }}
+            className="flex flex-row w-full h-full rounded-2xl items-center p-2"
           >
             <div className="bg-red-200 flex p-4 items-center  rounded-md ">
               <p className="text-red-600 text-md m-auto text-center font-bold ">
                 <FaUsers />
               </p>
             </div>
-            <div className="flex flex-col gap-1 p-2 h-1/2 items-center w-1/2">
+            <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
               <p className="text-black text-md font-bold">
                 <Counter
                   targetValue={user.length.toString().padStart(2, "0")}
@@ -369,14 +337,15 @@ const AdminPage = () => {
           </div>
           <div
             data-aos="fade-down"
-            className="flex flex-row  w-full h-full items-center gap-4 p-2"
+            style={{ boxShadow: "0 0 1em gray" }}
+            className="flex flex-row  w-full h-full items-center rounded-2xl p-2"
           >
             <div className="bg-green-500 flex p-4 items-cente rounded-md ">
               <p className="text-green-900 text-md m-auto text-center font-bold ">
                 <PiBowlFoodBold />
               </p>
             </div>
-            <div className="flex flex-col gap-1 p-2 h-1/2 items-center w-1/2">
+            <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
               <p className="text-black text-md font-bold">
                 <Counter
                   targetValue={items.length.toString().padStart(2, "0")}
@@ -387,11 +356,11 @@ const AdminPage = () => {
           </div>
         </div>
 
-        <div className="flex h-1/3 flex-row gap-10">
+        <div className="flex h-1/3  flex-row gap-6">
           <div
             style={{ boxShadow: "0 0 0.5em gray" }}
             data-aos="fade-right"
-            className="flex flex-col items-center rounded-lg  justify-center h-[300px] w-[500px]"
+            className="flex flex-col items-center rounded-2xl  justify-center h-[300px] w-[530px]"
           >
             <Bar data={dataforbarchart} options={optionsforbarchart} />
             <h1 className="text-center  capitalize text-orange-800 text-sm font-bold">
@@ -401,7 +370,7 @@ const AdminPage = () => {
           <div
             data-aos="fade-left"
             style={{ boxShadow: "0 0 0.5em gray" }}
-            className="flex flex-col gap-2 p-2 h-[300px] w-[500px] rounded-lg drop-shadow-2xl"
+            className="flex flex-col gap-2 p-4 h-[300px] w-[500px] rounded-2xl drop-shadow-2xl"
           >
             <div className="flex flex-row gap-2 text-sm">
               <div className="flex flex-row items-center gap-2">
@@ -413,7 +382,7 @@ const AdminPage = () => {
                 <p className="text-sm text-black">Card Payments</p>
               </div>
             </div>
-            {user.map((userdata) => {
+            {user.map((userdata: User) => {
               console.log(userdata);
 
               const totalCashPayments = cashPaymentForUsers[userdata._id];
@@ -453,30 +422,7 @@ const AdminPage = () => {
           </div>
         </div>
 
-        <div
-          data-aos="fade-right"
-          className="flex flex-col gap-2 justify-start items-start"
-        >
-          <h1 className="text-start capitalize text-black text-md font-bold">
-            Recently Orders
-          </h1>
-          <div className="w-[1100px] h-[300px]" data-aos="fade-right">
-            <DataGrid
-              style={{ fontFamily: "Poppins" }}
-              rows={rows}
-              columns={columns}
-              pagination
-              pageSizeOptions={[
-                10,
-                20,
-                30,
-                40,
-                100,
-                { value: 1000, label: "1,000" },
-              ]}
-            />
-          </div>
-        </div>
+        <div style={{ height: "50%" }} id="chart"></div>
       </div>
     </>
   );
