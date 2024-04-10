@@ -550,7 +550,7 @@ const Orders = ({ id }: { id: string }) => {
                               Price:
                             </span>
                             <span className="font-bold  text-black text-sm w-full">
-                              &#8377;{selected.totalPrice}
+                              &#8377;{selected.totalPrice.toFixed(2)}
                             </span>
                           </div>
                         </div>

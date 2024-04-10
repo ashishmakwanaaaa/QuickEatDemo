@@ -27,6 +27,21 @@ const AdminPage = () => {
   const [allCashPayment, setAllCashPayment] = useState<PaymentType[]>([]);
   const [allCardPayment, setAllCardPayment] = useState<PaymentType[]>([]);
 
+  const lables = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
   useEffect(() => {
     const cashPayments = sales.filter((item) => item.paymentMethod === "cash");
     setAllCashPayment(cashPayments);
@@ -123,12 +138,12 @@ const AdminPage = () => {
     }, {});
     // console.log(ordersByDays);
     const sortedDays = Object.keys(ordersByDays).sort((a, b) => {
-      const [aMonth, aDay] = a.split("-").map(Number); // Split combined key into month and day
-      const [bMonth, bDay] = b.split("-").map(Number);
-      if (aMonth !== bMonth) {
-        return aMonth - bMonth; // Sort by month first
+      const [aDay, aMonth] = a.split("-").map(Number); // Split combined key into month and day
+      const [bDay, bMonth] = b.split("-").map(Number);
+      if (aDay !== bDay) {
+        return bDay - aDay; // Sort by month first
       }
-      return aDay - bDay; // Then sort by day within the same month
+      return bMonth - aMonth; // Then sort by day within the same month
     });
     // console.log(sortedDays)
     const data = sortedDays.map((day) => ordersByDays[day]);
@@ -155,7 +170,7 @@ const AdminPage = () => {
       xaxis: {
         categories: sortedDays.map((day) => {
           const [month, date] = day.split("-");
-          return `${date}/${parseInt(month)}`; // Adjust month index to start from 1
+          return `${month}th ${lables[date-1]}`; // Adjust month index to start from 1
         }),
       },
       tooltip: {
@@ -198,20 +213,7 @@ const AdminPage = () => {
       intersect: true,
     },
   };
-  const lables = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sept",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+  
   const dataforbarchart = {
     labels: lables,
     datasets: [
