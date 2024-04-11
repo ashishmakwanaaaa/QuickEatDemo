@@ -4,6 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -69,29 +70,23 @@ export class AuthService {
   }
 
   async login(logindto: UserLoginDto, res: Response) {
-    try {
-      const { emailid, password } = logindto;
-      let user = await this.usermodel.findOne({ emailid });
-      if (!user) {
-        throw new NotFoundException();
-      }
-      user.isActive = true;
-      await user.save();
-      const decode = await bcrypt.compare(password, user.password);
-      console.log(decode, password, user.password);
-      if (!decode) {
-        throw new HttpException('Wrong Password', HttpStatus.UNAUTHORIZED);
-      }
-      const token = await this.jwtService.sign({
-        id: user._id,
-        isadmin: user.isAdmin,
-      });
-
-      return { message: 'Login Successfully', user, token };
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException();
+    const { emailid, password } = logindto;
+    let user = await this.usermodel.findOne({ emailid });
+    if (!user) {
+      throw new NotFoundException('Wrong Email!....Please enter correct email');
     }
+    user.isActive = true;
+    await user.save();
+    const decode = await bcrypt.compare(password, user.password);
+    console.log(decode, password, user.password);
+    if (!decode) {
+      throw new UnauthorizedException('Wrong Password');
+    }
+    const token = await this.jwtService.sign({
+      id: user._id,
+      isadmin: user.isAdmin,
+    });
+    return { message: 'Login Successfully', user, token };
   }
 
   async forgotpsw(email: string) {

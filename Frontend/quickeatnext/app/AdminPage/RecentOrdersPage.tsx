@@ -48,7 +48,7 @@ const RecentOrdersPage = () => {
     {
       field: "resname",
       headerName: "Restrurant ",
-      width: 120,
+      width: 150,
     },
     {
       field: "ownername",
@@ -111,12 +111,12 @@ const RecentOrdersPage = () => {
     <>
       <div
         data-aos="fade-right"
-        className="flex flex-col gap-2 justify-start items-start"
+        className="flex flex-col w-full h-full gap-2 justify-start items-start"
       >
         <h1 className="text-start capitalize text-black text-md font-bold">
           Recently Orders
         </h1>
-        <div className="w-[1100px]" data-aos="fade-right">
+        <div className="w-[1100px] h-full" data-aos="fade-right">
           <DataGrid
             style={{ fontFamily: "Poppins" }}
             rows={rows}

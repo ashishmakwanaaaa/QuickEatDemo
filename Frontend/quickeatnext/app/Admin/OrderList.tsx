@@ -178,7 +178,7 @@ const OrderListPage = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center w-[68rem]">
         <h1 className="font-[Poppins] font-bold text-start">Order Details</h1>
         <div className="flex flex-row gap-2 w-1/2">
           <LocalizationProvider dateAdapter={AdapterDayjs}>

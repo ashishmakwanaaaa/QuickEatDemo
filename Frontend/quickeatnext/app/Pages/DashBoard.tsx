@@ -6,11 +6,11 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import { useRouter } from "next/navigation";
 
+
 const DashBoard = ({ children }: any) => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const role = localStorage.getItem("role") || "";
-  console.log(role);
   const handleClick = (moduleName: string) => {
     router.push(moduleName);
   };
@@ -77,15 +77,17 @@ const DashBoard = ({ children }: any) => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-row font-[Poppins]">
+      <div className="flex flex-row gap-3 w-full h-full font-[Poppins]">
         <Sidebar
           open={open}
           setOpen={setOpen}
           menus={role === "User" ? MenusForUser : MenusForAdmin}
           onModuleClick={handleClick}
         />
-        <div className="p-7 text-2xl font-semibold flex-1 h-screen">
-          {children}
+        <div className="flex flex-col gap-1 justify-center items-center w-[68rem]">
+          <div className="p-2 text-2xl font-semibold flex-1 h-screen">
+            {children}
+          </div>
         </div>
       </div>
     </>

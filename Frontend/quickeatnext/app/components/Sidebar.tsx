@@ -1,8 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Logo from "../assests/control.png";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useTheme } from "next-themes";
+import { FaMoon } from "react-icons/fa";
+import { IoSunnyOutline } from "react-icons/io5";
 import Image from "next/image";
 
 const Sidebar = ({
@@ -26,16 +29,18 @@ const Sidebar = ({
   const Location = usePathname();
   const role = localStorage.getItem("role");
   console.log(Location);
+  const { setTheme } = useTheme();
+  const [darkMode, setdarkMode] = useState(false);
   return (
     <div
       className={`${
         open ? "w-72" : "w-20"
-      } duration-300 p-5 pt-8  h-screen bg-stone-900 relative rounded-tr-3xl rounded-br-3xl`}
+      } duration-300 p-5 pt-8 mt-2  h-screen bg-stone-900 dark:bg-gray-800 dark:text-white relative rounded-tr-3xl rounded-br-3xl`}
     >
       <Image
         src={Logo}
         onClick={() => setOpen(!open)}
-        className={`absolute cursor-pointer rounded-full -right-5 top-9 w-10 border-2 border-dark-purple ${
+        className={`absolute cursor-pointer rounded-full -right-5 top-64 w-10 border-2 border-dark-purple ${
           !open && "rotate-180"
         }`}
         alt={""}
@@ -54,6 +59,27 @@ const Sidebar = ({
         >
           QUICKEAT
         </h1>
+        <div
+          className={`border text-white h-9 ml-10 duration-300 origin-left ${
+            !open && "scale-0"
+          } border-gray-500 p-2 cursor-pointer rounded-md bg-transparent`}
+        >
+          {darkMode ? (
+            <FaMoon
+              onClick={() => {
+                setdarkMode(false);
+                setTheme("light");
+              }}
+            />
+          ) : (
+            <IoSunnyOutline
+              onClick={() => {
+                setdarkMode(true);
+                setTheme("dark");
+              }}
+            />
+          )}
+        </div>
       </div>
       <ul className="pt-6">
         {menus.map(

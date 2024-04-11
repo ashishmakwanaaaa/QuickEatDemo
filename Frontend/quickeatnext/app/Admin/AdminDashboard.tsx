@@ -74,11 +74,14 @@ export const Counter = ({ targetValue }: { targetValue: any }) => {
 };
 
 const AdminDashboard = () => {
-
   const [monthlyData, setMonthlyData] = useState([]);
-  const [filterdata,setfilterdata]=useState([]);
-  const [selectedMonth, setSelectedMonth] = useState<number | string>(new Date().getMonth() + 1);
-  const [selectedYear, setSelectedYear] = useState<number | string>(new Date().getFullYear());
+  const [filterdata, setfilterdata] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState<number | string>(
+    new Date().getMonth() + 1
+  );
+  const [selectedYear, setSelectedYear] = useState<number | string>(
+    new Date().getFullYear()
+  );
   const [top5sellingItems, setTop5sellingItems] = useState<
     Top5sellingItemType[]
   >([]);
@@ -174,7 +177,6 @@ const AdminDashboard = () => {
     responsive: true,
     plugins: {
       legend: { position: "top" },
-      title: { display: true, text: "Chart.js Bar Chart" },
     },
     scales: {
       y: {
@@ -201,11 +203,24 @@ const AdminDashboard = () => {
       intersect: true,
     },
   };
-  const lables = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  const lables = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
   const dailyAmounts = new Array(daysInMonth).fill(0);
-  console.log(filterdata)
-  filterdata.forEach(payment => {
+  console.log(filterdata);
+  filterdata.forEach((payment) => {
     const paymentDate = new Date(payment.Date);
     const dayOfMonth = paymentDate.getDate();
     dailyAmounts[dayOfMonth - 1] += parseFloat(payment.amount);
@@ -226,17 +241,18 @@ const AdminDashboard = () => {
     ],
   };
 
-
-
   useEffect(() => {
     const calculatedMonthlydata = () => {
-      const filteredData = payments.filter(payment => {
-        console.log(selectedMonth, selectedYear)
+      const filteredData = payments.filter((payment) => {
+        console.log(selectedMonth, selectedYear);
         const paymentDate = new Date(payment.Date);
-        return paymentDate.getMonth() === selectedMonth - 1 && paymentDate.getFullYear() === selectedYear;
+        return (
+          paymentDate.getMonth() === selectedMonth - 1 &&
+          paymentDate.getFullYear() === selectedYear
+        );
       });
-   
-      setfilterdata(filteredData)
+
+      setfilterdata(filteredData);
       const dailyData = filteredData.reduce((acc, payment) => {
         const paymentDate = new Date(payment.Date);
         const day = paymentDate.getDate();
@@ -244,10 +260,10 @@ const AdminDashboard = () => {
         return acc;
       }, {});
       const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
-      console.log(daysInMonth)
+      console.log(daysInMonth);
       const monthlyData = Array.from({ length: daysInMonth }, (_, i) => ({
         day: i + 1,
-        totalAmount: dailyData[i + 1] || 0
+        totalAmount: dailyData[i + 1] || 0,
       }));
 
       setMonthlyData(monthlyData);
@@ -258,15 +274,17 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <div className="font-[Poppins] bg-[#f4f4f4]  w-full h-full p-2 rounded-lg text-white">
+      <div className="dark:bg-gray-900 dark:text-gray-500 w-[68rem] font-[Poppins] bg-[#f4f4f4]  h-screen p-2 rounded-lg text-white">
         <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 w-full p-2 rounded-lg text-white">
           <div
-            className="flex flex-col gap-6 items-center bg-white text-black p-2 rounded-3xl border-b-4 border-red-600 drop-shadow-2xl h-44 mt-4"
-            style={{ boxShadow: "0 0  1em grey" }}
+            className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-red-600 drop-shadow-2xl h-44 mt-4"
+            // style={{ boxShadow: "0 0  1em grey" }}
           >
-            <h4 className="text-md text-red-600">Customers</h4>
-            <IoPeople color="red" />
-            <p className="text-3xl text-red-600">
+            <h4 className="text-md text-red-600 dark:text-gray-300">
+              Customers
+            </h4>
+            <IoPeople color="red " />
+            <p className="text-3xl text-red-600 dark:text-gray-300">
               <Counter
                 targetValue={
                   customers && customers.length > 0 && customers.length
@@ -275,94 +293,107 @@ const AdminDashboard = () => {
             </p>
           </div>
           <div
-            style={{ boxShadow: "0 0  1em grey" }}
-            className="flex flex-col gap-6 items-center bg-white text-black p-2 rounded-3xl border-b-4 border-green-800  drop-shadow-2xl h-44 mt-4"
+            // style={{ boxShadow: "0 0  1em grey" }}
+            className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-green-800  drop-shadow-2xl h-44 mt-4"
           >
-            <h4 className="text-md text-green-800">FoodItems</h4>
-            <IoFastFood color="green" />
-            <p className="text-3xl text-green-800">
+            <h4 className="text-md text-green-800 dark:text-gray-300">
+              FoodItems
+            </h4>
+            <IoFastFood color="green " />
+            <p className="text-3xl text-green-800 dark:text-gray-300">
               <Counter targetValue={items.length} />
             </p>
           </div>
           <div
-            style={{ boxShadow: "0 0  1em grey" }}
-            className="flex flex-col gap-6 items-center bg-white text-black p-2 rounded-3xl border-b-4 border-blue-600  drop-shadow-2xl h-44 mt-4"
+            // style={{ boxShadow: "0 0  1em grey" }}
+            className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-blue-600  drop-shadow-2xl h-44 mt-4"
           >
-            <h4 className="text-md text-blue-600">Total Sales</h4>
+            <h4 className="text-md text-blue-600 dark:text-gray-300">
+              Total Sales
+            </h4>
             <MonetizationOnIcon style={{ color: "blue" }} />
-            <p className="text-3xl text-blue-600">
+            <p className="text-3xl text-blue-600 dark:text-gray-300">
               &#x20B9; <Counter targetValue={totalAmount} />
             </p>
           </div>
           <div
-            style={{ boxShadow: "0 0  1em grey" }}
-            className="flex flex-col gap-6 items-center bg-white text-black p-2 rounded-3xl border-b-4 border-orange-600  drop-shadow-2xl h-44 mt-4"
+            // style={{ boxShadow: "0 0  1em grey" }}
+            className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-orange-600  drop-shadow-2xl h-44 mt-4"
           >
-            <h4 className="text-md text-orange-600">Card Sales</h4>
+            <h4 className="text-md text-orange-600 dark:text-gray-300">
+              Card Sales
+            </h4>
             <CreditCardIcon style={{ color: "orange" }} />
-            <p className="text-3xl text-orange-600">
+            <p className="text-3xl text-orange-600 dark:text-gray-300">
               &#x20B9; <Counter targetValue={totalCardAmount} />
             </p>
           </div>
           <div
-            style={{ boxShadow: "0 0  1em grey" }}
-            className="flex flex-col gap-6 items-center bg-white text-black p-2 rounded-3xl border-b-4 border-purple-600  drop-shadow-2xl h-44 mt-4"
+            // style={{ boxShadow: "0 0  1em grey" }}
+            className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-purple-600  drop-shadow-2xl h-44 mt-4"
           >
-            <h4 className="text-md text-purple-700">Cash Sales</h4>
+            <h4 className="text-md text-purple-700 dark:text-gray-300">
+              Cash Sales
+            </h4>
             <MoneyIcon style={{ color: "purple" }} />
-            <p className="text-3xl text-purple-700">
+            <p className="text-3xl text-purple-700 dark:text-gray-300">
               &#x20B9; <Counter targetValue={totalCashAmount} />
             </p>
           </div>
         </div>
-        <div className="flex flex-row justify-between w-full h-full mt-10 z-20">
+        <div className="flex flex-row justify-between w-full h-full mt-5 z-20">
           <div className="flex flex-col items-center  justify-center h-[260px] mt-5 w-[400px] gap-2">
             <Doughnut data={finalData} options={options} />
-            <h1 className="text-center  mt-2 capitalize text-orange-600 font-bold">
+            <h1 className="text-center dark:text-gray-300  mt-2 capitalize text-orange-600 font-bold">
               Categories Wise Data
             </h1>
           </div>
           <div className="flex flex-col items-center  justify-center mt-3 ">
-            <div className="flex flex-row gap-2 justify-center items-center">
-              <div>
-                <FormControl variant="standard" style={{ width: "160px" }}>
-                  <InputLabel id="demo-simple-select-label" style={{ color: "black" }}>Select A Month</InputLabel>
+            <div className="flex flex-row gap-2 justify-start items-start">
+              <div className="flex items-end">
+                <FormControl variant="standard" style={{ width: "80px" }}>
+                  {/* <InputLabel id="demo-simple-select-label" style={{ color: "black" }}>Select A Month</InputLabel> */}
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={selectedMonth}
                     label="select"
+                    className="dark:text-gray-300"
                     onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
                   >
                     {Array.from({ length: 12 }, (_, i) => (
-                      <MenuItem key={i + 1} value={i + 1}>{lables[i]}</MenuItem>
+                      <MenuItem key={i + 1} value={i + 1}>
+                        {lables[i]}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </div>
-              <div>
-                <FormControl variant="standard" style={{ width: "160px" }}>
-                  <InputLabel id="demo-simple-select-label" style={{ color: "black" }}>Select A Month</InputLabel>
+              <div className="flex items-end">
+                <FormControl variant="standard" style={{ width: "80px" }}>
+                  {/* <InputLabel id="demo-simple-select-label" style={{ color: "black" }}>Select A Month</InputLabel> */}
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={selectedYear}
                     label="select"
+                    className="dark:text-gray-300"
                     onChange={(e) => setSelectedYear(parseInt(e.target.value))}
                   >
                     {Array.from({ length: 10 }, (_, i) => (
-                      <MenuItem key={i + 1} value={2024 + i}>{2024 + i}</MenuItem>
+                      <MenuItem key={i + 1} value={2024 + i}>
+                        {2024 + i}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </div>
-
             </div>
             <div className=" flex flex-col gap-2 w-[500px] h-[700px] mr-16">
-            <Bar data={dataforbarchart} options={optionsforbarchart} />
-            <h1 className="text-center  capitalize text-orange-600 font-bold">
-              Monthly Sales Record
-            </h1>
+              <Bar data={dataforbarchart} options={optionsforbarchart} />
+              <h1 className="text-center dark:text-gray-300 capitalize text-orange-600 font-bold">
+                Monthly Sales Record
+              </h1>
             </div>
           </div>
         </div>

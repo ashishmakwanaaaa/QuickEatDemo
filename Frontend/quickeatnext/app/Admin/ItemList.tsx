@@ -202,7 +202,7 @@ const ItemList = () => {
       : [];
 
   return (
-    <div className="font-[Poppins] flex flex-col gap-6">
+    <div className="font-[Poppins] flex flex-col gap-6 w-[68rem]">
       <div className="flex flex-row justify-between items-center">
         <h1
           className="text-start  text-black font-bold text-md"

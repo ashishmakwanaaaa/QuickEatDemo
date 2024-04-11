@@ -170,7 +170,7 @@ const AdminPage = () => {
       xaxis: {
         categories: sortedDays.map((day) => {
           const [month, date] = day.split("-");
-          return `${month}th ${lables[date-1]}`; // Adjust month index to start from 1
+          return `${month}th ${lables[date - 1]}`; // Adjust month index to start from 1
         }),
       },
       tooltip: {
@@ -213,7 +213,7 @@ const AdminPage = () => {
       intersect: true,
     },
   };
-  
+
   const dataforbarchart = {
     labels: lables,
     datasets: [
@@ -262,10 +262,10 @@ const AdminPage = () => {
         <div className="flex flex-row gap-2 p-2">
           <div
             data-aos="fade-down"
-            className="flex flex-row w-full h-full items-center p-2 rounded-2xl"
-            style={{ boxShadow: "0 0 1em gray" }}
+            className="flex flex-row w-full h-full items-center p-1 dark:bg-gray-800 dark:text-gray-300  rounded-2xl"
+            style={{ boxShadow: "0 0 0.2em gray" }}
           >
-            <div className="bg-orange-200 flex px-5 py-3 items-center  rounded-md ">
+            <div className="bg-orange-200 flex px-5 py-3 ml-2 items-center  rounded-md ">
               <p className="text-orange-600 text-center m-auto text-md font-bold ">
                 &#x20B9;
               </p>
@@ -273,7 +273,7 @@ const AdminPage = () => {
             <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
               {" "}
               {/* Added width here */}
-              <p className="text-black text-md font-bold">
+              <p className="text-black text-md font-bold dark:text-gray-300">
                 &#x20B9;
                 <Counter targetValue={totalSales.toFixed(2)} />
               </p>
@@ -282,16 +282,16 @@ const AdminPage = () => {
           </div>
           <div
             data-aos="fade-down"
-            style={{ boxShadow: "0 0 1em gray" }}
-            className="flex flex-row w-full h-full items-center rounded-2xl p-2"
+            style={{ boxShadow: "0 0 0.2em gray" }}
+            className="flex flex-row w-full h-full items-center  dark:bg-gray-800 dark:text-gray-300 rounded-2xl p-1"
           >
-            <div className="bg-cyan-200 flex p-4 items-center rounded-md ">
+            <div className="bg-cyan-200 flex p-4  ml-2 items-center rounded-md ">
               <p className="text-cyan-600 text-center m-auto text-md font-bold ">
                 <MdOutlineSell />
               </p>
             </div>
             <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
-              <p className="text-black text-md font-bold">
+              <p className="text-black text-md font-bold dark:text-gray-300">
                 <Counter
                   targetValue={order.length.toString().padStart(2, "0")}
                 />
@@ -301,16 +301,16 @@ const AdminPage = () => {
           </div>
           <div
             data-aos="fade-down"
-            style={{ boxShadow: "0 0 1em gray" }}
-            className="flex flex-row w-full h-full items-center rounded-2xl p-2"
+            style={{ boxShadow: "0 0 0.2em gray" }}
+            className="flex flex-row w-full h-full items-center dark:bg-gray-800 dark:text-gray-300  rounded-2xl p-1"
           >
-            <div className="bg-green-200 flex p-4 items-center rounded-md ">
+            <div className="bg-green-200 flex p-4 ml-2 items-center rounded-md ">
               <p className="text-green-600 text-md text-center m-auto font-bold ">
                 <MdNotificationsActive />
               </p>
             </div>
             <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
-              <p className="text-black text-md font-bold">
+              <p className="text-black text-md font-bold dark:text-gray-300">
                 <Counter
                   targetValue={activeuser.length.toString().padStart(2, "0")}
                 />
@@ -320,16 +320,16 @@ const AdminPage = () => {
           </div>
           <div
             data-aos="fade-down"
-            style={{ boxShadow: "0 0 1em gray" }}
-            className="flex flex-row w-full h-full rounded-2xl items-center p-2"
+            style={{ boxShadow: "0 0 0.2em gray" }}
+            className="flex flex-row w-full h-full rounded-2xl  dark:bg-gray-800 dark:text-gray-300 items-center p-1"
           >
-            <div className="bg-red-200 flex p-4 items-center  rounded-md ">
+            <div className="bg-red-200 flex p-4 ml-2 items-center  rounded-md ">
               <p className="text-red-600 text-md m-auto text-center font-bold ">
                 <FaUsers />
               </p>
             </div>
             <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
-              <p className="text-black text-md font-bold">
+              <p className="text-black text-md font-bold dark:text-gray-300">
                 <Counter
                   targetValue={user.length.toString().padStart(2, "0")}
                 />
@@ -339,16 +339,16 @@ const AdminPage = () => {
           </div>
           <div
             data-aos="fade-down"
-            style={{ boxShadow: "0 0 1em gray" }}
-            className="flex flex-row  w-full h-full items-center rounded-2xl p-2"
+            style={{ boxShadow: "0 0 0.2em gray" }}
+            className="flex flex-row  w-full h-full items-center dark:bg-gray-800 dark:text-gray-300  rounded-2xl p-1"
           >
-            <div className="bg-green-500 flex p-4 items-cente rounded-md ">
+            <div className="bg-green-500 flex p-4 ml-2 items-cente rounded-md ">
               <p className="text-green-900 text-md m-auto text-center font-bold ">
                 <PiBowlFoodBold />
               </p>
             </div>
             <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
-              <p className="text-black text-md font-bold">
+              <p className="text-black text-md font-bold dark:text-gray-300">
                 <Counter
                   targetValue={items.length.toString().padStart(2, "0")}
                 />
@@ -362,7 +362,7 @@ const AdminPage = () => {
           <div
             style={{ boxShadow: "0 0 0.5em gray" }}
             data-aos="fade-right"
-            className="flex flex-col items-center rounded-2xl  justify-center h-[300px] w-[530px]"
+            className="flex flex-col dark:bg-gray-800 items-center rounded-2xl  justify-center h-[300px] w-[530px]"
           >
             <Bar data={dataforbarchart} options={optionsforbarchart} />
             <h1 className="text-center  capitalize text-orange-800 text-sm font-bold">
@@ -372,7 +372,7 @@ const AdminPage = () => {
           <div
             data-aos="fade-left"
             style={{ boxShadow: "0 0 0.5em gray" }}
-            className="flex flex-col gap-2 p-4 h-[300px] w-[500px] rounded-2xl drop-shadow-2xl"
+            className="flex flex-col gap-2 dark:bg-gray-800 p-4 h-[300px] w-[500px] rounded-2xl drop-shadow-2xl"
           >
             <div className="flex flex-row gap-2 text-sm">
               <div className="flex flex-row items-center gap-2">

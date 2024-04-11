@@ -56,6 +56,7 @@ const PaymentList = () => {
     }
     setSelectedDates(dates);
   };
+  console.log("<<<order",order)
   const filterRowsByDate = () => {
     console.log(selectedDates);
     const [startDate, endDate] = selectedDates;
@@ -126,7 +127,7 @@ const PaymentList = () => {
     setInvoiceId(row.id);
     try {
       const response = await fetch(
-        `http://localhost:5000/orders/getOrder/${row.Date}/${row.customeremail}`
+        `http://localhost:5000/orders/getOrder/${row.Date}/${row.email}`
       );
       const data = await response.json();
       setOrder(data.orders);
@@ -233,7 +234,7 @@ const PaymentList = () => {
   // setRows(rowsArray);
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between w-[68rem]">
         <h1 className="font-[Poppins] font-bold text-start ml-8">
           Payment Details
         </h1>
@@ -299,7 +300,7 @@ const PaymentList = () => {
       >
         <DialogTitle>Generate Invoice</DialogTitle>
         <DialogContent>
-          {order.map((item, index) => {
+          {order?.map((item, index) => {
             return (
               <>
                 <div

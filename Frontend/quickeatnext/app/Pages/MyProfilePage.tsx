@@ -93,7 +93,7 @@ const MyProfilePage = () => {
         {
           StateContext.login && role === "User"
             ? router.push("/dashboard")
-            : router.push("/admin");
+            : router.push("/adminside");
         }
         dispatch({
           type: "UPDATE_IMAGE",

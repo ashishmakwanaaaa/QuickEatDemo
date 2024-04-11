@@ -56,7 +56,7 @@ const ViewAllRestrurant = () => {
       <div
         id="map"
         className="border rounded-md p-2 drop-shadow-2xl"
-        style={{ height: "600px" }}
+        style={{ height: "600px", width: "68rem" }}
       ></div>
     </>
   );

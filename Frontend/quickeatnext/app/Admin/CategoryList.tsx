@@ -156,7 +156,7 @@ const CategoriesList = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-10 items-center justify-center">
+      <div className="flex flex-col gap-10 items-center justify-center w-[68rem]">
         {/* <h1 className="font-bold text-start">Categories Details</h1> */}
         <div className="flex flex-row gap-3 justify-center items-center">
           <p className="text-md text-start font-normal">

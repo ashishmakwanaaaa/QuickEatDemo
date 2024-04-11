@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./Providers/providers";
 import { LoginProvider } from "./LoginState/logincontext";
+import { ThemeProvider } from "./Providers/theme";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +25,17 @@ export default function RootLayout({
       </style>
       <body className={inter.className}>
         <Providers>
-          <LoginProvider>{children}</LoginProvider></Providers>
+          <LoginProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </LoginProvider>
+        </Providers>
       </body>
     </html>
   );
