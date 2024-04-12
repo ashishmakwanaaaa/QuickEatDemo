@@ -42,7 +42,8 @@ const ItemList = () => {
     });
   }, []);
   const StateContext = useContext(StateLogin);
-  const userId = StateContext.userid;
+  const user = useSelector((state) => state.user.user);
+  const userId = user._id;
   const [open, setOpen] = useState<boolean>(false);
   const [edititemdata, setEditItem] = useState<ItemType>({});
   const [query, setQuery] = useState<string>("");

@@ -10,11 +10,11 @@ const ItemData = () => {
 
   return (
     <>
-      {StateContext.login && (
+      
         <Dashboard>
           <PaymentList />
         </Dashboard>
-      )}
+    
     </>
   );
 };

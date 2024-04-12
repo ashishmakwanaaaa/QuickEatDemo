@@ -19,6 +19,8 @@ import "aos/dist/aos.css";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import LoginContext from "../LoginState/logincontext";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "@/lib/reducers/userSlice/UserReducers";
 
 // import { Link, resolvePath, useNavigate } from "react-router-dom";
 
@@ -32,7 +34,11 @@ const Navbar = () => {
     });
   }, []);
   const StateContext = useContext(LoginContext);
+  const user = useSelector((state) => state.user.user);
+  const userId = user._id;
   const router = useRouter();
+  const dispatch = useDispatch();
+  // const user = useSelector((state) => state.user.user);
   const pathname = usePathname();
   console.log(pathname[1]);
   // const { login, restaurantname, ownername } = useContext(LoginContext);
@@ -49,6 +55,7 @@ const Navbar = () => {
   const [dropdown, setDropDown] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const role = localStorage.getItem("role") || "";
+  const login = localStorage.getItem("login");
   console.log(role);
   const handleDropDown: () => void = () => {
     setDropDown(!dropdown);
@@ -60,8 +67,11 @@ const Navbar = () => {
     setOpen(false);
   };
   //   const navigate = useNavigate();
+  console.log("Before Logout", user);
   const handleLogout = async (id: string) => {
     StateContext.login = false;
+    dispatch(logoutUser);
+
     try {
       const response = await fetch(`http://localhost:5000/auth/logout/${id}`);
       const data = await response.json();
@@ -78,6 +88,7 @@ const Navbar = () => {
       console.log("error");
     }
   };
+  console.log("After Logout", user);
   const handleChangePassword = async (e: {
     preventDefault: () => void;
   }): Promise<void> => {
@@ -144,9 +155,7 @@ const Navbar = () => {
           <span className="text-black dark:text-gray-300  font-bold text-3xl">
             Welcome ,
             <span className="text-orange-500 shadow-orange text-3xl">
-              {role === "User"
-                ? StateContext.restaurantname
-                : StateContext.ownername}
+              {role === "User" ? user.restaurantname : user.ownername}
             </span>
           </span>
         </div>

@@ -25,7 +25,7 @@ export class ItemsService {
       itemcategory,
     } = itemdto;
     try {
-      let item = await this.itemsmodel.findOne({ itemname });
+      let item = await this.itemsmodel.findOne({ itemname,userId });
       if (item) {
         throw new ConflictException({ message: 'Item Has Already Exists' });
       }

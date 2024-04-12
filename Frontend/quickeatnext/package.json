@@ -44,6 +44,7 @@
     "react-simple-typewriter": "^5.0.1",
     "react-typed": "^2.0.12",
     "redux": "^5.0.1",
+    "redux-persist": "^6.0.0",
     "sweetalert2": "^11.10.6",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7"

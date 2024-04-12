@@ -7,13 +7,12 @@ import { useContext } from "react";
 
 const DashBoardPage = () => {
   const StateContext = useContext(LoginContext);
+  console.log(StateContext);
   return (
     <>
-      {StateContext.login && (
-        <DashBoard>
-          <AdminDashboard />
-        </DashBoard>
-      )}
+      <DashBoard>
+        <AdminDashboard />
+      </DashBoard>
     </>
   );
 };

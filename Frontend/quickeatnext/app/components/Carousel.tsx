@@ -21,7 +21,6 @@ const Carousel: React.FC = () => {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
 
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % 6);
@@ -29,7 +28,6 @@ const Carousel: React.FC = () => {
     }, 3000);
     return () => clearInterval(interval);
   }, [currentIndex]);
-
 
   return (
     <div
@@ -42,15 +40,15 @@ const Carousel: React.FC = () => {
       <div className="absolute inset-0 bg-black opacity-60 rounded-3xl"></div>
       <div className="flex items-center justify-between p-8 absolute inset-0">
         {/* Left side */}
-        <div className=" text-left text-white z-10 w-1/2">
+        <div className="text-left text-white z-10 w-1/2">
           <div style={{ height: "100px" }} data-aos="zoom-in">
-            <h1 className="text-4xl font-bold text-orange-400 ">
+            <h1 className="text-4xl font-bold text-orange-400">
               <Typewriter
                 words={[
-                  "Elevating Home Dining to Gourmet Excellence,",
-                  "Your Restaurant, Your Rules, Delivered to Your Doorstep,",
-                  "From Chef Creation to Your Table - Culinary Bliss Awaits,",
-                  "Seamless Dining, Effortless Enjoyment for Every Occasion,",
+                  "Welcome to QuickEat - Elevating Your Dining Experience!",
+                  "Empowering Restaurant Owners for Success!",
+                  "Indulge in Culinary Excellence with QuickEat!",
+                  "Your Gateway to Seamless Dining and Gourmet Delights!",
                 ]}
                 typeSpeed={80}
                 deleteSpeed={50}
@@ -60,19 +58,19 @@ const Carousel: React.FC = () => {
             </h1>
           </div>
           <p className="text-lg mb-4 font-extrabold" data-aos="zoom-in">
-            Explore a world of delightful flavors brought to your doorstep by
+            Discover a world of culinary delights at your fingertips with
             QuickEat.
           </p>
           <p className="text-lg font-extrabold" data-aos="zoom-in">
-            From hearty breakfasts to savory dinners, QuickEat has a menu that
-            caters to every craving.
+            From mouth-watering dishes to convenient table bookings, QuickEat
+            has you covered.
           </p>
           <button
             onClick={() => router.push("/login")}
             data-aos="zoom-in"
-            className="bg-orange-500 hover:text-orange-500 flex items-center hover:bg-white font-bold  text-white py-2 px-4 mt-10 rounded-md"
+            className="bg-orange-500 hover:text-orange-500 flex items-center hover:bg-white font-bold text-white py-2 px-4 mt-10 rounded-md"
           >
-            Take The Order <FaCartArrowDown />
+            Start Managing Your Restaurant <FaCartArrowDown />
           </button>
         </div>
 

@@ -39,6 +39,7 @@ const PaymentList = () => {
   const [filteredRow, setFilteredRows] = useState<PaymentType[]>([]);
   const [invoiceid, setInvoiceId] = useState<number>(0);
   const StateContext = useContext(LoginContext);
+  const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch<Dispatch>();
   const payments: PaymentType[] = useSelector(
     (state: payment) => state.payment.payments
@@ -46,7 +47,7 @@ const PaymentList = () => {
   const [selectedDates, setSelectedDates] = useState<
     [Dayjs | null, Dayjs | null]
   >([null, null]);
-  const userId = StateContext.userid;
+  const userId = user._id;
   const handleDateRangeChange = (dates: [Dayjs | null, Dayjs | null]) => {
     if (dates[0]) {
       dates[0] = dates[0].startOf("day");
@@ -56,7 +57,7 @@ const PaymentList = () => {
     }
     setSelectedDates(dates);
   };
-  console.log("<<<order",order)
+  console.log("<<<order", order);
   const filterRowsByDate = () => {
     console.log(selectedDates);
     const [startDate, endDate] = selectedDates;

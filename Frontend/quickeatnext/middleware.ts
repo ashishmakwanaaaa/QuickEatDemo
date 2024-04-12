@@ -4,22 +4,13 @@ import * as jose from "jose";
 
 export async function middleware(request: NextRequest) {
   const cookiestore = cookies();
+  console.log(cookiestore, "vcdc");
   const token = cookiestore.get("token")?.value || "";
-  const secretKey = new TextEncoder().encode("hbuhvbevbeuivbiurjr");
-
-  const decode = await jose.jwtVerify(token, secretKey, {
-    algorithms: ["HS256"],
-  });
-  const role = decode.payload.isadmin;
-  console.log("role", role);
-  localStorage.setItem("role", `${role}`);
-  if (role) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  } else {
+  if (token === "") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 }
 
 export const config = {
-  matcher: "/abcd",
+  matcher: ["/abcd"],
 };

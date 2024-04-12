@@ -35,7 +35,7 @@ export class OrdersService {
         customeremailid,
         customerphoneno,
         selectedItem,
-        totalAmount,
+        totalAmount: totalAmount.toFixed(2),
       });
       await order.save();
       return { message: 'Order Created', order };

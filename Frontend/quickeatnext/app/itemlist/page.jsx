@@ -10,11 +10,9 @@ const ItemData = () => {
 
   return (
     <>
-      {StateContext.login && (
-        <Dashboard>
-          <ItemList />
-        </Dashboard>
-      )}
+      <Dashboard>
+        <ItemList />
+      </Dashboard>
     </>
   );
 };

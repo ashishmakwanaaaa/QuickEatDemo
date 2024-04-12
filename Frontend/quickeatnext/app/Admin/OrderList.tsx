@@ -24,15 +24,14 @@ const OrderListPage = () => {
   const [filteredRow, setFilteredRows] = useState([]);
   const [rows, setRows] = useState([]);
   const [data, setData] = useState([]);
-  const StateContext = useContext(LoginContext);
+  const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const specificorder = useSelector((state) => state.order.orders);
-  console.log(StateContext);
   useEffect(() => {
     async function FetchAllPayment() {
       try {
         const response = await fetch(
-          `http://localhost:5000/orders/getAllOrders/${StateContext.userid}`
+          `http://localhost:5000/orders/getAllOrders/${user._id}`
         );
         const data = await response.json();
         console.log(data);

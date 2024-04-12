@@ -18,7 +18,8 @@ export interface CategoryType {
 
 const CategoriesList = () => {
   const StateContext = useContext(StateLogin);
-  const userId = StateContext.userid;
+  const user = useSelector((state) => state.user.user);
+  const userId = user._id;
   console.log(userId);
   const [input, setInput] = useState<CategoryType>({
     categoryname: "",

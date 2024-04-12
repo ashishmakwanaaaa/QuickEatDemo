@@ -88,7 +88,8 @@ const AdminDashboard = () => {
 
   let data: ItemDataTypeForChart[] = [];
   const StateContext = useContext(StateLogin);
-  const userId = StateContext.userid;
+  const user = useSelector((state) => state.user.user);
+  const userId = user._id;
   const dispatch = useDispatch();
   const items = useSelector(
     (state: initialStateTypeForItems) => state.item.items
@@ -99,7 +100,7 @@ const AdminDashboard = () => {
   const payments = useSelector((state) => state.payment.payments);
   const cardPayment = useSelector((state) => state.payment.cardpayments);
   const cashPayment = useSelector((state) => state.payment.cashpayments);
-  console.log(payments);
+  console.log(payments, customers);
   const totalAmount =
     payments &&
     payments
@@ -145,15 +146,16 @@ const AdminDashboard = () => {
     return "#" + Math.floor(Math.random() * 16777215).toString(16);
   };
 
-  top5sellingItems.forEach((item) => {
-    const itemData = {
-      label: item._id,
-      value: item.count,
-      color: getRandomColor(),
-      cutout: "50%",
-    };
-    data.push(itemData);
-  });
+  top5sellingItems &&
+    top5sellingItems.forEach((item) => {
+      const itemData = {
+        label: item._id,
+        value: item.count,
+        color: getRandomColor(),
+        cutout: "50%",
+      };
+      data.push(itemData);
+    });
   const options: any = {
     plugins: {
       responsive: true,
@@ -220,11 +222,12 @@ const AdminDashboard = () => {
   const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
   const dailyAmounts = new Array(daysInMonth).fill(0);
   console.log(filterdata);
-  filterdata.forEach((payment) => {
-    const paymentDate = new Date(payment.Date);
-    const dayOfMonth = paymentDate.getDate();
-    dailyAmounts[dayOfMonth - 1] += parseFloat(payment.amount);
-  });
+  filterdata &&
+    filterdata.forEach((payment) => {
+      const paymentDate = new Date(payment.Date);
+      const dayOfMonth = paymentDate.getDate();
+      dailyAmounts[dayOfMonth - 1] += parseFloat(payment.amount);
+    });
   const labels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   const dataforbarchart = {
     labels,
@@ -243,27 +246,31 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const calculatedMonthlydata = () => {
-      const filteredData = payments.filter((payment) => {
-        console.log(selectedMonth, selectedYear);
-        const paymentDate = new Date(payment.Date);
-        return (
-          paymentDate.getMonth() === selectedMonth - 1 &&
-          paymentDate.getFullYear() === selectedYear
-        );
-      });
+      const filteredData =
+        payments &&
+        payments.filter((payment) => {
+          console.log(selectedMonth, selectedYear);
+          const paymentDate = new Date(payment.Date);
+          return (
+            paymentDate.getMonth() === selectedMonth - 1 &&
+            paymentDate.getFullYear() === selectedYear
+          );
+        });
 
       setfilterdata(filteredData);
-      const dailyData = filteredData.reduce((acc, payment) => {
-        const paymentDate = new Date(payment.Date);
-        const day = paymentDate.getDate();
-        acc[day] = (acc[day] || 0) + parseFloat(payment.amount);
-        return acc;
-      }, {});
+      const dailyData =
+        filteredData &&
+        filteredData.reduce((acc, payment) => {
+          const paymentDate = new Date(payment.Date);
+          const day = paymentDate.getDate();
+          acc[day] = (acc[day] || 0) + parseFloat(payment.amount);
+          return acc;
+        }, {});
       const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
       console.log(daysInMonth);
       const monthlyData = Array.from({ length: daysInMonth }, (_, i) => ({
         day: i + 1,
-        totalAmount: dailyData[i + 1] || 0,
+        totalAmount: (dailyData && dailyData[i + 1]) || 0,
       }));
 
       setMonthlyData(monthlyData);
@@ -301,7 +308,9 @@ const AdminDashboard = () => {
             </h4>
             <IoFastFood color="green " />
             <p className="text-3xl text-green-800 dark:text-gray-300">
-              <Counter targetValue={items.length} />
+              <Counter
+                targetValue={items && items.length > 0 && items.length}
+              />
             </p>
           </div>
           <div

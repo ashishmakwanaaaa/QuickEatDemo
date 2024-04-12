@@ -27,7 +27,7 @@ const Services = () => {
         {/* Service 1 */}
         <div
           data-aos="fade-right"
-          className="w-[500px] p-1 flex flex-col items-center gap-8 border-b-8 pr-8 rounded-2xl border-orange-400 mt-5 hover:bg-gradient-to-t from-transparent to-orange-500 transition duration-300 hover:scale-105"
+          className="w-[500px] h-[430px]  p-1 flex flex-col items-center gap-[4rem] border-b-8 pr-8 rounded-2xl border-orange-400 mt-5 hover:bg-gradient-to-t from-transparent to-orange-500 transition duration-300 hover:scale-105"
         >
           <img
             className="w-40 h-50 rounded-full drop-shadow-2xl"
@@ -35,12 +35,11 @@ const Services = () => {
           />
           <div className="ml-3">
             <p className="font-bold text-xl text-orange-500  ">
-              User Account Management
+              Customer Management
             </p>
             <p className=" mt-5 text-white font-normal mb-2">
-              Create an account for a better ordering experience. Save
-              favorites, track orders, and customize preferences. Enjoy a
-              seamless journey every visit.
+              Efficiently manage customer records, preferences, and order
+              history for a personalized dining experience.
             </p>
           </div>
         </div>
@@ -48,19 +47,17 @@ const Services = () => {
         {/* Service 2 */}
         <div
           data-aos="fade-up"
-          className="flex w-[500px] p-1 items-center gap-8 flex-col border-b-8 pr-8 rounded-2xl border-blue-500 mt-8 hover:bg-gradient-to-t from-transparent to-blue-500 transition duration-300"
+          className="flex w-[500px] p-1 items-center gap-[4rem] flex-col border-b-8 pr-8 rounded-2xl border-blue-500 mt-8 hover:bg-gradient-to-t from-transparent to-blue-500 transform duration-300"
         >
           <img
             className="w-30 h-40 rounded-full drop-shadow-2xl"
-            src="https://cdn0.iconfinder.com/data/icons/work-from-home-18/512/FoodDelivery-food-delivery-meal-order-512.png"
+            src="http://www.newdesignfile.com/postpic/2011/07/local-food-icon_63633.png"
           />
           <div className="ml-3">
-            <p className="font-bold text-xl text-blue-500  ">
-              Effortless Food Ordering
-            </p>
+            <p className="font-bold text-xl text-blue-500  ">Food Management</p>
             <p className="font-normal  mt-5 text-white mb-10">
-              Explore a diverse menu with ease. Effortlessly navigate and order
-              your favorite meals in just a few clicks.
+              Organize your menu items and categories, update availability, and
+              showcase enticing dishes to enhance customer satisfaction.
             </p>
           </div>
         </div>
@@ -75,11 +72,11 @@ const Services = () => {
           />
           <div className="ml-3">
             <p className="font-bold text-xl text-green-500  ">
-              Secure Online Payments
+              Secure Payments
             </p>
             <p className="font-normal  mt-5 text-white mb-6">
-              Safely make online payments with ease. Enjoy secure transactions
-              and choose from various payment methods.
+              Offer customers peace of mind with secure online payment options,
+              ensuring a seamless and trustworthy transaction process.
             </p>
           </div>
         </div>
@@ -91,16 +88,13 @@ const Services = () => {
         >
           <img
             className="w-30 h-40 rounded-full drop-shadow-2xl"
-            src="https://cdn1.iconfinder.com/data/icons/color-bold-style/21/14_2-512.png"
+            src="https://www.ezurs.com/wp-content/themes/ezurs/images/new/icon-big-data-analytics.svg"
           />
           <div className="ml-3">
-            <p className="font-bold text-xl text-red-500  ">
-              Real-time Order Tracking
-            </p>
+            <p className="font-bold text-xl text-red-500  ">Data Analytics</p>
             <p className="font-normal  mt-5 text-white mb-8">
-              Track your order in real-time. Get updates from preparation to
-              delivery and contact the delivery partner directly for peace of
-              mind.
+              Harness the power of data analytics to gain valuable insights into
+              customer behavior, optimize operations, and drive business growth.
             </p>
           </div>
         </div>

@@ -17,15 +17,13 @@ const orderpage = ({ params }: { params: { slug: string } }) => {
   console.log(id);
   return (
     <>
-      {StateContext.login && (
-        <DashBoard>
-          {params.slug.includes("customerprofile") ? (
-            <CustomerProfile id={id} />
-          ) : (
-            <Orders id={id} />
-          )}
-        </DashBoard>
-      )}
+      <DashBoard>
+        {params.slug.includes("customerprofile") ? (
+          <CustomerProfile id={id} />
+        ) : (
+          <Orders id={id} />
+        )}
+      </DashBoard>
     </>
   );
 };

@@ -8,11 +8,9 @@ const CustomerData = () => {
 
   return (
     <>
-      {StateContext.login && (
-        <DashBoard>
-          <CustomerList />
-        </DashBoard>
-      )}
+      <DashBoard>
+        <CustomerList />
+      </DashBoard>
     </>
   );
 };

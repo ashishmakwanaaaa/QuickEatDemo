@@ -8,11 +8,11 @@ const CategoryData = () => {
 
   return (
     <>
-      {StateContext.login && (
+    
         <DashBoard>
           <CategoriesList />
         </DashBoard>
-      )}
+   
     </>
   );
 };

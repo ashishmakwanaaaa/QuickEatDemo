@@ -122,6 +122,7 @@ const RecentOrdersPage = () => {
             rows={rows}
             columns={columns}
             pagination
+            pagesize={10}
             pageSizeOptions={[
               10,
               20,

@@ -12,13 +12,13 @@ import Button from "@mui/material/Button";
 import LoginContext from "../LoginState/logincontext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "@/lib/actions/userAction";
 
 const Login = (): React.JSX.Element => {
   const router = useRouter();
 
-  const StateContext = useContext(LoginContext);
-  const { dispatch } = StateContext;
-
+  const dispatc = useDispatch();
   const [formData, setFormData] = useState<{
     emailid: string;
     password: string;
@@ -38,60 +38,44 @@ const Login = (): React.JSX.Element => {
     setOpen(false);
     router.push("/signup");
   };
-
+  const StateContext = useContext(LoginContext);
+  const { dispatch } = StateContext;
+  const user = useSelector((state) => state.user.user);
+  console.log(user);
   async function validateUser(): Promise<void> {
     console.log(formData);
-    const url = "http://localhost:5000/auth/login";
-    const res = await fetch(url, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-    const data = await res.json();
-    console.log(res);
-    if (res.status === 201) {
+    dispatc(fetchUser(formData));
+    if (user) {
       dispatch({
         type: "LOGIN",
         payload: {
           login: true,
-          restaurantname: data.user.restaurantname,
-          ownername: data.user.ownername,
-          userid: data.user._id,
-          image: data.user.image,
-          resimage: data.user.resimage,
+          restaurantname: user.restaurantname,
+          ownername: user.ownername,
+          userid: user._id,
+          image: user.image,
+          resimage: user.resimage,
         },
       });
       StateContext.login = true;
+      localStorage.setItem("login", StateContext.login);
       Swal.fire({
         icon: "success",
         title: "Successfully Login",
         timer: 3000,
       });
-      console.log("data", data);
-      //
-
-      // StateContext.restaurantname = data.user.restaurantname;
-      // StateContext.ownername = data.user.ownername;
-      // StateContext.userid = data.user._id;
-      // StateContext.image = data.user.image;
 
       console.log(StateContext);
-      localStorage.setItem("role", data.user.isAdmin ? "Admin" : "User");
+      localStorage.setItem("role", user.isAdmin ? "Admin" : "User");
       router.push("/");
     } else {
       Swal.fire({
         icon: "error",
-        text: "Error:   " + data.message,
+        text: "Error:",
         timer: 3000,
       });
     }
   }
-  console.log(StateContext);
-
-  // console.log(StateContext)
 
   const handleSubmit = (e: { preventDefault: () => void }): void => {
     try {

@@ -79,9 +79,10 @@ const Orders = ({ id }: { id: string }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [open2, setOpen2] = useState<boolean>(false);
   const StateContext = useContext(StateLogin);
-  const userId = StateContext.userid;
   const dispatch = useDispatch();
   const items: ItemType[] = useSelector((state) => state.item.items);
+  const user = useSelector((state) => state.user.user);
+  const userId = user._id;
   const customer: Customer = useSelector(
     (state) => state.customer.specificcustomer
   );
@@ -585,7 +586,7 @@ const Orders = ({ id }: { id: string }) => {
                   Total Amount:
                 </span>
                 <span className="font-bold  text-black text-2xl w-full">
-                  &#8377;{TotalAmount}
+                  &#8377;{TotalAmount.toFixed(2)}
                 </span>
               </div>
             )}

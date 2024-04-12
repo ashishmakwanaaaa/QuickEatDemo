@@ -1,4 +1,4 @@
-import { fetchUsers } from "@/lib/actions/userAction";
+import { fetchUser, fetchUsers } from "@/lib/actions/userAction";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface User {
@@ -18,12 +18,14 @@ export interface User {
 
 export interface initialStateTypeForUsers {
   users: User[];
+  user: User;
   activeusers: User[];
   loading: boolean;
   error: null | string | undefined;
 }
 const initialState: initialStateTypeForUsers = {
   users: [],
+  user: {},
   activeusers: [],
   loading: false,
   error: null,
@@ -32,7 +34,13 @@ const initialState: initialStateTypeForUsers = {
 const UserSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {},
+  reducers: {
+    logoutUser(state) {
+      state.user = null;
+      state.loading = false;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.pending, (state) => {
@@ -47,8 +55,21 @@ const UserSlice = createSlice({
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(fetchUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
 
+export const { logoutUser } = UserSlice.actions;
 export default UserSlice.reducer;

@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomer } from "@/lib/actions/customerAction";
+import { fetchUser } from "@/lib/actions/userAction";
 
 export interface Customer {
   _id?: string;
@@ -49,8 +50,9 @@ const CustomerList = () => {
   const getRandomColor = (): string => {
     return "#" + Math.floor(Math.random() * 16777215).toString(16);
   };
+  const user = useSelector((state) => state.user.user);
   const StateContext = useContext(StateLogin);
-  const userId = StateContext.userid;
+  const userId = user._id;
   const dispatch = useDispatch();
   const customerData: Customer[] = useSelector(
     (state) => state.customer.customer
@@ -178,6 +180,7 @@ const CustomerList = () => {
   useEffect(() => {
     dispatch(fetchCustomer(userId));
   }, [dispatch, userId]);
+
   const columns = [
     {
       field: "id",
