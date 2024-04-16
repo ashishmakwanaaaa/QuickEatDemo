@@ -68,7 +68,7 @@ const Carousel: React.FC = () => {
           <button
             onClick={() => router.push("/login")}
             data-aos="zoom-in"
-            className="bg-orange-500 hover:text-orange-500 flex items-center hover:bg-white font-bold text-white py-2 px-4 mt-10 rounded-md"
+            className="bg-transparent border  border-orange-600 text-orange-600 flex items-center  transform duration-300 font-bold py-3 px-5 mt-10"
           >
             Start Managing Your Restaurant <FaCartArrowDown />
           </button>

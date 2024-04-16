@@ -35,6 +35,7 @@ const Navbar = () => {
   }, []);
   const StateContext = useContext(LoginContext);
   const user = useSelector((state) => state.user.user);
+  console.log(user);
   const userId = user._id;
   const router = useRouter();
   const dispatch = useDispatch();
@@ -70,7 +71,7 @@ const Navbar = () => {
   console.log("Before Logout", user);
   const handleLogout = async (id: string) => {
     StateContext.login = false;
-    dispatch(logoutUser);
+    dispatch(logoutUser());
 
     try {
       const response = await fetch(`http://localhost:5000/auth/logout/${id}`);
@@ -135,8 +136,11 @@ const Navbar = () => {
   return (
     <nav className="dark:bg-gray-900 bg-transparent sticky font-[Poppins] z-20 p-4  flex items-center justify-between  shadow-2xl rounded-lg">
       {/* Left side */}
-      {!StateContext.login ? (
-        <div className="flex items-center " data-aos="fade-right">
+      {!user.isActive ? (
+        <div
+          className="flex items-center cursor-pointer "
+          data-aos="fade-right"
+        >
           <span className="text-black  font-bold text-3xl">
             Quick
             <span className="text-orange-500 shadow-orange text-3xl">Eat</span>
@@ -155,14 +159,14 @@ const Navbar = () => {
           <span className="text-black dark:text-gray-300  font-bold text-3xl">
             Welcome ,
             <span className="text-orange-500 shadow-orange text-3xl">
-              {role === "User" ? user.restaurantname : user.ownername}
+              {!user.isAdmin ? user.restaurantname : user.ownername}
             </span>
           </span>
         </div>
       )}
 
       {/* Center links */}
-      {!StateContext.login && (
+      {!user.isActive && (
         <div
           className="flex items-center space-x-4 gap-5"
           data-aos="fade-right"
@@ -232,7 +236,7 @@ const Navbar = () => {
       )}
 
       {/* Right side */}
-      {!StateContext.login ? (
+      {!user.isActive ? (
         <div className="flex items-center space-x-4" data-aos="fade-right">
           <Link href="/login">
             <button className="bg-orange-500 border-2 border-orange-500 w-24  text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
@@ -250,7 +254,7 @@ const Navbar = () => {
           className="flex flex-row items-center space-x-4 ml-[-70px]"
           data-aos="fade-right"
         >
-          {role !== "Admin" && (
+          {!user.isAdmin && (
             <>
               <Link href="/addcustomer">
                 <button className="bg-orange-500 border-2 border-orange-500 w-44  text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
@@ -264,14 +268,14 @@ const Navbar = () => {
               </Link>
             </>
           )}
-          {StateContext.image ? (
+          {user.image ? (
             <div
               className="w-12 h-12 rounded-full ml-[36] cursor-pointer "
               onClick={handleDropDown}
             >
               <img
                 className="rounded-full"
-                src={`http://localhost:5000/uploads/` + StateContext.image}
+                src={`http://localhost:5000/uploads/` + user.image}
                 alt=""
               />
             </div>
@@ -281,11 +285,11 @@ const Navbar = () => {
                 onClick={handleDropDown}
                 className="text-center text-2xl  mt-2 cursor-pointer"
               >
-                {StateContext.ownername[0]}
+                {user.ownername[0]}
               </p>
             </div>
           )}
-          {dropdown && StateContext.image && (
+          {dropdown && user.image && (
             <div
               className={`absolute top-full bg-white border border-gray-300 rounded-md shadow-lg mt-6 z-10 ${
                 role === "Admin" ? "left-[-110px]" : "left-[221px]"
@@ -306,9 +310,7 @@ const Navbar = () => {
                   >
                     <img
                       className="rounded-full"
-                      src={
-                        `http://localhost:5000/uploads/` + StateContext.image
-                      }
+                      src={`http://localhost:5000/uploads/` + user.image}
                       alt=""
                     />
                   </p>
@@ -339,7 +341,7 @@ const Navbar = () => {
                 <hr className="border" />
                 <ul className="p-4">
                   <li
-                    onClick={() => handleLogout(StateContext.userid)}
+                    onClick={() => handleLogout(user._id)}
                     className="px-4 py-2 flex items-center hover:rounded-md hover:ml-2 transform duration-300 cursor-pointer text-md hover:bg-black hover:text-white"
                   >
                     <LogoutIcon /> Logout

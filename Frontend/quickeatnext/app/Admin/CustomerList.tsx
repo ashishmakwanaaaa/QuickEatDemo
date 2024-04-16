@@ -10,14 +10,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Swal from "sweetalert2";
 import "aos/dist/aos.css";
-import StateLogin from "../LoginState/logincontext";
-
 import AOS from "aos";
 import { useRouter } from "next/navigation";
 import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomer } from "@/lib/actions/customerAction";
-import { fetchUser } from "@/lib/actions/userAction";
 
 export interface Customer {
   _id?: string;
@@ -51,7 +48,6 @@ const CustomerList = () => {
     return "#" + Math.floor(Math.random() * 16777215).toString(16);
   };
   const user = useSelector((state) => state.user.user);
-  const StateContext = useContext(StateLogin);
   const userId = user._id;
   const dispatch = useDispatch();
   const customerData: Customer[] = useSelector(
@@ -202,7 +198,7 @@ const CustomerList = () => {
         };
 
         return (
-          <div className="flex items-start justify-start  m-auto w-[68rem]">
+          <div className="flex  items-start justify-start  m-auto w-[68rem]">
             <div
               className="rounded-full w-10 h-10 mt-1 flex items-center justify-center"
               style={profileStyle}

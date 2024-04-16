@@ -39,7 +39,6 @@ export class AuthController {
   @Post('/login')
   async login(@Body() userlogindto: UserLoginDto, @Res() res: Response) {
     const token = await this.userservice.login(userlogindto, res);
-
     res
       .cookie('token', token.token, {
         httpOnly: true,
@@ -111,17 +110,17 @@ export class AuthController {
   catch(error) {}
 
   @Get('/getalluser')
-  getAllUser(){
+  getAllUser() {
     return this.userservice.getAllUser();
   }
 
   @Get('/logout/:id')
-  logout(@Param('id') id:string){
+  logout(@Param('id') id: string) {
     return this.userservice.logout(id);
   }
 
   @Delete('/deleteuser/:id')
-  deleteUser(@Param('id') id:string){
+  deleteUser(@Param('id') id: string) {
     return this.userservice.deleteUser(id);
   }
 }

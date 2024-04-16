@@ -1,10 +1,4 @@
-"use client";
-
-import LoginContext from "@/app/LoginState/logincontext";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { useRouter } from "next/navigation";
-import { useContext } from "react";
-import Swal from "sweetalert2";
 
 export const fetchUsers = createAsyncThunk("fetchUsers", async () => {
   const response = await fetch("http://localhost:5000/auth/getalluser");
@@ -17,8 +11,6 @@ export const fetchUsers = createAsyncThunk("fetchUsers", async () => {
 });
 
 export const fetchUser = createAsyncThunk("fetchUser", async (formData) => {
-
-
   const response = await fetch("http://localhost:5000/auth/login", {
     method: "POST",
     headers: {
@@ -28,5 +20,8 @@ export const fetchUser = createAsyncThunk("fetchUser", async (formData) => {
   });
   console.log(response);
   const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
   return data.user;
 });

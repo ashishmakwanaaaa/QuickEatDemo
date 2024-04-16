@@ -44,8 +44,9 @@ const Login = (): React.JSX.Element => {
   console.log(user);
   async function validateUser(): Promise<void> {
     console.log(formData);
-    dispatc(fetchUser(formData));
-    if (user) {
+    const response = await dispatc(fetchUser(formData));
+    console.log(response);
+    if (response.payload !== undefined) {
       dispatch({
         type: "LOGIN",
         payload: {
@@ -71,7 +72,7 @@ const Login = (): React.JSX.Element => {
     } else {
       Swal.fire({
         icon: "error",
-        text: "Error:",
+        text: "Invalid Credentials:",
         timer: 3000,
       });
     }

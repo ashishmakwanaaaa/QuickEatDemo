@@ -43,6 +43,7 @@ const ItemList = () => {
   }, []);
   const StateContext = useContext(StateLogin);
   const user = useSelector((state) => state.user.user);
+  console.log(user);
   const userId = user._id;
   const [open, setOpen] = useState<boolean>(false);
   const [edititemdata, setEditItem] = useState<ItemType>({});
@@ -206,7 +207,7 @@ const ItemList = () => {
     <div className="font-[Poppins] flex flex-col gap-6 w-[68rem]">
       <div className="flex flex-row justify-between items-center">
         <h1
-          className="text-start  text-black font-bold text-md"
+          className="text-start dark:text-white  text-black font-bold text-md"
           data-aos="fade-left"
         >
           Item Details
@@ -286,7 +287,7 @@ const ItemList = () => {
           {filteredItems.map((item, index) => {
             return (
               <div
-                className="grid grid-cols-12 mt-5 gap-4 p-2 rounded-2xl"
+                className="grid grid-cols-12 mt-5 gap-4 p-2 rounded-2xl dark:bg-gray-800"
                 style={{ boxShadow: "0 0 0.5em orange" }}
                 // data-aos="fade-right"
               >
@@ -317,7 +318,7 @@ const ItemList = () => {
                       <span className="text-sm font-bold  text-orange-500 w-36">
                         Item Name:
                       </span>
-                      <span className="font-bold  text-black text-sm w-full">
+                      <span className="font-bold dark:text-white  text-black text-sm w-full">
                         {item.itemname}
                       </span>
                     </div>
@@ -328,7 +329,7 @@ const ItemList = () => {
                         {" "}
                         Description:
                       </span>
-                      <span className="font-bold  text-black text-sm w-full">
+                      <span className="font-bold dark:text-white  text-black text-sm w-full">
                         {item.itemdescription}
                       </span>
                     </div>
@@ -338,7 +339,7 @@ const ItemList = () => {
                       <span className="text-sm font-bold  text-orange-500 w-36">
                         Item Quantity:
                       </span>
-                      <span className="font-bold  text-black text-sm w-full">
+                      <span className="font-bold dark:text-white  text-black text-sm w-full">
                         {item.quantity}
                       </span>
                     </div>
@@ -348,7 +349,7 @@ const ItemList = () => {
                       <span className="text-sm font-bold  text-orange-500 w-36">
                         Item Price:
                       </span>
-                      <span className="font-bold  text-black text-sm w-full">
+                      <span className="font-bold dark:text-white  text-black text-sm w-full">
                         &#8377;{item.price}
                       </span>
                     </div>

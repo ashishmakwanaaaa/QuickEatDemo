@@ -36,7 +36,7 @@ const UserSlice = createSlice({
   initialState,
   reducers: {
     logoutUser(state) {
-      state.user = null;
+      state.user.isActive = false;
       state.loading = false;
       state.error = null;
     },

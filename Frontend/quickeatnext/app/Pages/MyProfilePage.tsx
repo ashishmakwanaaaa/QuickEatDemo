@@ -7,10 +7,13 @@ import TextField from "@mui/material/TextField";
 import Swal from "sweetalert2";
 import LoginContext from "../LoginState/logincontext";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const MyProfilePage = () => {
   const [image, setImage] = useState<File | null>(null);
   const role = localStorage.getItem("role") || "";
+  const user = useSelector((state) => state.user.user);
+  console.log(user);
 
   const [resimage, setresImage] = useState<File | null>(null);
   const [owner, setOwner] = useState<{
@@ -66,20 +69,20 @@ const MyProfilePage = () => {
         body: formData,
       });
       const data = await response.json();
-      owner.image = data.filenames[0];
-      owner.resimage = data.filenames[1];
+      user.image = data.filenames[0];
+      user.resimage = data.filenames[1];
       console.log(data);
     }
 
     try {
       const response = await fetch(
-        `http://localhost:5000/auth/updateProfile/${owner._id}`,
+        `http://localhost:5000/auth/updateProfile/${user._id}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(owner),
+          body: JSON.stringify(user),
         }
       );
       const data = await response.json();
@@ -97,7 +100,7 @@ const MyProfilePage = () => {
         }
         dispatch({
           type: "UPDATE_IMAGE",
-          payload: { ownerimage: owner.image, restrurantimage: owner.resimage },
+          payload: { ownerimage: user.image, restrurantimage: user.resimage },
         });
       } else {
         alert("error");
@@ -111,7 +114,7 @@ const MyProfilePage = () => {
     async function fetchOwner() {
       try {
         const response = await fetch(
-          `http://localhost:5000/auth/getUser/${StateContext.restaurantname}`
+          `http://localhost:5000/auth/getUser/${user.restaurantname}`
         );
         const data = await response.json();
         console.log(data);
@@ -131,32 +134,68 @@ const MyProfilePage = () => {
           My Profile
         </h1>
         <hr className="border mt-3" />
-          <div className="flex flex-row border border-gray-300 rounded-md gap-6 justify-center items-center">
-            <div className="flex flex-row  w-[250px] justify-center items-center">
-              {/* Upload Photo Section */}
-              <div className="flex flex-col justify-center items-center gap-16">
-                <div className="flex flex-col w-[150px] h-[150px]">
-                  {/* Image 1 */}
+        <div className="flex flex-row border border-gray-300 rounded-md gap-6 justify-center items-center">
+          <div className="flex flex-row  w-[250px] justify-center items-center">
+            {/* Upload Photo Section */}
+            <div className="flex flex-col justify-center items-center gap-16">
+              <div className="flex flex-col w-[150px] h-[150px]">
+                {/* Image 1 */}
+                <input
+                  onChange={handleImageChange}
+                  id="file-upload"
+                  className="hidden"
+                  type="file"
+                  name=""
+                />
+                <div className="w-full h-full p-2 items-center">
+                  {StateContext.image && !image ? (
+                    <img
+                      className="rounded-full"
+                      src={`http://localhost:5000/uploads/${StateContext.image}`}
+                      alt=""
+                    />
+                  ) : (
+                    <>
+                      {image && (
+                        <img
+                          className="rounded-full"
+                          src={URL.createObjectURL(image)}
+                          alt="Profile"
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+                <label
+                  htmlFor="file-upload"
+                  className="bg-blue-500 font-[Poppins] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+                >
+                  Upload Photo
+                </label>
+              </div>
+              {role === "User" && (
+                <div className="flex flex-col w-[250px] h-[220px]">
+                  {/* Image 2 */}
                   <input
-                    onChange={handleImageChange}
-                    id="file-upload"
+                    onChange={handleImageChange1}
+                    id="file-upload-1"
                     className="hidden"
                     type="file"
                     name=""
                   />
                   <div className="w-full h-full p-2 items-center">
-                    {StateContext.image && !image ? (
+                    {StateContext.resimage && !resimage ? (
                       <img
-                        className="rounded-full"
-                        src={`http://localhost:5000/uploads/${StateContext.image}`}
+                        className="rounded-md"
+                        src={`http://localhost:5000/uploads/${StateContext.resimage}`}
                         alt=""
                       />
                     ) : (
                       <>
-                        {image && (
+                        {resimage && (
                           <img
-                            className="rounded-full"
-                            src={URL.createObjectURL(image)}
+                            className="rounded-md"
+                            src={URL.createObjectURL(resimage)}
                             alt="Profile"
                           />
                         )}
@@ -164,137 +203,101 @@ const MyProfilePage = () => {
                     )}
                   </div>
                   <label
-                    htmlFor="file-upload"
+                    htmlFor="file-upload-1"
                     className="bg-blue-500 font-[Poppins] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
                   >
-                    Upload Photo
+                    Upload Restaurant Image
                   </label>
                 </div>
-                {role === "User" && (
-                  <div className="flex flex-col w-[250px] h-[220px]">
-                    {/* Image 2 */}
-                    <input
-                      onChange={handleImageChange1}
-                      id="file-upload-1"
-                      className="hidden"
-                      type="file"
-                      name=""
-                    />
-                    <div className="w-full h-full p-2 items-center">
-                      {StateContext.resimage && !resimage ? (
-                        <img
-                          className="rounded-md"
-                          src={`http://localhost:5000/uploads/${StateContext.resimage}`}
-                          alt=""
-                        />
-                      ) : (
-                        <>
-                          {resimage && (
-                            <img
-                              className="rounded-md"
-                              src={URL.createObjectURL(resimage)}
-                              alt="Profile"
-                            />
-                          )}
-                        </>
-                      )}
-                    </div>
-                    <label
-                      htmlFor="file-upload-1"
-                      className="bg-blue-500 font-[Poppins] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
-                    >
-                      Upload Restaurant Image
-                    </label>
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* Profile Details Section */}
-            <div className="flex flex-col gap-4 mt-10">
-              <Box
-                component="form"
-                sx={{
-                  "& > :not(style)": { m: 1, width: "500px" },
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <p className="text-black font-bold font-[Poppins]">Owner Name</p>
-                <TextField
-                  id="outlined-basic"
-                  value={owner.ownername}
-                  onChange={(e) =>
-                    setOwner({ ...owner, ownername: e.target.value })
-                  }
-                  variant="outlined"
-                />
-              </Box>
-              <Box
-                component="form"
-                sx={{
-                  "& > :not(style)": { m: 1, width: "500px" },
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <p className="text-black font-bold font-[Poppins]">
-                  Restaurant Name
-                </p>
-                <TextField
-                  id="outlined-basic"
-                  value={owner.restaurantname}
-                  onChange={(e) =>
-                    setOwner({ ...owner, restaurantname: e.target.value })
-                  }
-                  variant="outlined"
-                />
-              </Box>
-              <Box
-                component="form"
-                sx={{
-                  "& > :not(style)": { m: 1, width: "500px" },
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <p className="text-black font-bold font-[Poppins]">
-                  Restaurant Address:
-                </p>
-                <TextField
-                  id="outlined-basic"
-                  value={owner.address}
-                  onChange={(e) =>
-                    setOwner({ ...owner, address: e.target.value })
-                  }
-                  variant="outlined"
-                />
-              </Box>
-              <Box
-                component="form"
-                sx={{
-                  "& > :not(style)": { m: 1, width: "500px" },
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <p className="text-black font-bold font-[Poppins]">Email ID</p>
-                <TextField
-                  id="outlined-basic"
-                  value={owner.emailid}
-                  onChange={(e) =>
-                    setOwner({ ...owner, emailid: e.target.value })
-                  }
-                  variant="outlined"
-                />
-              </Box>
-              <button
-                onClick={updateProfile}
-                className="bg-blue-500 text-white font-[Poppins] font-bold hover:bg-blue-800 p-2 w-full rounded-lg transfomr duration-300"
-              >
-                Save Profile
-              </button>
+              )}
             </div>
           </div>
+          {/* Profile Details Section */}
+          <div className="flex flex-col gap-4 mt-10">
+            <Box
+              component="form"
+              sx={{
+                "& > :not(style)": { m: 1, width: "500px" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <p className="text-black font-bold font-[Poppins]">Owner Name</p>
+              <TextField
+                id="outlined-basic"
+                value={owner.ownername}
+                onChange={(e) =>
+                  setOwner({ ...owner, ownername: e.target.value })
+                }
+                variant="outlined"
+              />
+            </Box>
+            <Box
+              component="form"
+              sx={{
+                "& > :not(style)": { m: 1, width: "500px" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <p className="text-black font-bold font-[Poppins]">
+                Restaurant Name
+              </p>
+              <TextField
+                id="outlined-basic"
+                value={owner.restaurantname}
+                onChange={(e) =>
+                  setOwner({ ...owner, restaurantname: e.target.value })
+                }
+                variant="outlined"
+              />
+            </Box>
+            <Box
+              component="form"
+              sx={{
+                "& > :not(style)": { m: 1, width: "500px" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <p className="text-black font-bold font-[Poppins]">
+                Restaurant Address:
+              </p>
+              <TextField
+                id="outlined-basic"
+                value={owner.address}
+                onChange={(e) =>
+                  setOwner({ ...owner, address: e.target.value })
+                }
+                variant="outlined"
+              />
+            </Box>
+            <Box
+              component="form"
+              sx={{
+                "& > :not(style)": { m: 1, width: "500px" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <p className="text-black font-bold font-[Poppins]">Email ID</p>
+              <TextField
+                id="outlined-basic"
+                value={owner.emailid}
+                onChange={(e) =>
+                  setOwner({ ...owner, emailid: e.target.value })
+                }
+                variant="outlined"
+              />
+            </Box>
+            <button
+              onClick={updateProfile}
+              className="bg-blue-500 text-white font-[Poppins] font-bold hover:bg-blue-800 p-2 w-full rounded-lg transfomr duration-300"
+            >
+              Save Profile
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );

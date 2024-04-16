@@ -5,12 +5,13 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import { useRouter } from "next/navigation";
-
+import { useSelector } from "react-redux";
 
 const DashBoard = ({ children }: any) => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const role = localStorage.getItem("role") || "";
+  const user = useSelector((state) => state.user.user);
   const handleClick = (moduleName: string) => {
     router.push(moduleName);
   };
@@ -81,7 +82,7 @@ const DashBoard = ({ children }: any) => {
         <Sidebar
           open={open}
           setOpen={setOpen}
-          menus={role === "User" ? MenusForUser : MenusForAdmin}
+          menus={!user.isAdmin ? MenusForUser : MenusForAdmin}
           onModuleClick={handleClick}
         />
         <div className="flex flex-col gap-1 justify-center items-center w-[68rem]">

@@ -144,7 +144,7 @@ const PaymentList = () => {
   const handleGenerateFile = async () => {
     try {
       setOpen(false);
-      const doc = new jsPDF("p", "pt", "a4", true);
+      const doc = new jsPDF("p", "pt", "a6", true);
       const dialogContent = document.getElementById("invoice-dialog-content");
       if (dialogContent) {
         const HtmlContent = dialogContent.innerHTML;

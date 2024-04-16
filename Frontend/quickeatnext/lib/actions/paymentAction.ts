@@ -1,4 +1,4 @@
-"use client";
+
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { PaymentType } from "../reducers/paymentSlice/paymentReducers";

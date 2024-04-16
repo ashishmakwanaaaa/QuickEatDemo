@@ -1,4 +1,4 @@
-"use client"
+
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
