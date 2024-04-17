@@ -23,7 +23,7 @@ const Services = () => {
       </p>
       <div className="bg-orange-900 h-2 w-56 rounded"></div>
 
-      <div className="flex flex-row gap-10 w-full justify-center h-full items-center ">
+      <div className="flex md:flex-row sm:flex-col  gap-10 w-full justify-center h-full items-center ">
         {/* Service 1 */}
         <div
           data-aos="fade-right"

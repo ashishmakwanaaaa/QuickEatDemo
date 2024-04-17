@@ -31,18 +31,18 @@ const Carousel: React.FC = () => {
 
   return (
     <div
-      className="relative bg-cover bg-center h-screen flex flex-column rounded-3xl font-[Poppins]"
+      className="relative bg-cover bg-center h-screen flex flex-col md:flex-row rounded-3xl font-[Poppins]"
       style={{
         backgroundImage:
           "url(https://www.nicdarkthemes.com/themes/restaurant/wp/demo/intro/img/parallax/splash-header-2.jpg)",
       }}
     >
       <div className="absolute inset-0 bg-black opacity-60 rounded-3xl"></div>
-      <div className="flex items-center justify-between p-8 absolute inset-0">
+      <div className="flex flex-col md:flex-row items-center justify-between p-8 absolute inset-0">
         {/* Left side */}
-        <div className="text-left text-white z-10 w-1/2">
+        <div className="text-left text-white z-10 w-full md:w-1/2">
           <div style={{ height: "100px" }} data-aos="zoom-in">
-            <h1 className="text-4xl font-bold text-orange-400">
+            <h1 className="text-4xl md:text-3xl lg:text-3xl font-bold text-orange-400">
               <Typewriter
                 words={[
                   "Welcome to QuickEat - Elevating Your Dining Experience!",
@@ -57,11 +57,14 @@ const Carousel: React.FC = () => {
               />
             </h1>
           </div>
-          <p className="text-lg mb-4 font-extrabold" data-aos="zoom-in">
+          <p
+            className="text-lg md:text-md  mb-4 font-extrabold"
+            data-aos="zoom-in"
+          >
             Discover a world of culinary delights at your fingertips with
             QuickEat.
           </p>
-          <p className="text-lg font-extrabold" data-aos="zoom-in">
+          <p className="text-lg  md:text-md font-extrabold" data-aos="zoom-in">
             From mouth-watering dishes to convenient table bookings, QuickEat
             has you covered.
           </p>
@@ -74,9 +77,9 @@ const Carousel: React.FC = () => {
           </button>
         </div>
 
-        <div className="z-10 w-[700px] h-[400px]  flex gap-[10px]">
+        <div className="z-10 w-full md:w-[700px] h-[400px] mt-8 md:mt-0 flex gap-4 md:gap-20">
           {/* Replace this with your actual image */}
-          <div className="relative w-[400px] ml-48 h-80 overflow-hidden rounded-2xl">
+          <div className="relative w-full md:ml-32 md:w-[400px] h-[300px] md:h-[400px] overflow-hidden rounded-2xl">
             <img
               src="https://static.vecteezy.com/system/resources/thumbnails/022/559/426/small/american-cheese-bbq-beef-with-tomato-lettuce-juicy-beef-burger-fast-food-presentation-studio-product-isolated-on-white-background-photo.jpg"
               alt="Restaurant Image"
