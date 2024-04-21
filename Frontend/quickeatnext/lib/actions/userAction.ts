@@ -1,5 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
+interface FormDataType {
+  emailid:string,
+  password:string
+}
+
 export const fetchUsers = createAsyncThunk("fetchUsers", async () => {
   const response = await fetch("http://localhost:5000/auth/getalluser");
   const data = await response.json();
@@ -10,7 +15,7 @@ export const fetchUsers = createAsyncThunk("fetchUsers", async () => {
   };
 });
 
-export const fetchUser = createAsyncThunk("fetchUser", async (formData) => {
+export const fetchUser = createAsyncThunk("fetchUser", async (formData:FormDataType) => {
   const response = await fetch("http://localhost:5000/auth/login", {
     method: "POST",
     headers: {

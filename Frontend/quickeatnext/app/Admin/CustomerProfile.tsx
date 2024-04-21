@@ -15,17 +15,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomerById } from "@/lib/actions/customerAction";
 import { initialStateTypeForCustomer } from "@/lib/reducers/customerSlice/customerReducers";
 import { fetchSpecificOrder } from "@/lib/actions/orderAction";
+import { customer, order } from "@/lib/reducers";
 
 const CustomerProfile = ({ id }: { id: string }) => {
   const [customerorder, setCustomerOrder] = useState<OrderDataType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const specificorder = useSelector((state) => state.order.orders);
+  const specificorder = useSelector((state:order) => state.order.orders);
   const customer: Customer = useSelector(
-    (state: initialStateTypeForCustomer) => state.customer.specificcustomer
+    (state: customer) => state.customer.specificcustomer
   );
   useEffect(() => {
-    dispatch(fetchCustomerById(id));
+    dispatch(fetchCustomerById(id) as any);
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -53,7 +54,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
   console.log(sumoftotalAmount);
   const handleClickOpen = async (row: any) => {
     setOpen(true);
-    dispatch(fetchSpecificOrder(row._id));
+    dispatch(fetchSpecificOrder(row._id) as any);
 
     console.log(row);
   };

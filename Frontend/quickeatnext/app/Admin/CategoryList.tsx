@@ -1,13 +1,14 @@
 "use client";
 
 import { Button } from "@mui/material";
-import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridColDef, GridRowSelectionApi } from "@mui/x-data-grid";
 import { useContext, useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import StateLogin from "../LoginState/logincontext";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "@/lib/actions/categoryAction";
+import { category, user } from "@/lib/reducers";
 
 export interface CategoryType {
   _id?: string;
@@ -18,7 +19,7 @@ export interface CategoryType {
 
 const CategoriesList = () => {
   const StateContext = useContext(StateLogin);
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state:user) => state.user.user);
   const userId = user._id;
   console.log(userId);
   const [input, setInput] = useState<CategoryType>({
@@ -28,9 +29,9 @@ const CategoriesList = () => {
     userId,
   });
   const dispatch = useDispatch();
-  const categories = useSelector((state) => state.category.categories);
+  const categories = useSelector((state:category) => state.category.categories);
   useEffect(() => {
-    dispatch(fetchCategories(userId));
+    dispatch(fetchCategories(userId) as any);
   }, [dispatch, userId]);
   console.log(categories);
   const handelDeleteCategory = async (id: string) => {
@@ -47,7 +48,7 @@ const CategoriesList = () => {
           icon: "success",
           timer: 1000,
         });
-        dispatch(fetchCategories(userId));
+        dispatch(fetchCategories(userId) as any);
       } else {
         Swal.fire({
           title: "Error : " + data.message,
@@ -83,7 +84,7 @@ const CategoriesList = () => {
           timer: 1000,
         });
         setInput({ categoryname: "", image: "" });
-        dispatch(fetchCategories(userId));
+        dispatch(fetchCategories(userId) as any);
       } else {
         Swal.fire({
           title: "Error: " + data.message,
@@ -115,20 +116,7 @@ const CategoriesList = () => {
     }
   };
 
-  const columns: (
-    | {
-        field: string;
-        headerName: string;
-        width: number;
-        renderCell?: undefined;
-      }
-    | {
-        field: string;
-        headerName: string;
-        width: number;
-        renderCell: (params: GridRowSelectionApi) => JSX.Element;
-      }
-  )[] = [
+  const columns: GridColDef[] = [
     {
       field: "id",
       headerName: "ID",
@@ -144,7 +132,7 @@ const CategoriesList = () => {
       // headerClassName: "bg-black text-white font-bold",
       headerName: "Delete",
       width: 60,
-      renderCell: (params: GridRowSelectionApi) => (
+      renderCell: (params: GridCellParams) => (
         <Button
           onClick={() => handelDeleteCategory(params.row._id)}
           style={{ color: "red", padding: "2px", fontSize: "20px" }}

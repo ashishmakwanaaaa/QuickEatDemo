@@ -18,7 +18,7 @@
     "@mui/x-charts": "^7.1.0",
     "@mui/x-data-grid": "^7.0.0",
     "@mui/x-date-pickers": "^7.2.0",
-    "@mui/x-date-pickers-pro": "^7.0.0",
+    "@mui/x-date-pickers-pro": "^7.2.0",
     "@reduxjs/toolkit": "^2.2.3",
     "aos": "^2.3.4",
     "apexcharts": "^3.48.0",
@@ -50,6 +50,7 @@
     "react-typed": "^2.0.12",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
+    "styled-components": "^6.1.8",
     "sweetalert2": "^11.10.6",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7"

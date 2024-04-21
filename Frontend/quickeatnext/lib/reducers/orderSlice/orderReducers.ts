@@ -1,13 +1,25 @@
+import { OrderDataType } from "@/app/Admin/Orders";
 import { fetchSpecificOrder } from "@/lib/actions/orderAction";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface initialStateTypeForOrder {
-  orders: [];
+  orders: OrderDataType;
   loading: boolean;
   error: null | string | undefined;
 }
 const initialState: initialStateTypeForOrder = {
-  orders: [],
+  orders: {
+    _id: undefined,
+    userId: "",
+    customerID: undefined,
+    customerfirstname: "",
+    customerlastname: "",
+    customeremailid: "",
+    customerphoneno: 0,
+    selectedItem: [],
+    totalAmount: undefined,
+    Date: "",
+  },
   loading: false,
   error: null,
 };

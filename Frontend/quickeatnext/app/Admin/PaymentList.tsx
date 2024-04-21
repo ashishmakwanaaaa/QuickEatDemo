@@ -1,6 +1,6 @@
 "use client";
 
-import { DataGrid, GridRowParams, GridRowSelectionApi } from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridColDef, GridRowParams, GridRowSelectionApi } from "@mui/x-data-grid";
 import { useContext, useEffect, useState } from "react";
 import { OrderDataType } from "./Orders";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
@@ -11,7 +11,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import LoginContext from "../LoginState/logincontext";
 import jsPDF from "jspdf";
-import { DateRangePicker } from "@mui/x-date-pickers-pro";
+import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import dayjs, { Dayjs } from "dayjs";
 import Swal from "sweetalert2";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -19,17 +19,14 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPayments } from "@/lib/actions/paymentAction";
+import { fetchPayments,FetchPaymentsPayload } from "@/lib/actions/paymentAction";
 import {
   PaymentType,
   initialStateTypeForPayment,
 } from "@/lib/reducers/paymentSlice/paymentReducers";
-import { payment } from "@/lib/reducers";
+import { payment, user } from "@/lib/reducers";
 import { Dispatch } from "redux";
 
-interface CustomRenderCellParams extends GridRowParams {
-  row: PaymentType;
-}
 
 const PaymentList = () => {
   const [rows, setRows] = useState<PaymentType[]>([]);
@@ -39,7 +36,7 @@ const PaymentList = () => {
   const [filteredRow, setFilteredRows] = useState<PaymentType[]>([]);
   const [invoiceid, setInvoiceId] = useState<number>(0);
   const StateContext = useContext(LoginContext);
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state:user) => state.user.user);
   const dispatch = useDispatch<Dispatch>();
   const payments: PaymentType[] = useSelector(
     (state: payment) => state.payment.payments
@@ -97,7 +94,7 @@ const PaymentList = () => {
   console.log(StateContext);
   let currentDate = new Date().toJSON().slice(0, 10);
   useEffect(() => {
-    dispatch(fetchPayments(userId));
+    dispatch(fetchPayments(userId) as any);
   }, [dispatch, userId]);
   useEffect(() => {
     if (!payments || payments.length === 0) {
@@ -165,13 +162,7 @@ const PaymentList = () => {
     }
   };
   console.log(payments);
-  const columns: {
-    field: string;
-    headerName: string;
-    width: number;
-    cellClassName?: string;
-    renderCell?: (params: GridRowSelectionApi) => Element;
-  }[] = [
+  const columns:GridColDef[] = [
     {
       field: "id",
 
@@ -220,7 +211,7 @@ const PaymentList = () => {
 
       headerName: "Generate Invoice",
       width: 120,
-      renderCell: (params: CustomRenderCellParams) => (
+      renderCell: (params: GridCellParams) => (
         <Button
           onClick={() => handleClickOpen(params.row)}
           style={{ color: "red", padding: "2px" }}

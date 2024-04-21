@@ -21,6 +21,7 @@ import Link from "next/link";
 import LoginContext from "../LoginState/logincontext";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "@/lib/reducers/userSlice/UserReducers";
+import { user } from "@/lib/reducers";
 
 // import { Link, resolvePath, useNavigate } from "react-router-dom";
 
@@ -34,8 +35,8 @@ const Navbar = () => {
     });
   }, []);
   const StateContext = useContext(LoginContext);
-  const user = useSelector((state) => state.user.user);
-  console.log(user);
+  const user = useSelector((state:user) => state.user.user);
+  console.log(user,StateContext);
   const userId = user._id;
   const router = useRouter();
   const dispatch = useDispatch();

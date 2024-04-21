@@ -1,8 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
+export interface FetchCustomerPayload {
+  id: string;
+}
+
 export const fetchCustomer = createAsyncThunk(
   "fetchCustomer",
-  async (userId) => {
+  async (userId:string) => {
     const response = await fetch(
       `http://localhost:5000/customer/getAllCustomer/${userId}`
     );
@@ -16,7 +20,7 @@ export const fetchCustomer = createAsyncThunk(
 
 export const fetchCustomerById = createAsyncThunk(
   "fetchcustomerbyid",
-  async (id) => {
+  async (id:string) => {
     console.log(id);
     const response = await fetch(
       `http://localhost:5000/customer/getCustomer/${id}`

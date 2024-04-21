@@ -4,13 +4,23 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export interface initialStateTypeForCustomer {
   customer: Customer[];
-  specificcustomer: {};
+  specificcustomer: Customer;
   loading: boolean;
   error: null | string | undefined;
 }
 export const initialState: initialStateTypeForCustomer = {
   customer: [],
-  specificcustomer: {},
+  specificcustomer: {
+    userId: "",
+    firstname: "",
+    lastname: "",
+    emailid: "",
+    phoneno: 0,
+    address: "",
+    state: "",
+    city: "",
+    pincode: ""
+  },
   loading: false,
   error: null,
 };

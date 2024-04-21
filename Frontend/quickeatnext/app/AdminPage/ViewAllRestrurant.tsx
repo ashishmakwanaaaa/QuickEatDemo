@@ -6,15 +6,16 @@ import "leaflet/dist/leaflet.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers } from "@/lib/actions/userAction";
 import { User } from "@/lib/reducers/userSlice/UserReducers";
+import { user } from "@/lib/reducers";
 
 const ViewAllRestrurant = () => {
   const [mapInitialized, setMapInitialized] = useState(false);
-  const users = useSelector((state) => state.user.users);
+  const users = useSelector((state:user) => state.user.users);
   const dispatch = useDispatch();
-  const mapRef = useRef(null);
+  const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    dispatch(fetchUsers() as any);
   }, [dispatch]);
 
   useEffect(() => {

@@ -9,6 +9,7 @@ interface LoginContextType {
   userid: string;
   image?: string;
   resimage?: string;
+  dispatch?:React.Dispatch<Action>
 }
 
 interface LoginProviderProps {

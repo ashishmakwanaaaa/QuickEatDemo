@@ -1,9 +1,10 @@
+import { CategoryType } from "@/app/Admin/CategoryList";
 import { ItemType } from "@/app/Admin/ItemList";
 import { fetchCategories } from "@/lib/actions/categoryAction";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface initialStateTypeForCategory {
-  categories: ItemType[];
+  categories: CategoryType[];
   loading: boolean;
   error: null | string | undefined;
 }

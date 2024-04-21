@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchCategories = createAsyncThunk(
   "fetchCategories",
-  async (userId) => {
+  async (userId:string) => {
     const response = await fetch(
       `http://localhost:5000/category/getAllCategories/${userId}`
     );

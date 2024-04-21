@@ -4,7 +4,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { FaChair, FaTable } from "react-icons/fa";
 
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -17,6 +17,8 @@ import {
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useSelector } from "react-redux";
+import { user } from "@/lib/reducers";
+import { Dayjs } from "dayjs";
 
 interface ItemTypeTableBooking {
   type: string;
@@ -24,15 +26,24 @@ interface ItemTypeTableBooking {
   x: number;
   y: number;
 }
+interface bookingdetailstype {
+  userId:string,
+  TableId:string,
+  Customername:string,
+  Customerphoneno:string,
+  Howmanypeople:number,
+  Time:Dayjs | null | any,
+  Date:Dayjs | null | any
+}
 
 const BookTable = () => {
   const [items, setItems] = useState<ItemTypeTableBooking[]>([]);
   const [editMode, setEditMode] = useState<boolean>(true);
   const [bookedtable, setbookedtable] = useState<number[]>([]);
   const [open, setOpen] = useState<boolean>(false);
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state:user) => state.user.user);
   console.log(user._id);
-  const [bookingdetails, setbookingdetails] = useState({
+  const [bookingdetails, setbookingdetails] = useState<bookingdetailstype>({
     userId: user._id,
     TableId: "TABLE" + Math.floor(Math.random() * 1000),
     Customername: "",
@@ -208,13 +219,13 @@ const BookTable = () => {
       console.log(data);
       if (response.ok) {
         Swal.fire({
-          title: "Table Book Successfully",
+          text: "Table Book Successfully",
           icon: "success",
           timer: 1000,
         });
       } else {
         Swal.fire({
-          title: "Error:" + data.message,
+          text: "Error:" + data.message,
           icon: "error",
           timer: 1000,
         });
@@ -493,11 +504,9 @@ const BookTable = () => {
                 onChange={(newValue) =>
                   setbookingdetails({ ...bookingdetails, Date: newValue })
                 }
-                renderInput={(params: any) => (
-                  <TextField {...params} fullWidth variant="standard" />
-                )}
+              
               />
-            </LocalizationProvider>
+            </LocalizationProvider>   
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <TimePicker
                 label="Time"
@@ -505,9 +514,7 @@ const BookTable = () => {
                 onChange={(newValue) =>
                   setbookingdetails({ ...bookingdetails, Time: newValue })
                 }
-                renderInput={(params: any) => (
-                  <TextField {...params} fullWidth variant="standard" />
-                )}
+              
               />
             </LocalizationProvider>
           </div>

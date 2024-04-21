@@ -19,6 +19,7 @@ import {
   ArcElement,
   Tooltip,
   Legend,
+  ChartOptions,
 } from "chart.js";
 import { Bar, Doughnut } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,7 +27,9 @@ import { fetchItems } from "@/lib/actions/itemAction";
 import { fetchCustomer } from "@/lib/actions/customerAction";
 import { initialStateTypeForCustomer } from "@/lib/reducers/customerSlice/customerReducers";
 import { initialStateTypeForItems } from "@/lib/reducers/ItemSlice/itemReducers";
-import { fetchPayments } from "@/lib/actions/paymentAction";
+import { PaymentData, fetchPayments } from "@/lib/actions/paymentAction";
+import { customer, item, payment, user } from "@/lib/reducers";
+import { PaymentType } from "@/lib/reducers/paymentSlice/paymentReducers";
 
 ChartJS.register(
   CategoryScale,
@@ -54,6 +57,11 @@ export interface CategoryType {
   image: string;
 }
 
+interface monthlyDatatype {
+  day:number,
+  totalAmount:number
+}
+
 export const Counter = ({ targetValue }: { targetValue: any }) => {
   const [count, setCount] = useState(0);
 
@@ -74,8 +82,8 @@ export const Counter = ({ targetValue }: { targetValue: any }) => {
 };
 
 const AdminDashboard = () => {
-  const [monthlyData, setMonthlyData] = useState([]);
-  const [filterdata, setfilterdata] = useState([]);
+  const [monthlyData, setMonthlyData] = useState<monthlyDatatype[]>([]);
+  const [filterdata, setfilterdata] = useState<PaymentType[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<number | string>(
     new Date().getMonth() + 1
   );
@@ -88,18 +96,18 @@ const AdminDashboard = () => {
 
   let data: ItemDataTypeForChart[] = [];
   const StateContext = useContext(StateLogin);
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state:user) => state.user.user);
   const userId = user._id;
   const dispatch = useDispatch();
   const items = useSelector(
-    (state: initialStateTypeForItems) => state.item.items
+    (state: item) => state.item.items
   );
   const customers: Customer[] = useSelector(
-    (state: initialStateTypeForCustomer) => state.customer.customer
+    (state: customer) => state.customer.customer
   );
-  const payments = useSelector((state) => state.payment.payments);
-  const cardPayment = useSelector((state) => state.payment.cardpayments);
-  const cashPayment = useSelector((state) => state.payment.cashpayments);
+  const payments = useSelector((state:payment) => state.payment.payments);
+  const cardPayment = useSelector((state:payment) => state.payment.cardpayments);
+  const cashPayment = useSelector((state:payment) => state.payment.cashpayments);
   console.log(payments, customers);
   const totalAmount =
     payments &&
@@ -119,13 +127,13 @@ const AdminDashboard = () => {
       .toFixed(2);
   console.log(typeof totalAmount);
   useEffect(() => {
-    dispatch(fetchCustomer(userId));
+    dispatch(fetchCustomer(userId) as any);
   }, [dispatch, userId]);
   useEffect(() => {
-    dispatch(fetchItems(userId));
+    dispatch(fetchItems(userId) as any);
   }, [dispatch, userId]);
   useEffect(() => {
-    dispatch(fetchPayments(userId));
+    dispatch(fetchPayments(userId) as any);
   }, [dispatch, userId]);
   useEffect(() => {
     async function top5sellingitems() {
@@ -175,7 +183,7 @@ const AdminDashboard = () => {
     ],
   };
 
-  const optionsforbarchart: any = {
+  const optionsforbarchart:ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
       legend: { position: "top" },
@@ -219,7 +227,7 @@ const AdminDashboard = () => {
     "November",
     "December",
   ];
-  const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+  const daysInMonth = new Date(Number(selectedYear), Number(selectedMonth), 0).getDate();
   const dailyAmounts = new Array(daysInMonth).fill(0);
   console.log(filterdata);
   filterdata &&
@@ -252,7 +260,7 @@ const AdminDashboard = () => {
           console.log(selectedMonth, selectedYear);
           const paymentDate = new Date(payment.Date);
           return (
-            paymentDate.getMonth() === selectedMonth - 1 &&
+            paymentDate.getMonth() === Number(selectedMonth) - 1 &&
             paymentDate.getFullYear() === selectedYear
           );
         });
@@ -265,8 +273,8 @@ const AdminDashboard = () => {
           const day = paymentDate.getDate();
           acc[day] = (acc[day] || 0) + parseFloat(payment.amount);
           return acc;
-        }, {});
-      const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
+        }, {} as {[key:number]:number});
+      const daysInMonth = new Date(Number(selectedYear), Number(selectedMonth), 0).getDate();
       console.log(daysInMonth);
       const monthlyData = Array.from({ length: daysInMonth }, (_, i) => ({
         day: i + 1,
@@ -365,7 +373,7 @@ const AdminDashboard = () => {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={selectedMonth}
+                    value={selectedMonth.toString()}
                     label="select"
                     className="dark:text-gray-300"
                     onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
@@ -384,7 +392,7 @@ const AdminDashboard = () => {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={selectedYear}
+                    value={selectedYear.toString()}
                     label="select"
                     className="dark:text-gray-300"
                     onChange={(e) => setSelectedYear(parseInt(e.target.value))}

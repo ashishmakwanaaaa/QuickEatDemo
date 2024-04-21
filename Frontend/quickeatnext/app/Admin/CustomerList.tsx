@@ -12,9 +12,10 @@ import Swal from "sweetalert2";
 import "aos/dist/aos.css";
 import AOS from "aos";
 import { useRouter } from "next/navigation";
-import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridColDef, GridRowSelectionApi } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomer } from "@/lib/actions/customerAction";
+import { customer, user } from "@/lib/reducers";
 
 export interface Customer {
   _id?: string;
@@ -41,17 +42,17 @@ const CustomerList = () => {
 
   const [query, setQuery] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
-  const [editCustomer, setEditCustomer] = useState<Customer>({});
+  const [editCustomer, setEditCustomer] = useState<Customer>({} as Customer);
   const router = useRouter();
 
   const getRandomColor = (): string => {
     return "#" + Math.floor(Math.random() * 16777215).toString(16);
   };
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state:user) => state.user.user);
   const userId = user._id;
   const dispatch = useDispatch();
   const customerData: Customer[] = useSelector(
-    (state) => state.customer.customer
+    (state:customer) => state.customer.customer
   );
   console.log(customerData);
   const handleClickOpen = async (id: string) => {
@@ -116,7 +117,7 @@ const CustomerList = () => {
             timer: 1000,
           });
         }
-        dispatch(fetchCustomer(userId));
+        dispatch(fetchCustomer(userId) as any);
       }
     } catch (error) {
       window.alert(error);
@@ -154,7 +155,7 @@ const CustomerList = () => {
             icon: "success",
             timer: 1000,
           });
-          dispatch(fetchCustomer(userId));
+          dispatch(fetchCustomer(userId) as any);
         } else {
           Swal.fire({
             title: "Delete Failed",
@@ -174,10 +175,10 @@ const CustomerList = () => {
     }
   };
   useEffect(() => {
-    dispatch(fetchCustomer(userId));
+    dispatch(fetchCustomer(userId) as any);
   }, [dispatch, userId]);
 
-  const columns = [
+  const columns:GridColDef[] = [
     {
       field: "id",
       // headerClassName: "bg-black text-white font-bold",
@@ -190,7 +191,7 @@ const CustomerList = () => {
         `text-black w-10 h-10 text-sm font-bold m-auto cursor-pointer p-2`,
       headerName: "Profile",
       width: 100,
-      renderCell: (params) => {
+      renderCell: (params: { row: { Profile: any; _id: any; }; }) => {
         const initials = params.row.Profile;
         const randomColor = getRandomColor();
         const profileStyle = {
@@ -243,7 +244,7 @@ const CustomerList = () => {
       cellClassName:
         "text-orange-600 text-md font-bold m-auto cursor-pointer p-2",
       width: 90,
-      renderCell: (params: { row: object }) => (
+      renderCell: (params:GridCellParams) => (
         <button
           onClick={() => handleOrder(params.row._id)}
           className="text-orange-600 font-bold text-md"
@@ -257,7 +258,7 @@ const CustomerList = () => {
       headerName: "Edit",
       cellClassName: "text-green-800 font-bold text-center capitalize",
       width: 100,
-      renderCell: (params: GridRowSelectionApi) => (
+      renderCell: (params: GridCellParams) => (
         <Button
           onClick={() => handleClickOpen(params.row._id)}
           style={{ color: "green", padding: "2px", fontSize: "20px" }}
@@ -271,7 +272,7 @@ const CustomerList = () => {
       // headerClassName: "bg-black text-white font-bold",
       headerName: "Delete",
       width: 60,
-      renderCell: (params: GridRowSelectionApi) => (
+      renderCell: (params: GridCellParams) => (
         <Button
           onClick={() => handelDeleteCustomer(params.row._id)}
           style={{ color: "red", padding: "2px", fontSize: "20px" }}

@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchSpecificOrder = createAsyncThunk(
   "fetchSpecificOrder",
-  async (id) => {
+  async (id:string) => {
     const response = await fetch(
       `http://localhost:5000/orders/getOneOrder/${id}`
     );

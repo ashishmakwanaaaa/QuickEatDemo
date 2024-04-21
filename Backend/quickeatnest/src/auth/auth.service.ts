@@ -28,8 +28,8 @@ export class AuthService {
   transported = nodemailer.createTransport({
     service: process.env.service,
     auth: {
-      user: process.env.user,
-      pass: process.env.pass,
+      user: process.env.userforemail,
+      pass: process.env.passforemail,
     },
   });
 
@@ -102,7 +102,7 @@ export class AuthService {
           from: 'quickeatwithus123@gmail.com',
           to: email,
           subject: 'Reset Your Password',
-          text: `This Link Is Valid For 2 minutes http://localhost:3001/forgotpassword/${user._id}/${token}`,
+          text: `This Link Is Valid For 2 minutes http://localhost:3000/forgotpassword/${user._id}/${token}`,
         };
         this.transported.sendMail(mailOptions, (err, info) => {
           if (!err) {

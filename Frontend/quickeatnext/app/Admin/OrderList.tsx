@@ -3,30 +3,41 @@
 import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
 import { useContext, useEffect, useState } from "react";
 import { OrderDataType } from "./Orders";
-import { DateRangePicker } from "@mui/x-date-pickers-pro";
+import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import dayjs, { Dayjs } from "dayjs";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import LoginContext from "../LoginState/logincontext";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import CancelIcon from "@mui/icons-material/Cancel";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSpecificOrder } from "@/lib/actions/orderAction";
+import { order, user } from "@/lib/reducers";
+
+export interface OrderListRows{
+  id:number,
+  _id:string | any,
+  Date:string,
+  customername:string,
+  customeremail:string,
+  customerphoneno:number,
+  amount:number,
+  invoice:string,
+}
 
 const OrderListPage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [orders, setOrders] = useState<OrderDataType[]>([]);
-  const [filteredRow, setFilteredRows] = useState([]);
-  const [rows, setRows] = useState([]);
-  const [data, setData] = useState([]);
-  const user = useSelector((state) => state.user.user);
+  const [filteredRow, setFilteredRows] = useState<OrderDataType[]>([]);
+  const [rows, setRows] = useState<OrderListRows[]>([]);
+  const [data, setData] = useState<OrderListRows[]>([]);
+  const user = useSelector((state:user) => state.user.user);
   const dispatch = useDispatch();
-  const specificorder = useSelector((state) => state.order.orders);
+  const specificorder:OrderDataType = useSelector((state:order) => state.order.orders);
   useEffect(() => {
     async function FetchAllPayment() {
       try {
@@ -48,10 +59,10 @@ const OrderListPage = () => {
       setData([]);
       return;
     }
-    const rowsArray = orders.map((order, index) => ({
+    const rowsArray:OrderListRows[]= orders.map((order, index) => ({
       id: index + 1,
       _id: order._id,
-      Date: order.Date.split("T")[0],
+      Date: order.Date.toString().split("T")[0],
       customername: order.customerfirstname + " " + order.customerlastname,
       customeremail: order.customeremailid,
       customerphoneno: order.customerphoneno,
@@ -78,7 +89,7 @@ const OrderListPage = () => {
   };
   const handleClickOpen = async (row: any) => {
     setOpen(true);
-    dispatch(fetchSpecificOrder(row._id));
+    dispatch(fetchSpecificOrder(row._id) as any);
     console.log(row);
   };
   console.log(specificorder);
@@ -90,7 +101,7 @@ const OrderListPage = () => {
     const [startDate, endDate] = selectedDates;
 
     const filteredData: OrderDataType[] = orders.filter((order) => {
-      const paymentDate = dayjs(order.Date.split("T")[0]);
+      const paymentDate = dayjs(order.Date.toString().split("T")[0]);
       return (
         paymentDate.isSame(startDate, "day") ||
         (paymentDate.isAfter(startDate, "day") &&
@@ -101,11 +112,12 @@ const OrderListPage = () => {
 
     setFilteredRows(filteredData);
   };
-  const filteredRowsWithIds: OrderDataType[] = filteredRow.map(
+  
+  const filteredRowsWithIds: OrderListRows[] = filteredRow.map(
     (order, index) => ({
       id: index + 1,
       _id: order._id,
-      Date: order.Date.split("T")[0],
+      Date: order.Date.toString().split("T")[0],
       customername: order.customerfirstname + " " + order.customerlastname,
       customeremail: order.customeremailid,
       customerphoneno: order.customerphoneno,

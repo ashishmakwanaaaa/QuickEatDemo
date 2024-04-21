@@ -25,7 +25,19 @@ export interface initialStateTypeForUsers {
 }
 const initialState: initialStateTypeForUsers = {
   users: [],
-  user: {},
+  user: {
+    restaurantname: "",
+    ownername: "",
+    emailid: "",
+    password: "",
+    confirmpassword: "",
+    image: "",
+    resimage: "",
+    isAdmin: false,
+    isActive: false,
+    lat: undefined,
+    long: undefined
+  },
   activeusers: [],
   loading: false,
   error: null,
@@ -40,6 +52,9 @@ const UserSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    updateUser(state,action){
+      state.user = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -71,5 +86,5 @@ const UserSlice = createSlice({
   },
 });
 
-export const { logoutUser } = UserSlice.actions;
+export const { logoutUser,updateUser } = UserSlice.actions;
 export default UserSlice.reducer;

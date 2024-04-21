@@ -25,6 +25,7 @@ import StateLogin from "../LoginState/logincontext";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchItems } from "@/lib/actions/itemAction";
 import { fetchCustomerById } from "@/lib/actions/customerAction";
+import { customer, item, user } from "@/lib/reducers";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -34,12 +35,7 @@ const Transition = React.forwardRef(function Transition(
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-interface SelectedItemType {
-  filter(arg0: (_: any, i: any) => boolean): unknown;
-  reduce(
-    arg0: (total: any, item: { totalPrice: any }) => number,
-    arg1: number
-  ): unknown;
+interface SelectedItemType extends ItemType {
   _id: string;
   itemname: string;
   itemdescription: string;
@@ -51,6 +47,7 @@ interface SelectedItemType {
   image: string;
 }
 
+
 export interface OrderDataType {
   _id: any;
   userId: string;
@@ -61,7 +58,7 @@ export interface OrderDataType {
   customerphoneno: number;
   selectedItem: SelectedItemType[];
   totalAmount: number | unknown | any;
-  Date: Date;
+  Date: string | Date | any;
 }
 
 const Orders = ({ id }: { id: string }) => {
@@ -80,11 +77,11 @@ const Orders = ({ id }: { id: string }) => {
   const [open2, setOpen2] = useState<boolean>(false);
   const StateContext = useContext(StateLogin);
   const dispatch = useDispatch();
-  const items: ItemType[] = useSelector((state) => state.item.items);
-  const user = useSelector((state) => state.user.user);
+  const items: ItemType[] = useSelector((state:item) => state.item.items);
+  const user = useSelector((state:user) => state.user.user);
   const userId = user._id;
-  const customer: Customer = useSelector(
-    (state) => state.customer.specificcustomer
+  const customer:Customer = useSelector(
+    (state:customer) => state.customer.specificcustomer
   );
   console.log(customer);
   const TotalAmount = selectedItem.reduce(
@@ -94,7 +91,7 @@ const Orders = ({ id }: { id: string }) => {
   );
 
   useEffect(() => {
-    dispatch(fetchCustomerById(id));
+    dispatch(fetchCustomerById(id) as any);
   }, [dispatch, userId]);
 
   const OrderData: OrderDataType = {
@@ -107,6 +104,7 @@ const Orders = ({ id }: { id: string }) => {
     selectedItem: selectedItem,
     totalAmount: TotalAmount,
     Date: new Date(),
+    _id: undefined
   };
 
   const CashData = {
@@ -128,7 +126,7 @@ const Orders = ({ id }: { id: string }) => {
   console.log(typeof customer.userId);
 
   useEffect(() => {
-    dispatch(fetchItems(userId));
+    dispatch(fetchItems(userId) as any);
   }, [dispatch, userId]);
 
   const handleRemoveItem = async (item: SelectedItemType) => {
@@ -170,7 +168,7 @@ const Orders = ({ id }: { id: string }) => {
 
         const data = await response.json();
         console.log(data);
-        dispatch(fetchItems(userId));
+        dispatch(fetchItems(userId) as any);
       } else {
         // If item quantity is 1, remove the item from the cart
         updatedItems = selectedItem.filter(
@@ -194,10 +192,10 @@ const Orders = ({ id }: { id: string }) => {
 
         const data = await response.json();
         console.log(data);
-        dispatch(fetchItems(userId));
+        dispatch(fetchItems(userId) as any);
       }
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   };
 
@@ -253,10 +251,10 @@ const Orders = ({ id }: { id: string }) => {
 
       const data = await response.json();
       console.log(data);
-      dispatch(fetchItems(userId));
+      dispatch(fetchItems(userId) as any);
       console.log(data);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   };
   console.log(selectedItem);
@@ -555,14 +553,7 @@ const Orders = ({ id }: { id: string }) => {
                             </span>
                           </div>
                         </div>
-                        <div className="flex justify-center-items-center">
-                          <p
-                            className="text-3xl cursor-pointer text-red-800 inline-block align-middle"
-                            onClick={() => handleRemoveItem(selected, index)}
-                          >
-                            <MdDelete />
-                          </p>
-                        </div>
+                       
                       </div>
                     </div>
                   );

@@ -21,6 +21,7 @@ import Carousel from "@itseasy21/react-elastic-carousel";
 import { CategoryType } from "./CategoryList";
 import { fetchItems } from "@/lib/actions/itemAction";
 import { fetchCategories } from "@/lib/actions/categoryAction";
+import { category, item, user } from "@/lib/reducers";
 
 export interface ItemType {
   _id: string;
@@ -42,18 +43,18 @@ const ItemList = () => {
     });
   }, []);
   const StateContext = useContext(StateLogin);
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state:user) => state.user.user);
   console.log(user);
   const userId = user._id;
   const [open, setOpen] = useState<boolean>(false);
-  const [edititemdata, setEditItem] = useState<ItemType>({});
+  const [edititemdata, setEditItem] = useState<ItemType>({} as ItemType);
   const [query, setQuery] = useState<string>("");
   const [option, setOption] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const dispatch = useDispatch();
-  const items: ItemType[] = useSelector((state) => state.item.items);
+  const items: ItemType[] = useSelector((state:item) => state.item.items);
   const categories: CategoryType[] = useSelector(
-    (state) => state.category.categories
+    (state:category) => state.category.categories
   );
 
   const handleClickOpen = (item: React.SetStateAction<ItemType>) => {
@@ -95,7 +96,7 @@ const ItemList = () => {
             icon: "success",
             timer: 2000,
           });
-          dispatch(fetchItems(userId));
+          dispatch(fetchItems(userId) as any);
         }
       } catch (error) {
         console.log(error);
@@ -129,7 +130,7 @@ const ItemList = () => {
             icon: "success",
             timer: 1000,
           });
-          dispatch(fetchItems(userId));
+          dispatch(fetchItems(userId) as any);
         } else {
           Swal.fire({
             title: "Delete Failed",
@@ -174,10 +175,10 @@ const ItemList = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchItems(userId));
+    dispatch(fetchItems(userId) as any);
   }, [dispatch, userId]);
   useEffect(() => {
-    dispatch(fetchCategories(userId));
+    dispatch(fetchCategories(userId) as any);
   }, [dispatch, userId]);
   const filteredItems: ItemType[] =
     items && items.length > 0

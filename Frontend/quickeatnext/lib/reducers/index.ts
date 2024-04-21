@@ -36,3 +36,8 @@ const rootReducers: Reducer<{
 
 export default rootReducers;
 export type payment = ReturnType<typeof rootReducers>;
+export type user = ReturnType<typeof rootReducers>
+export type item = ReturnType<typeof rootReducers>
+export type customer = ReturnType<typeof rootReducers>
+export type order = ReturnType<typeof rootReducers>
+export  type category = ReturnType<typeof rootReducers>

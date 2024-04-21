@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "@/lib/actions/userAction";
+import { user } from "@/lib/reducers";
 
 const Login = (): React.JSX.Element => {
   const router = useRouter();
@@ -40,13 +41,13 @@ const Login = (): React.JSX.Element => {
   };
   const StateContext = useContext(LoginContext);
   const { dispatch } = StateContext;
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state:user) => state.user.user);
   console.log(user);
   async function validateUser(): Promise<void> {
     console.log(formData);
-    const response = await dispatc(fetchUser(formData));
+    const response = await dispatc(fetchUser(formData) as any);
     console.log(response);
-    if (response.payload !== undefined) {
+    if (dispatch && response.payload !== undefined) {
       dispatch({
         type: "LOGIN",
         payload: {
@@ -59,7 +60,7 @@ const Login = (): React.JSX.Element => {
         },
       });
       StateContext.login = true;
-      localStorage.setItem("login", StateContext.login);
+      localStorage.setItem("login", StateContext.login.toString());
       Swal.fire({
         icon: "success",
         title: "Successfully Login",

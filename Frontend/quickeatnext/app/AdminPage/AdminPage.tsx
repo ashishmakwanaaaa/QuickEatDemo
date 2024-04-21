@@ -10,19 +10,26 @@ import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
 import { PaymentType } from "@/lib/reducers/paymentSlice/paymentReducers";
-import { payment } from "@/lib/reducers";
+import { payment, user } from "@/lib/reducers";
 import { fetchUsers } from "@/lib/actions/userAction";
 import ApexCharts from "apexcharts";
 import { User } from "@/lib/reducers/userSlice/UserReducers";
+import { OrderDataType } from "../Admin/Orders";
+
+interface monthlyDataType {
+  month:number,
+  totalAmount:string
+}
+
 const AdminPage = () => {
   const [sales, setSales] = useState<PaymentType[]>([]);
   const [order, setOrder] = useState([]);
   const [items, setItems] = useState([]);
-  const [monthlyData, setMonthlyData] = useState([]);
+  const [monthlyData, setMonthlyData] = useState<monthlyDataType[]>([]);
   /*  ++++++++++++++++++++++ */
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.users);
-  const activeuser = useSelector((state) => state.user.activeusers);
+  const user = useSelector((state:user) => state.user.users);
+  const activeuser = useSelector((state:user) => state.user.activeusers);
   console.log(user, activeuser);
   const [allCashPayment, setAllCashPayment] = useState<PaymentType[]>([]);
   const [allCardPayment, setAllCardPayment] = useState<PaymentType[]>([]);
@@ -79,7 +86,7 @@ const AdminPage = () => {
     );
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    dispatch(fetchUsers() as any);
   }, [dispatch]);
 
   useEffect(() => {
@@ -128,7 +135,7 @@ const AdminPage = () => {
   }, []);
 
   useEffect(() => {
-    const ordersByDays = order.reduce((acc, cur) => {
+    const ordersByDays:{[key:string]:number} = order.reduce((acc: { [key: string]: number }, cur:OrderDataType) => {
       const orderDate = new Date(cur.Date).toISOString().split("T");
       const day = orderDate[0].split("-")[2];
       const month = orderDate[0].split("-")[1];
@@ -169,7 +176,8 @@ const AdminPage = () => {
       },
       xaxis: {
         categories: sortedDays.map((day) => {
-          const [month, date] = day.split("-");
+          const [month, dateStr] = day.split("-");
+          const date = parseInt(dateStr, 10); 
           return `${month}th ${lables[date - 1]}`; // Adjust month index to start from 1
         }),
       },
@@ -255,7 +263,7 @@ const AdminPage = () => {
     };
     calculatedMonthlydata();
   }, [sales]);
-
+  console.log(monthlyData)
   return (
     <>
       <div className="flex flex-col gap-2 font-[Poppins] cursor-pointer">

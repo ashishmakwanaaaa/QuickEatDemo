@@ -8,48 +8,52 @@ import Swal from "sweetalert2";
 import LoginContext from "../LoginState/logincontext";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+import { updateUser } from "@/lib/reducers/userSlice/UserReducers";
+import { user } from "@/lib/reducers";
 
 const MyProfilePage = () => {
   const [image, setImage] = useState<File | null>(null);
   const role = localStorage.getItem("role") || "";
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector((state:user) => state.user.user);
   console.log(user);
 
   const [resimage, setresImage] = useState<File | null>(null);
-  const [owner, setOwner] = useState<{
-    _id: string;
-    restaurantname: string;
-    ownername: string;
-    address: string;
-    emailid: string;
-    password: string;
-    confirmpassowrd: string;
-    image: string;
-    resimage: string;
-  }>({});
+  const [owner, setOwner] = useState({
+    _id: '',
+    restaurantname: '',
+    ownername: '',
+    address: '',
+    emailid: '',
+    password: '',
+    confirmpassowrd: '',
+    image: '',
+    resimage: ''
+  });
+  
   console.log(typeof image);
   const StateContext = useContext(LoginContext);
   const { dispatch } = StateContext;
   console.log("stateContext", StateContext);
   const router = useRouter();
-  const handleImageChange = (e: { target: { files: any[] } }) => {
+  const handleImageChange:React.ChangeEventHandler<HTMLInputElement> = (e) => {
     try {
       const file = e.target.files?.[0];
-      setImage(file);
+      setImage(file ?? null);
     } catch (error) {
       console.log(error);
     }
   };
-  const handleImageChange1 = (e: { target: { files: any[] } }) => {
+  const handleImageChange1:React.ChangeEventHandler<HTMLInputElement> = (e) => {
     try {
       const file1 = e.target.files?.[0];
-      setresImage(file1);
+      setresImage(file1 ?? null);
     } catch (error) {
       console.log(error);
     }
   };
   const updateProfile = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    const updatedUser = { ...user }; // shallow copy
     console.log(image, resimage);
     if (image || resimage) {
       const formData = new FormData();
@@ -69,11 +73,11 @@ const MyProfilePage = () => {
         body: formData,
       });
       const data = await response.json();
-      user.image = data.filenames[0];
-      user.resimage = data.filenames[1];
-      console.log(data);
+      console.log(data)
+    updatedUser.image = data.filenames[0];
+    updatedUser.resimage = data.filenames[1];
     }
-
+    
     try {
       const response = await fetch(
         `http://localhost:5000/auth/updateProfile/${user._id}`,
@@ -82,12 +86,13 @@ const MyProfilePage = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(user),
+          body: JSON.stringify(updatedUser),
         }
       );
       const data = await response.json();
+      console.log("data");
 
-      if (response.ok) {
+      if (dispatch && response.ok) {
         Swal.fire({
           title: "Profile Update Successfully",
           icon: "success",
@@ -98,10 +103,11 @@ const MyProfilePage = () => {
             ? router.push("/dashboard")
             : router.push("/adminside");
         }
-        dispatch({
-          type: "UPDATE_IMAGE",
-          payload: { ownerimage: user.image, restrurantimage: user.resimage },
-        });
+        // dispatch({
+        //   type: "UPDATE_IMAGE",
+        //   payload: { ownerimage: user.image, restrurantimage: user.resimage },
+        // });
+         dispatch(updateUser(updateUser) as any)
       } else {
         alert("error");
         console.log(data.message);
@@ -151,7 +157,7 @@ const MyProfilePage = () => {
                   {StateContext.image && !image ? (
                     <img
                       className="rounded-full"
-                      src={`http://localhost:5000/uploads/${StateContext.image}`}
+                      src={`http://localhost:5000/uploads/${user.image}`}
                       alt=""
                     />
                   ) : (
@@ -187,7 +193,7 @@ const MyProfilePage = () => {
                     {StateContext.resimage && !resimage ? (
                       <img
                         className="rounded-md"
-                        src={`http://localhost:5000/uploads/${StateContext.resimage}`}
+                        src={`http://localhost:5000/uploads/${user.resimage}`}
                         alt=""
                       />
                     ) : (

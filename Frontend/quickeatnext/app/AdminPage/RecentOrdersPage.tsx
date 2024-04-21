@@ -1,18 +1,26 @@
 "use client";
 
-import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRowSelectionApi } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
-const RecentOrdersPage = () => {
-  const [order, setOrder] = useState([]);
+interface OrderItem {
+  _id: string;
+  Date: string;
+  userId: {
+      image: string;
+      restaurantname: string;
+      ownername: string;
+      emailid: string;
+  };
+  customerfirstname: string;
+  customerphoneno: string;
+  totalAmount: number;
+}
 
-  const columns: {
-    field: string;
-    headerName: string;
-    width: number;
-    cellClassName?: string;
-    renderCell?: (params: GridRowSelectionApi) => Element;
-  }[] = [
+const RecentOrdersPage = () => {
+  const [order, setOrder] = useState<OrderItem[]>([]);
+
+  const columns:GridColDef[] = [
     {
       field: "id",
       headerName: "ID",
@@ -122,7 +130,6 @@ const RecentOrdersPage = () => {
             rows={rows}
             columns={columns}
             pagination
-            pagesize={10}
             pageSizeOptions={[
               10,
               20,

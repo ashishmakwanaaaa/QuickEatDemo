@@ -8,13 +8,14 @@ import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { Counter } from "../Admin/AdminDashboard";
 import Swal from "sweetalert2";
+import { user } from "@/lib/reducers";
 
 const ManageUserPage = () => {
   const dispatch = useDispatch();
   const [sales, setsales] = useState<PaymentType[]>([]);
-  const users = useSelector((state) => state.user.users);
+  const users = useSelector((state:user) => state.user.users);
   useEffect(() => {
-    dispatch(fetchUsers());
+    dispatch(fetchUsers() as any);
   }, [dispatch]);
   useEffect(() => {
     async function getAllSales() {
