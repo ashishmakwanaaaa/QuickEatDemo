@@ -35,8 +35,8 @@ const Navbar = () => {
     });
   }, []);
   const StateContext = useContext(LoginContext);
-  const user = useSelector((state:user) => state.user.user);
-  console.log(user,StateContext);
+  const user = useSelector((state: user) => state.user.user);
+  console.log(user, StateContext);
   const userId = user._id;
   const router = useRouter();
   const dispatch = useDispatch();

@@ -1,7 +1,12 @@
 "use client";
 
 import { Button } from "@mui/material";
-import { DataGrid, GridCellParams, GridColDef, GridRowSelectionApi } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCellParams,
+  GridColDef,
+  GridRowSelectionApi,
+} from "@mui/x-data-grid";
 import { useContext, useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
@@ -19,7 +24,8 @@ export interface CategoryType {
 
 const CategoriesList = () => {
   const StateContext = useContext(StateLogin);
-  const user = useSelector((state:user) => state.user.user);
+  const [loading, setLoading] = useState<boolean>(false);
+  const user = useSelector((state: user) => state.user.user);
   const userId = user._id;
   console.log(userId);
   const [input, setInput] = useState<CategoryType>({
@@ -29,9 +35,13 @@ const CategoriesList = () => {
     userId,
   });
   const dispatch = useDispatch();
-  const categories = useSelector((state:category) => state.category.categories);
+  const categories = useSelector(
+    (state: category) => state.category.categories
+  );
   useEffect(() => {
+    setLoading(true);
     dispatch(fetchCategories(userId) as any);
+    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   console.log(categories);
   const handelDeleteCategory = async (id: string) => {
@@ -146,51 +156,63 @@ const CategoriesList = () => {
   return (
     <>
       <div className="flex flex-col gap-10 items-center justify-center w-[68rem]">
-        {/* <h1 className="font-bold text-start">Categories Details</h1> */}
         <div className="flex flex-row gap-3 justify-center items-center">
-          <p className="text-md text-start font-normal">
-            Enter Category Name:{" "}
-          </p>
-          <input
-            type="text"
-            name="categories"
-            value={input.categoryname}
-            onChange={(e) =>
-              setInput({ ...input, categoryname: e.target.value })
-            }
-            id=""
-            className="border-orange-600 p-1 w-1/2 placeholder-shown:text-sm border rounded-lg drop-shadow-2xl"
-          />
-          <button
-            onClick={handleAddCatogory}
-            className="text-black text-sm bg-orange-500 p-2 rounded-md hover:border hover:border-orange-500 hover:text-orange-500 hover:bg-transparent transform duration-300"
-          >
-            ADD +
-          </button>
-        </div>
+          {loading ? (
+            <>
+              <div className="animate-pulse bg-gray-300 rounded-lg w-96 h-10"></div>
+              <div className="animate-pulse bg-gray-300 rounded-md w-20 h-10"></div>
+            </>
+          ) : (
+            <>
+              <p className="text-md text-start font-normal">
+                Enter Category Name:
+              </p>
 
-        {categories && categories.length > 0 && (
-          <div className="w-[500px] h-[500px]" data-aos="fade-right">
-            <DataGrid
-              style={{ fontFamily: "Poppins" }}
-              rows={categories.map((category, index) => ({
-                _id: category._id,
-                id: index + 1,
-                name: category.categoryname,
-                delete: "Delete",
-              }))}
-              columns={columns}
-              pagination
-              pageSizeOptions={[
-                10,
-                20,
-                30,
-                40,
-                100,
-                { value: 1000, label: "1,000" },
-              ]}
-            />
-          </div>
+              <input
+                type="text"
+                name="categories"
+                value={input.categoryname}
+                onChange={(e) =>
+                  setInput({ ...input, categoryname: e.target.value })
+                }
+                className="border-orange-600 p-1 w-1/2 placeholder-shown:text-sm border rounded-lg drop-shadow-2xl"
+              />
+              <button
+                onClick={handleAddCatogory}
+                className="text-black text-sm bg-orange-500 p-2 rounded-md hover:border hover:border-orange-500 hover:text-orange-500 hover:bg-transparent transform duration-300"
+              >
+                ADD +
+              </button>
+            </>
+          )}
+        </div>
+        {loading ? (
+          <div className="animate-pulse bg-gray-300 rounded-lg w-[500px] h-[500px]"></div>
+        ) : (
+          categories &&
+          categories.length > 0 && (
+            <div className="w-[500px] h-[500px]">
+              <DataGrid
+                style={{ fontFamily: "Poppins" }}
+                rows={categories.map((category, index) => ({
+                  _id: category._id,
+                  id: index + 1,
+                  name: category.categoryname,
+                  delete: "Delete",
+                }))}
+                columns={columns}
+                pagination
+                pageSizeOptions={[
+                  10,
+                  20,
+                  30,
+                  40,
+                  100,
+                  { value: 1000, label: "1,000" },
+                ]}
+              />
+            </div>
+          )
         )}
       </div>
     </>

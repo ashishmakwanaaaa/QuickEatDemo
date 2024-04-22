@@ -5,11 +5,14 @@ import StateLogin from "../LoginState/logincontext";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { CategoryType } from "../Admin/CategoryList";
+import { useSelector } from "react-redux";
+import { user } from "@/lib/reducers";
 
 const AddItem = () => {
   const router = useRouter();
   const StateContext = useContext(StateLogin);
-  const userId = StateContext.userid;
+  const user = useSelector((state: user) => state.user.user);
+  const userId = user._id;
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [Fooddata, setFooddata] = useState<{
     userId:string;

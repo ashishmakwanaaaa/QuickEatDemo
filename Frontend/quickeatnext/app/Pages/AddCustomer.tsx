@@ -5,12 +5,18 @@ import StateLogin from "../LoginState/logincontext";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { Customer } from "../Admin/CustomerList";
+import { useSelector } from "react-redux";
+import EmailIcon from "@mui/icons-material/Email";
+
+import { user } from "@/lib/reducers";
 
 const AddCustomer = () => {
   const router = useRouter();
   const StateContext = useContext(StateLogin);
   const [email, setEmail] = useState(false);
-  const userId = StateContext.userid;
+  const user = useSelector((state: user) => state.user.user);
+  const userId = user._id;
+  console.log(userId);
   const [CustomerData, setCustomerData] = useState<Customer>({
     userId,
     firstname: "",
@@ -120,23 +126,28 @@ const AddCustomer = () => {
           <label htmlFor="address" className="font-bold ">
             Email ID:
           </label>
-          <input
-            id="address"
-            name="address"
-            type="email"
-            value={CustomerData.emailid}
-            onChange={(e) => {
-              const emaill = e.target.value;
-              if (!emaill.includes("@")) {
-                setEmail(true);
-              } else {
-                setEmail(false);
-              }
-              setCustomerData({ ...CustomerData, emailid: e.target.value });
-            }}
-            placeholder="Enter Email Address"
-            className="p-2 rounded-md border-2 border-orange-500 w-full"
-          />
+          <div className="flex flex-row w-full">
+            <div className="bg-orange-600 p-2 rounded-bl-md rounded-tl-md text-white flex items-center justify-center">
+              <EmailIcon style={{ color: "white" }} />
+            </div>
+            <input
+              id="address"
+              name="address"
+              type="email"
+              value={CustomerData.emailid}
+              onChange={(e) => {
+                const emaill = e.target.value;
+                if (!emaill.includes("@")) {
+                  setEmail(true);
+                } else {
+                  setEmail(false);
+                }
+                setCustomerData({ ...CustomerData, emailid: e.target.value });
+              }}
+              placeholder="Enter Email Address"
+              className="p-2 rounded-tr-md rounded-br-md border-2 border-orange-500 w-full"
+            />
+          </div>
           {email && (
             <p className="text-red-600 text-sm font-bold ">
               Please enter valid email address

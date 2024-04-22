@@ -43,7 +43,7 @@ const ItemList = () => {
     });
   }, []);
   const StateContext = useContext(StateLogin);
-  const user = useSelector((state:user) => state.user.user);
+  const user = useSelector((state: user) => state.user.user);
   console.log(user);
   const userId = user._id;
   const [open, setOpen] = useState<boolean>(false);
@@ -51,10 +51,11 @@ const ItemList = () => {
   const [query, setQuery] = useState<string>("");
   const [option, setOption] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const items: ItemType[] = useSelector((state:item) => state.item.items);
+  const items: ItemType[] = useSelector((state: item) => state.item.items);
   const categories: CategoryType[] = useSelector(
-    (state:category) => state.category.categories
+    (state: category) => state.category.categories
   );
 
   const handleClickOpen = (item: React.SetStateAction<ItemType>) => {
@@ -142,7 +143,8 @@ const ItemList = () => {
         console.error("Error:", error);
         Swal.fire({
           title: "Error",
-          text: "An error occurred while deleting the item. Please try again later.",
+          text:
+            "An error occurred while deleting the item. Please try again later.",
           icon: "error",
         });
       }
@@ -175,10 +177,14 @@ const ItemList = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     dispatch(fetchItems(userId) as any);
+    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   useEffect(() => {
+    setLoading(true);
     dispatch(fetchCategories(userId) as any);
+    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   const filteredItems: ItemType[] =
     items && items.length > 0
@@ -207,52 +213,56 @@ const ItemList = () => {
   return (
     <div className="font-[Poppins] flex flex-col gap-6 w-[68rem]">
       <div className="flex flex-row justify-between items-center">
-        <h1
-          className="text-start dark:text-white  text-black font-bold text-md"
-          data-aos="fade-left"
-        >
-          Item Details
-        </h1>
-        <div className="flex items-center gap-4">
-          <input
-            type="text"
-            name=""
-            id=""
-            value={query}
-            data-aos="fade-right"
-            onChange={(e) => setQuery(e.target.value)}
-            className="shadow-lg border text-sm border-orange-500 rounded-lg placeholder: w-[400px] p-2"
-            placeholder="Search Item Here"
-          />
+        {loading ? (
+          <div className="animate-pulse bg-gray-300 rounded-md w-48 h-6"></div>
+        ) : (
+          <h1 className="text-start dark:text-white text-black font-bold text-md">
+            Item Details
+          </h1>
+        )}
 
-          <div className="bottom-3">
-            <FormControl variant="standard" style={{ width: "160px" }}>
-              <InputLabel
-                id="demo-simple-select-label"
-                style={{ color: "orange" }}
-              >
-                Select One Option
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={option}
-                label="select"
-                onChange={handleChange}
-              >
-                <MenuItem value="Price Highest">Price(High To Low)</MenuItem>
-                <hr />
-                <MenuItem value="Price Lowest">Price(Low To High)</MenuItem>
-                <hr />
-                <MenuItem value="Qty Highest">Qty(High To Low)</MenuItem>
-                <hr />
-                <MenuItem value="Qty Lowest">Qty(Low To High)</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
+        <div className="flex items-center gap-4">
+          {loading ? (
+            <>
+              <div className="animate-pulse bg-gray-300 rounded-lg w-400 h-12"></div>
+              <div className="animate-pulse bg-gray-300 rounded-lg w-40 h-12"></div>
+            </>
+          ) : (
+            <>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="shadow-lg border text-sm border-orange-500 rounded-lg w-400 p-2"
+                placeholder="Search Item Here"
+              />
+              <FormControl variant="standard" style={{ width: "160px" }}>
+                <InputLabel
+                  id="demo-simple-select-label"
+                  style={{ color: "orange" }}
+                >
+                  Select One Option
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={option}
+                  onChange={handleChange}
+                >
+                  <MenuItem value="Price Highest">Price(High To Low)</MenuItem>
+                  <hr />
+                  <MenuItem value="Price Lowest">Price(Low To High)</MenuItem>
+                  <hr />
+                  <MenuItem value="Qty Highest">Qty(High To Low)</MenuItem>
+                  <hr />
+                  <MenuItem value="Qty Lowest">Qty(Low To High)</MenuItem>
+                </Select>
+              </FormControl>
+            </>
+          )}
         </div>
       </div>
-      <div className="w-full h-10 bottom-5 font-normal text-sm drop-shadow-2xl ">
+      <div className="w-full h-10 bottom-5 font-normal text-sm drop-shadow-2xl">
         <Carousel
           showArrows={false}
           isRTL={false}
@@ -260,287 +270,299 @@ const ItemList = () => {
           itemsToShow={5}
           itemsToScroll={5}
         >
-          {categories &&
-            categories.length > 0 &&
-            categories.map((category, index) => {
-              return (
+          {categories.map((category, index) => (
+            <div className="flex flex-col gap-2 justify-center items-center">
+              {loading ? (
+                <div className="animate-pulse bg-gray-300 rounded-full w-16 h-16"></div>
+              ) : (
                 <>
-                  <div className="flex  flex-col gap-2 justify-center  items-center ">
-                    <img
-                      className="w-16 focus:outline-none focus:ring focus:ring-black  cursor-pointer h-16 rounded-full drop-shadow-2xl"
-                      src={category.image}
-                      alt=""
-                    />
-                    <button
-                      onClick={() => setSelectedCategory(category.categoryname)}
-                      className="focus:underline focus:underline-offset-4"
-                    >
-                      {category.categoryname}
-                    </button>
-                  </div>
+                  <img
+                    className="w-16 h-16 rounded-full drop-shadow-2xl"
+                    src={category.image}
+                    alt=""
+                  />
+                  <button
+                    onClick={() => setSelectedCategory(category.categoryname)}
+                    className="text-sm text-center"
+                  >
+                    {category.categoryname}
+                  </button>
                 </>
-              );
-            })}
+              )}
+            </div>
+          ))}
         </Carousel>
       </div>
-      {filteredItems && filteredItems.length > 0 ? (
-        <div className="overflow-y-auto h-[550px] p-3 mt-5">
-          {filteredItems.map((item, index) => {
-            return (
-              <div
-                className="grid grid-cols-12 mt-5 gap-4 p-2 rounded-2xl dark:bg-gray-800"
-                style={{ boxShadow: "0 0 0.5em orange" }}
-                // data-aos="fade-right"
-              >
-                <div
-                  className="col-span-2 overflow-hidden rounded-lg relative"
-                  // data-aos="fade-right"
-                >
-                  <img
-                    src={item.image}
-                    className="w-full h-[150px] rounded-lg cursor-pointer object-cover"
-                  />
-                  <div className="absolute bottom-0 left-0 w-full">
-                    <div className="relative z-20 p-2">
-                      <p className="text-white text-lg font-bold ">Up To</p>
-                      <p className="text-orange-500 text-md font-bold  ">
-                        {item.upToOffer}% Off
-                      </p>
-                    </div>
-                    <div className="absolute bottom-0 left-0 w-full h-28 bg-gradient-to-t from-black"></div>
-                  </div>
-                </div>
 
-                <div className="col-span-8">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-4">
-                      {" "}
-                      {/* Flex container for one line */}
-                      <span className="text-sm font-bold  text-orange-500 w-36">
-                        Item Name:
-                      </span>
-                      <span className="font-bold dark:text-white  text-black text-sm w-full">
-                        {item.itemname}
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-4">
-                      {" "}
-                      {/* Flex container for one line */}
-                      <span className="text-sm font-bold  text-orange-500 w-36">
-                        {" "}
-                        Description:
-                      </span>
-                      <span className="font-bold dark:text-white  text-black text-sm w-full">
-                        {item.itemdescription}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      {" "}
-                      {/* Flex container for one line */}
-                      <span className="text-sm font-bold  text-orange-500 w-36">
-                        Item Quantity:
-                      </span>
-                      <span className="font-bold dark:text-white  text-black text-sm w-full">
-                        {item.quantity}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      {" "}
-                      {/* Flex container for one line */}
-                      <span className="text-sm font-bold  text-orange-500 w-36">
-                        Item Price:
-                      </span>
-                      <span className="font-bold dark:text-white  text-black text-sm w-full">
-                        &#8377;{item.price}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-span-2">
-                  <div className="flex flex-col gap-4 mt-6 items-center justify-center">
-                    <p
-                      className="text-3xl cursor-pointer text-blue-900 inline-block align-middle"
-                      onClick={() => handleClickOpen(item)}
-                    >
-                      <MdEdit />
-                    </p>
-                    <p
-                      className="text-3xl cursor-pointer text-red-800 inline-block align-middle"
-                      onClick={() => handleDeleteItem(item)}
-                    >
-                      <MdDelete />
-                    </p>
-                  </div>
-                </div>
-                <Dialog
-                  fullWidth
-                  maxWidth="md"
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="draggable-dialog-title"
-                >
-                  <DialogTitle
-                    style={{
-                      cursor: "move",
-                      textAlign: "center",
-                      color: "white",
-                      backgroundColor: "orange",
-                      fontSize: "20px",
-                      fontWeight: "bold",
-                    }}
-                    id="draggable-dialog-title"
-                  >
-                    EDIT ITEM DETAILS
-                  </DialogTitle>
-                  <DialogContent>
-                    <div className="flex flex-row gap-6 mt-5">
-                      <div className="row-span-6">
-                        <DialogContentText>
-                          <img
-                            src={edititemdata.image}
-                            className="w-[400px] h-[300px] rounded-lg cursor-pointer "
-                            onClick={() => generateImage(edititemdata.itemname)}
-                          />
-                        </DialogContentText>
-                      </div>
-
-                      <div className="row-span-6">
-                        <TextField
-                          style={{ marginBottom: "1rem", fontWeight: "bold" }}
-                          required
-                          margin="dense"
-                          id="name"
-                          name="email"
-                          label="Item Name"
-                          type="text"
-                          value={edititemdata.itemname}
-                          onChange={(e) =>
-                            setEditItem({
-                              ...edititemdata,
-                              itemname: e.target.value,
-                            })
-                          }
-                          fullWidth
-                          variant="standard"
-                        />
-                        <InputLabel htmlFor="description">
-                          Item Description
-                        </InputLabel>
-                        <textarea
-                          className="w-full h-56 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-                          required
-                          aria-label="Item Description"
-                          id="description"
-                          name="description"
-                          placeholder="Item Description"
-                          value={edititemdata.itemdescription}
-                          onChange={(e) =>
-                            setEditItem({
-                              ...edititemdata,
-                              itemdescription: e.target.value,
-                            })
-                          }
-                          rows={3}
-                        />
-
-                        <TextField
-                          style={{ marginBottom: "1rem" }}
-                          required
-                          margin="dense"
-                          id="name"
-                          name="email"
-                          label="Item Quantity"
-                          type="number"
-                          value={edititemdata.quantity}
-                          onChange={(e) =>
-                            setEditItem({
-                              ...edititemdata,
-                              quantity: parseInt(e.target.value),
-                            })
-                          }
-                          fullWidth
-                          variant="standard"
-                        />
-
-                        <TextField
-                          style={{ marginBottom: "1rem" }}
-                          required
-                          margin="dense"
-                          id="name"
-                          name="email"
-                          label="Item Price"
-                          type="number"
-                          value={edititemdata.price}
-                          onChange={(e) =>
-                            setEditItem({
-                              ...edititemdata,
-                              price: parseInt(e.target.value),
-                            })
-                          }
-                          fullWidth
-                          variant="standard"
-                        />
-
-                        <TextField
-                          style={{ marginBottom: "1rem" }}
-                          required
-                          margin="dense"
-                          id="name"
-                          name="email"
-                          label="Item Offer"
-                          type="number"
-                          value={edititemdata.upToOffer}
-                          onChange={(e) =>
-                            setEditItem({
-                              ...edititemdata,
-                              upToOffer: parseInt(e.target.value),
-                            })
-                          }
-                          fullWidth
-                          variant="standard"
-                        />
-                      </div>
-                    </div>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      autoFocus
-                      style={{
-                        border: "1px solid #FFA500",
-                        color: "#FFA500",
-                        marginRight: "10px",
-                        borderRadius: "5px",
-                        padding: "8px 16px",
-                        transition: "background-color 0.3s, color 0.3s",
-                      }}
-                      onClick={handleClose}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      style={{
-                        backgroundColor: "#FFA500",
-                        color: "#FFFFFF",
-                        borderRadius: "5px",
-                        padding: "8px 16px",
-                        transition: "background-color 0.3s, color 0.3s",
-                      }}
-                      onClick={() => handleEditItem(edititemdata)}
-                    >
-                      Edit
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </div>
-            );
-          })}
-        </div>
+      {loading ? (
+        <div className="animate-pulse bg-gray-300 rounded-xl w-full mt-5 h-[550px]"></div>
       ) : (
-        <div className="m-auto ">
-          <h1 className="text-center mt-48 text-2xl text-bold text-orange-600">
-            Oops......There is no data of this category
-          </h1>
-        </div>
+        <>
+          {filteredItems && filteredItems.length > 0 ? (
+            <div className="overflow-y-auto h-[550px] p-3 mt-5">
+              {filteredItems.map((item, index) => {
+                return (
+                  <div
+                    className="grid grid-cols-12 mt-5 gap-4 p-2 rounded-2xl dark:bg-gray-800"
+                    style={{ boxShadow: "0 0 0.5em orange" }}
+                    // data-aos="fade-right"
+                  >
+                    <div
+                      className="col-span-2 overflow-hidden rounded-lg relative"
+                      // data-aos="fade-right"
+                    >
+                      <img
+                        src={item.image}
+                        className="w-full h-[150px] rounded-lg cursor-pointer object-cover"
+                      />
+                      <div className="absolute bottom-0 left-0 w-full">
+                        <div className="relative z-20 p-2">
+                          <p className="text-white text-lg font-bold ">Up To</p>
+                          <p className="text-orange-500 text-md font-bold  ">
+                            {item.upToOffer}% Off
+                          </p>
+                        </div>
+                        <div className="absolute bottom-0 left-0 w-full h-28 bg-gradient-to-t from-black"></div>
+                      </div>
+                    </div>
+
+                    <div className="col-span-8">
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-4">
+                          {" "}
+                          {/* Flex container for one line */}
+                          <span className="text-sm font-bold  text-orange-500 w-36">
+                            Item Name:
+                          </span>
+                          <span className="font-bold dark:text-white  text-black text-sm w-full">
+                            {item.itemname}
+                          </span>
+                        </div>
+                        <div className="flex items-start gap-4">
+                          {" "}
+                          {/* Flex container for one line */}
+                          <span className="text-sm font-bold  text-orange-500 w-36">
+                            {" "}
+                            Description:
+                          </span>
+                          <span className="font-bold dark:text-white  text-black text-sm w-full">
+                            {item.itemdescription}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          {" "}
+                          {/* Flex container for one line */}
+                          <span className="text-sm font-bold  text-orange-500 w-36">
+                            Item Quantity:
+                          </span>
+                          <span className="font-bold dark:text-white  text-black text-sm w-full">
+                            {item.quantity}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          {" "}
+                          {/* Flex container for one line */}
+                          <span className="text-sm font-bold  text-orange-500 w-36">
+                            Item Price:
+                          </span>
+                          <span className="font-bold dark:text-white  text-black text-sm w-full">
+                            &#8377;{item.price}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-span-2">
+                      <div className="flex flex-col gap-4 mt-6 items-center justify-center">
+                        <p
+                          className="text-3xl cursor-pointer text-blue-900 inline-block align-middle"
+                          onClick={() => handleClickOpen(item)}
+                        >
+                          <MdEdit />
+                        </p>
+                        <p
+                          className="text-3xl cursor-pointer text-red-800 inline-block align-middle"
+                          onClick={() => handleDeleteItem(item)}
+                        >
+                          <MdDelete />
+                        </p>
+                      </div>
+                    </div>
+                    <Dialog
+                      fullWidth
+                      maxWidth="md"
+                      open={open}
+                      onClose={handleClose}
+                      aria-labelledby="draggable-dialog-title"
+                    >
+                      <DialogTitle
+                        style={{
+                          cursor: "move",
+                          textAlign: "center",
+                          color: "white",
+                          backgroundColor: "orange",
+                          fontSize: "20px",
+                          fontWeight: "bold",
+                        }}
+                        id="draggable-dialog-title"
+                      >
+                        EDIT ITEM DETAILS
+                      </DialogTitle>
+                      <DialogContent>
+                        <div className="flex flex-row gap-6 mt-5">
+                          <div className="row-span-6">
+                            <DialogContentText>
+                              <img
+                                src={edititemdata.image}
+                                className="w-[400px] h-[300px] rounded-lg cursor-pointer "
+                                onClick={() =>
+                                  generateImage(edititemdata.itemname)
+                                }
+                              />
+                            </DialogContentText>
+                          </div>
+
+                          <div className="row-span-6">
+                            <TextField
+                              style={{
+                                marginBottom: "1rem",
+                                fontWeight: "bold",
+                              }}
+                              required
+                              margin="dense"
+                              id="name"
+                              name="email"
+                              label="Item Name"
+                              type="text"
+                              value={edititemdata.itemname}
+                              onChange={(e) =>
+                                setEditItem({
+                                  ...edititemdata,
+                                  itemname: e.target.value,
+                                })
+                              }
+                              fullWidth
+                              variant="standard"
+                            />
+                            <InputLabel htmlFor="description">
+                              Item Description
+                            </InputLabel>
+                            <textarea
+                              className="w-full h-56 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                              required
+                              aria-label="Item Description"
+                              id="description"
+                              name="description"
+                              placeholder="Item Description"
+                              value={edititemdata.itemdescription}
+                              onChange={(e) =>
+                                setEditItem({
+                                  ...edititemdata,
+                                  itemdescription: e.target.value,
+                                })
+                              }
+                              rows={3}
+                            />
+
+                            <TextField
+                              style={{ marginBottom: "1rem" }}
+                              required
+                              margin="dense"
+                              id="name"
+                              name="email"
+                              label="Item Quantity"
+                              type="number"
+                              value={edititemdata.quantity}
+                              onChange={(e) =>
+                                setEditItem({
+                                  ...edititemdata,
+                                  quantity: parseInt(e.target.value),
+                                })
+                              }
+                              fullWidth
+                              variant="standard"
+                            />
+
+                            <TextField
+                              style={{ marginBottom: "1rem" }}
+                              required
+                              margin="dense"
+                              id="name"
+                              name="email"
+                              label="Item Price"
+                              type="number"
+                              value={edititemdata.price}
+                              onChange={(e) =>
+                                setEditItem({
+                                  ...edititemdata,
+                                  price: parseInt(e.target.value),
+                                })
+                              }
+                              fullWidth
+                              variant="standard"
+                            />
+
+                            <TextField
+                              style={{ marginBottom: "1rem" }}
+                              required
+                              margin="dense"
+                              id="name"
+                              name="email"
+                              label="Item Offer"
+                              type="number"
+                              value={edititemdata.upToOffer}
+                              onChange={(e) =>
+                                setEditItem({
+                                  ...edititemdata,
+                                  upToOffer: parseInt(e.target.value),
+                                })
+                              }
+                              fullWidth
+                              variant="standard"
+                            />
+                          </div>
+                        </div>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button
+                          autoFocus
+                          style={{
+                            border: "1px solid #FFA500",
+                            color: "#FFA500",
+                            marginRight: "10px",
+                            borderRadius: "5px",
+                            padding: "8px 16px",
+                            transition: "background-color 0.3s, color 0.3s",
+                          }}
+                          onClick={handleClose}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          style={{
+                            backgroundColor: "#FFA500",
+                            color: "#FFFFFF",
+                            borderRadius: "5px",
+                            padding: "8px 16px",
+                            transition: "background-color 0.3s, color 0.3s",
+                          }}
+                          onClick={() => handleEditItem(edititemdata)}
+                        >
+                          Edit
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="m-auto ">
+              <h1 className="text-center mt-48 text-2xl text-bold text-orange-600">
+                Oops......There is no data of this category
+              </h1>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

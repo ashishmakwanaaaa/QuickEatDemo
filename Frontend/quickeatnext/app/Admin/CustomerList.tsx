@@ -12,7 +12,12 @@ import Swal from "sweetalert2";
 import "aos/dist/aos.css";
 import AOS from "aos";
 import { useRouter } from "next/navigation";
-import { DataGrid, GridCellParams, GridColDef, GridRowSelectionApi } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCellParams,
+  GridColDef,
+  GridRowSelectionApi,
+} from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomer } from "@/lib/actions/customerAction";
 import { customer, user } from "@/lib/reducers";
@@ -44,15 +49,16 @@ const CustomerList = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [editCustomer, setEditCustomer] = useState<Customer>({} as Customer);
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const getRandomColor = (): string => {
     return "#" + Math.floor(Math.random() * 16777215).toString(16);
   };
-  const user = useSelector((state:user) => state.user.user);
+  const user = useSelector((state: user) => state.user.user);
   const userId = user._id;
   const dispatch = useDispatch();
   const customerData: Customer[] = useSelector(
-    (state:customer) => state.customer.customer
+    (state: customer) => state.customer.customer
   );
   console.log(customerData);
   const handleClickOpen = async (id: string) => {
@@ -175,10 +181,12 @@ const CustomerList = () => {
     }
   };
   useEffect(() => {
+    setLoading(true);
     dispatch(fetchCustomer(userId) as any);
+    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
 
-  const columns:GridColDef[] = [
+  const columns: GridColDef[] = [
     {
       field: "id",
       // headerClassName: "bg-black text-white font-bold",
@@ -191,7 +199,7 @@ const CustomerList = () => {
         `text-black w-10 h-10 text-sm font-bold m-auto cursor-pointer p-2`,
       headerName: "Profile",
       width: 100,
-      renderCell: (params: { row: { Profile: any; _id: any; }; }) => {
+      renderCell: (params: { row: { Profile: any; _id: any } }) => {
         const initials = params.row.Profile;
         const randomColor = getRandomColor();
         const profileStyle = {
@@ -244,7 +252,7 @@ const CustomerList = () => {
       cellClassName:
         "text-orange-600 text-md font-bold m-auto cursor-pointer p-2",
       width: 90,
-      renderCell: (params:GridCellParams) => (
+      renderCell: (params: GridCellParams) => (
         <button
           onClick={() => handleOrder(params.row._id)}
           className="text-orange-600 font-bold text-md"
@@ -308,44 +316,54 @@ const CustomerList = () => {
   return (
     <div className="font-[Poppins] flex flex-col mt-4 gap-3 justify-center items-center">
       <div className="flex justify-between items-center gap-[400px]">
-        <h1 className="font-bold text-start">Customer Details</h1>
-        <input
-          type="text"
-          name=""
-          id=""
-          value={query}
-          data-aos="fade-right"
-          onChange={(e) => setQuery(e.target.value)}
-          className="border text-sm border-orange-500 rounded-lg p-2"
-          placeholder="Search Customer Here"
-        />
-      </div>
-      <div className="w-[900px] h-[600px]" data-aos="fade-right">
-        {customerData && customerData.length > 0 ? (
-          <DataGrid
-            style={{ fontFamily: "Poppins" }}
-            rows={rows}
-            columns={columns}
-            pagination
-            pageSizeOptions={[
-              10,
-              20,
-              30,
-              40,
-              100,
-              { value: 1000, label: "1,000" },
-            ]}
-          />
+        {loading ? (
+          <div className="animate-pulse rounded-xl bg-gray-300 w-[250px] h-[50px]"></div>
         ) : (
-          <>
-            <div className="m-auto flex flex-col w-1/2 h-1/2 ">
-              <h1 className="text-center mt-48 text-2xl text-bold text-orange-600">
-                No Data
-              </h1>
-            </div>
-          </>
+          <h1 className="font-bold text-start">Customer Details</h1>
+        )}
+
+        {loading ? (
+          <div className="animate-pulse rounded-lg bg-gray-300 w-[250px] h-[50px]"></div>
+        ) : (
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="border text-sm border-orange-500 rounded-lg p-2"
+            placeholder="Search Customer Here"
+          />
         )}
       </div>
+      {loading ? (
+        <div className="animate-pulse rounded-xl w-[900px] h-[600px] bg-gray-300"></div>
+      ) : (
+        <div className="w-[900px] h-[600px]">
+          {customerData && customerData.length > 0 ? (
+            <DataGrid
+              style={{ fontFamily: "Poppins" }}
+              rows={rows}
+              columns={columns}
+              pagination
+              pageSizeOptions={[
+                10,
+                20,
+                30,
+                40,
+                100,
+                { value: 1000, label: "1,000" },
+              ]}
+            />
+          ) : (
+            <>
+              <div className="m-auto flex flex-col w-1/2 h-1/2 ">
+                <h1 className="text-center mt-48 text-2xl text-bold text-orange-600">
+                  No Data
+                </h1>
+              </div>
+            </>
+          )}
+        </div>
+      )}
       <Dialog
         style={{ borderRadius: "20px" }}
         open={open}

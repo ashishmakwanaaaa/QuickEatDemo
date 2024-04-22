@@ -21,7 +21,7 @@ export class CustomerController {
   }
 
   @Get('/getAllCustomer/:userid')
-  GetAllCustomer(@Param('userid') userid: string) {
+  GetAllCustomer(@Param('userid') userid: string) {                                                                     
     return this.customerservice.getAllCustomer(userid);
   }
 

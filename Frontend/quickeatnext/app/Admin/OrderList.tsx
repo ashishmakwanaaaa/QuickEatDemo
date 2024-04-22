@@ -18,15 +18,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchSpecificOrder } from "@/lib/actions/orderAction";
 import { order, user } from "@/lib/reducers";
 
-export interface OrderListRows{
-  id:number,
-  _id:string | any,
-  Date:string,
-  customername:string,
-  customeremail:string,
-  customerphoneno:number,
-  amount:number,
-  invoice:string,
+export interface OrderListRows {
+  id: number;
+  _id: string | any;
+  Date: string;
+  customername: string;
+  customeremail: string;
+  customerphoneno: number;
+  amount: number;
+  invoice: string;
 }
 
 const OrderListPage = () => {
@@ -35,9 +35,11 @@ const OrderListPage = () => {
   const [filteredRow, setFilteredRows] = useState<OrderDataType[]>([]);
   const [rows, setRows] = useState<OrderListRows[]>([]);
   const [data, setData] = useState<OrderListRows[]>([]);
-  const user = useSelector((state:user) => state.user.user);
+  const user = useSelector((state: user) => state.user.user);
   const dispatch = useDispatch();
-  const specificorder:OrderDataType = useSelector((state:order) => state.order.orders);
+  const specificorder: OrderDataType = useSelector(
+    (state: order) => state.order.orders
+  );
   useEffect(() => {
     async function FetchAllPayment() {
       try {
@@ -59,7 +61,7 @@ const OrderListPage = () => {
       setData([]);
       return;
     }
-    const rowsArray:OrderListRows[]= orders.map((order, index) => ({
+    const rowsArray: OrderListRows[] = orders.map((order, index) => ({
       id: index + 1,
       _id: order._id,
       Date: order.Date.toString().split("T")[0],
@@ -112,7 +114,7 @@ const OrderListPage = () => {
 
     setFilteredRows(filteredData);
   };
-  
+
   const filteredRowsWithIds: OrderListRows[] = filteredRow.map(
     (order, index) => ({
       id: index + 1,

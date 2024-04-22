@@ -1,6 +1,12 @@
 "use client";
 
-import { DataGrid, GridCellParams, GridColDef, GridRowParams, GridRowSelectionApi } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCellParams,
+  GridColDef,
+  GridRowParams,
+  GridRowSelectionApi,
+} from "@mui/x-data-grid";
 import { useContext, useEffect, useState } from "react";
 import { OrderDataType } from "./Orders";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
@@ -19,7 +25,10 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPayments,FetchPaymentsPayload } from "@/lib/actions/paymentAction";
+import {
+  fetchPayments,
+  FetchPaymentsPayload,
+} from "@/lib/actions/paymentAction";
 import {
   PaymentType,
   initialStateTypeForPayment,
@@ -27,16 +36,16 @@ import {
 import { payment, user } from "@/lib/reducers";
 import { Dispatch } from "redux";
 
-
 const PaymentList = () => {
   const [rows, setRows] = useState<PaymentType[]>([]);
   const [data, setData] = useState<PaymentType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [order, setOrder] = useState<OrderDataType[]>([]);
   const [filteredRow, setFilteredRows] = useState<PaymentType[]>([]);
   const [invoiceid, setInvoiceId] = useState<number>(0);
   const StateContext = useContext(LoginContext);
-  const user = useSelector((state:user) => state.user.user);
+  const user = useSelector((state: user) => state.user.user);
   const dispatch = useDispatch<Dispatch>();
   const payments: PaymentType[] = useSelector(
     (state: payment) => state.payment.payments
@@ -94,7 +103,9 @@ const PaymentList = () => {
   console.log(StateContext);
   let currentDate = new Date().toJSON().slice(0, 10);
   useEffect(() => {
+    setLoading(true);
     dispatch(fetchPayments(userId) as any);
+    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   useEffect(() => {
     if (!payments || payments.length === 0) {
@@ -104,7 +115,7 @@ const PaymentList = () => {
     }
     const rowsArray: PaymentType[] = payments.map(
       (payment, index) =>
-        ({
+        (({
           id: index + 1,
           Date: payment.Date.split("T")[0],
           cardHoldername: payment.cardHoldername,
@@ -113,7 +124,7 @@ const PaymentList = () => {
           billingaddress: payment?.billingaddress?.city,
           paymentMethod: payment.paymentMethod,
           invoice: "Invoice",
-        } as unknown as PaymentType)
+        } as unknown) as PaymentType)
     );
 
     setRows(rowsArray);
@@ -162,7 +173,7 @@ const PaymentList = () => {
     }
   };
   console.log(payments);
-  const columns:GridColDef[] = [
+  const columns: GridColDef[] = [
     {
       field: "id",
 
@@ -227,53 +238,72 @@ const PaymentList = () => {
   return (
     <>
       <div className="flex justify-between w-[68rem]">
-        <h1 className="font-[Poppins] font-bold text-start ml-8">
-          Payment Details
-        </h1>
+        {loading ? (
+          <div className="animate-pulse bg-gray-300 rounded-md h-10 w-48"></div>
+        ) : (
+          <h1 className="font-[Poppins] font-bold text-start ml-8">
+            Payment Details
+          </h1>
+        )}
         <div className="flex flex-row gap-2 w-1/2">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateRangePicker
-              slotProps={{ textField: { size: "small" } }}
-              value={selectedDates}
-              onChange={handleDateRangeChange}
-            />
-          </LocalizationProvider>
-          <button
-            className="bg-orange-400 text-white w-10 h-10  rounded-md"
-            onClick={filterRowsByDate}
-          >
-            <VisibilityIcon />
-          </button>
-          <button
-            className="bg-red-500 text-white w-10 h-10  rounded-md"
-            onClick={() => {
-              setRows(data);
-              setSelectedDates([null, null]);
-            }}
-          >
-            <CancelIcon />
-          </button>
+          {loading ? (
+            <>
+              <div className="animate-pulse bg-gray-300 rounded-md h-10 w-1/3"></div>
+              <div className="animate-pulse bg-orange-400 rounded-md h-10 w-10"></div>
+              <div className="animate-pulse bg-red-500 rounded-md h-10 w-10"></div>
+            </>
+          ) : (
+            <>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateRangePicker
+                  slotProps={{ textField: { size: "small" } }}
+                  value={selectedDates}
+                  onChange={handleDateRangeChange}
+                />
+              </LocalizationProvider>
+              <button
+                className="bg-orange-400 text-white w-10 h-10 rounded-md"
+                onClick={filterRowsByDate}
+              >
+                <VisibilityIcon />
+              </button>
+              <button
+                className="bg-red-500 text-white w-10 h-10 rounded-md"
+                onClick={() => {
+                  setRows(data);
+                  setSelectedDates([null, null]);
+                }}
+              >
+                <CancelIcon />
+              </button>
+            </>
+          )}
         </div>
       </div>
 
       <div className="w-[950px] h-4/5 mt-4 mx-auto">
-        <div className="w-[980px] h-[580px] mt-4 mx-auto">
-          <DataGrid
-            style={{ fontFamily: "Poppins" }}
-            rows={rows}
-            columns={columns}
-            pagination
-            pageSizeOptions={[
-              10,
-              20,
-              30,
-              40,
-              100,
-              { value: 1000, label: "1,000" },
-            ]}
-          />
-        </div>
+        {loading ? (
+          <div className="animate-pulse bg-gray-300 rounded-lg w-[980px] h-[580px] mt-4 mx-auto"></div>
+        ) : (
+          <div className="w-[980px] h-[580px] mt-4 mx-auto">
+            <DataGrid
+              style={{ fontFamily: "Poppins" }}
+              rows={rows}
+              columns={columns}
+              pagination
+              pageSizeOptions={[
+                10,
+                20,
+                30,
+                40,
+                100,
+                { value: 1000, label: "1,000" },
+              ]}
+            />
+          </div>
+        )}
       </div>
+
       <Dialog
         maxWidth="xl"
         open={open}

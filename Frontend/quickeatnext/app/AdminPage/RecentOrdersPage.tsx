@@ -7,10 +7,10 @@ interface OrderItem {
   _id: string;
   Date: string;
   userId: {
-      image: string;
-      restaurantname: string;
-      ownername: string;
-      emailid: string;
+    image: string;
+    restaurantname: string;
+    ownername: string;
+    emailid: string;
   };
   customerfirstname: string;
   customerphoneno: string;
@@ -20,7 +20,7 @@ interface OrderItem {
 const RecentOrdersPage = () => {
   const [order, setOrder] = useState<OrderItem[]>([]);
 
-  const columns:GridColDef[] = [
+  const columns: GridColDef[] = [
     {
       field: "id",
       headerName: "ID",
@@ -124,7 +124,7 @@ const RecentOrdersPage = () => {
         <h1 className="text-start capitalize text-black text-md font-bold">
           Recently Orders
         </h1>
-        <div className="w-[1100px] h-full" data-aos="fade-right">
+        <div className="w-[1100px] h-[600px] ml-2" data-aos="fade-right">
           <DataGrid
             style={{ fontFamily: "Poppins" }}
             rows={rows}
