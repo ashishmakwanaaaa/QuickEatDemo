@@ -19,8 +19,8 @@ import { MdDelete } from "react-icons/md";
 import TextField from "@mui/material/TextField";
 import { useRouter } from "next/navigation";
 import { TransitionProps } from "@mui/material/transitions";
-import { Customer } from "@/app/Admin/CustomerList";
-import { ItemType } from "@/app/Admin/ItemList";
+import { Customer } from "@/app/UserPage/CustomerList";
+import { ItemType } from "@/app/UserPage/ItemList";
 import StateLogin from "../LoginState/logincontext";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchItems } from "@/lib/actions/itemAction";
@@ -46,7 +46,6 @@ interface SelectedItemType extends ItemType {
   upToOffer: number;
   image: string;
 }
-
 
 export interface OrderDataType {
   _id: any;
@@ -75,13 +74,14 @@ const Orders = ({ id }: { id: string }) => {
   const [selectedItem, setSelectedItem] = useState<SelectedItemType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [open2, setOpen2] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const StateContext = useContext(StateLogin);
   const dispatch = useDispatch();
-  const items: ItemType[] = useSelector((state:item) => state.item.items);
-  const user = useSelector((state:user) => state.user.user);
+  const items: ItemType[] = useSelector((state: item) => state.item.items);
+  const user = useSelector((state: user) => state.user.user);
   const userId = user._id;
-  const customer:Customer = useSelector(
-    (state:customer) => state.customer.specificcustomer
+  const customer: Customer = useSelector(
+    (state: customer) => state.customer.specificcustomer
   );
   console.log(customer);
   const TotalAmount = selectedItem.reduce(
@@ -104,7 +104,7 @@ const Orders = ({ id }: { id: string }) => {
     selectedItem: selectedItem,
     totalAmount: TotalAmount,
     Date: new Date(),
-    _id: undefined
+    _id: undefined,
   };
 
   const CashData = {
@@ -126,7 +126,9 @@ const Orders = ({ id }: { id: string }) => {
   console.log(typeof customer.userId);
 
   useEffect(() => {
+    setLoading(true);
     dispatch(fetchItems(userId) as any);
+    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
 
   const handleRemoveItem = async (item: SelectedItemType) => {
@@ -396,85 +398,113 @@ const Orders = ({ id }: { id: string }) => {
   return (
     <>
       <div className="font-[Poppins]  p-2 flex flex-col gap-4 w-full h-full">
-        <div className="flex flex-row gap-3 items-center justify-between rounded-xl p-4  border-b-2 border-gray-500">
-          <p className="text-lg  text-black " data-aos="fade-down">
-            <span className="text-black font-bold ">Customer Name</span>:{" "}
-            {customer.firstname} {customer.lastname}
-          </p>
-          <p data-aos="fade-down">
-            <Badge badgeContent={selectedItem.length} color="primary">
-              View Cart{" "}
-              <ShoppingCartIcon
-                className="cursor-pointer text-orange-500"
-                onClick={() => setOpen(true)}
-              />
-            </Badge>
-          </p>
-        </div>
-        <div className="grid grid-cols-5 gap-4">
-          {items &&
-            items.length > 0 &&
-            items.map((item, index) => (
-              <div
-                key={index}
-                className="relative flex flex-col gap-2 items-center drop-shadow-2xl rounded-2xl p-2 h-full"
-                data-aos="fade-right"
-                style={{ boxShadow: "0 0 0.5em gray" }}
-              >
-                <div
-                  className="rounded-2xl  overflow-hidden drop-shadow-2xl"
-                  style={{ width: "100%", height: "150px", overflow: "hidden" }}
-                >
-                  <img
-                    src={item.image}
-                    className="w-full h-[150px] rounded-lg cursor-pointer object-cover"
-                  />
-                  <div className="absolute bottom-0 left-0 w-full">
-                    <div className="relative z-20 p-2">
-                      <p className="text-white text-lg font-bold ">Up To</p>
-                      <p className="text-orange-500 text-lg font-bold  ">
-                        {item.upToOffer}% Off
-                      </p>
-                    </div>
-                    <div className="absolute bottom-0 left-0 w-full h-28 bg-gradient-to-t from-black"></div>
-                  </div>
-                </div>
-                <button
-                  disabled={item.quantity === 0}
-                  className={`bg-white text-orange-500  p-2 w-[110px] mx-auto text-sm z-10 mt-[-20px] mb-2 font-bold 
-    ${item.quantity === 0 ? "opacity-50 cursor-not-allowed" : "rounded-md"}`}
-                  onClick={() => handleAddItem(item)}
-                >
-                  Add To Cart
-                </button>
-                <div className="flex flex-col gap-2">
-                  <div className="flex flex-row justify-start items-start gap-2">
-                    <span className="text-sm  font-bold  text-orange-500">
-                      Name:
-                    </span>
-                    <span className="font-bold  text-black text-sm">
-                      {item.itemname}
-                    </span>
-                  </div>
-                  <div className="flex flex-row justify-start items-start gap-2">
-                    <span className="text-sm font-bold  text-orange-500">
-                      Quantity:
-                    </span>
-                    <span className="font-bold  text-black text-sm">
-                      {item.quantity}
-                    </span>
-                  </div>
-                  <div className="flex flex-row justify-start items-start gap-8">
-                    <span className="text-sm font-bold  text-orange-500">
-                      Price:
-                    </span>
-                    <span className="font-bold  text-black text-sm">
-                      &#8377;{item.price}
-                    </span>
-                  </div>
-                </div>
+        <div className="flex flex-row gap-3 items-center justify-between rounded-xl p-4 border-b-2 border-gray-500">
+          {loading ? (
+            <>
+              <div className="animate-pulse bg-gray-300 rounded-md h-6 w-[900px]"></div>
+              <div className="animate-pulse flex items-center gap-2">
+                <div className="bg-gray-300 h-6 w-10 rounded-full"></div>
+                <div className="bg-gray-300 h-6 w-10 rounded-lg"></div>
               </div>
-            ))}
+            </>
+          ) : (
+            <>
+              <p className="text-lg text-black">
+                <span className="text-black font-bold">Customer Name</span>:
+                {customer.firstname} {customer.lastname}
+              </p>
+              <p>
+                <Badge badgeContent={selectedItem.length} color="primary">
+                  View Cart
+                  <ShoppingCartIcon
+                    className="cursor-pointer text-orange-500"
+                    onClick={() => setOpen(true)}
+                  />
+                </Badge>
+              </p>
+            </>
+          )}
+        </div>
+
+        <div className="grid grid-cols-5 gap-4">
+          {loading
+            ? Array.from({ length: 5 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="animate-pulse flex flex-col items-center rounded-2xl p-2 h-full"
+                >
+                  <div className="bg-gray-300 rounded-2xl h-40 w-full"></div>
+                  <div className="bg-gray-300 h-6 w-3/4 rounded-lg mt-2"></div>
+                  <div className="bg-gray-300 h-6 w-3/4 rounded-lg mt-2"></div>
+                  <div className="bg-gray-300 h-6 w-3/4 rounded-lg mt-2"></div>
+                </div>
+              ))
+            : items &&
+              items.length > 0 &&
+              items.map((item, index) => (
+                <div
+                  key={index}
+                  className="relative flex flex-col gap-2 items-center drop-shadow-2xl rounded-2xl p-2 h-full"
+                  style={{ boxShadow: "0 0 0.5em gray" }}
+                >
+                  <div
+                    className="rounded-2xl  overflow-hidden drop-shadow-2xl"
+                    style={{
+                      width: "100%",
+                      height: "150px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <img
+                      src={item.image}
+                      className="w-full h-[150px] rounded-lg cursor-pointer object-cover"
+                    />
+                    <div className="absolute bottom-0 left-0 w-full">
+                      <div className="relative z-20 p-2">
+                        <p className="text-white text-lg font-bold ">Up To</p>
+                        <p className="text-orange-500 text-lg font-bold  ">
+                          {item.upToOffer}% Off
+                        </p>
+                      </div>
+                      <div className="absolute bottom-0 left-0 w-full h-28 bg-gradient-to-t from-black"></div>
+                    </div>
+                  </div>
+                  <button
+                    disabled={item.quantity === 0}
+                    className={`bg-white text-orange-500  p-2 w-[110px] mx-auto text-sm z-10 mt-[-20px] mb-2 font-bold 
+      ${item.quantity === 0 ? "opacity-50 cursor-not-allowed" : "rounded-md"}`}
+                    onClick={() => handleAddItem(item)}
+                  >
+                    Add To Cart
+                  </button>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-row justify-start items-start gap-2">
+                      <span className="text-sm  font-bold  text-orange-500">
+                        Name:
+                      </span>
+                      <span className="font-bold  text-black text-sm">
+                        {item.itemname}
+                      </span>
+                    </div>
+                    <div className="flex flex-row justify-start items-start gap-2">
+                      <span className="text-sm font-bold  text-orange-500">
+                        Quantity:
+                      </span>
+                      <span className="font-bold  text-black text-sm">
+                        {item.quantity}
+                      </span>
+                    </div>
+                    <div className="flex flex-row justify-start items-start gap-8">
+                      <span className="text-sm font-bold  text-orange-500">
+                        Price:
+                      </span>
+                      <span className="font-bold  text-black text-sm">
+                        &#8377;{item.price}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
         </div>
       </div>
       <Dialog
@@ -553,7 +583,6 @@ const Orders = ({ id }: { id: string }) => {
                             </span>
                           </div>
                         </div>
-                       
                       </div>
                     </div>
                   );

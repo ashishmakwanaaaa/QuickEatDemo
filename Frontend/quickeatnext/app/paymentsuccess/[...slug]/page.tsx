@@ -1,6 +1,6 @@
 "use client";
 
-import { Customer } from "@/app/Admin/CustomerList";
+import { Customer } from "@/app/UserPage/CustomerList";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
@@ -72,12 +72,12 @@ const PaymentSuccess = ({ params }: { params: { slug: string } }) => {
         }
       } catch (error) {
         console.log(error);
-      } 
+      }
     };
     if (customer.emailid && !paymentproceed) {
-      storePayment()
-    } else if(!customer.emailid) {
-      fetchData()
+      storePayment();
+    } else if (!customer.emailid) {
+      fetchData();
     }
   }, [customer]);
   return (
@@ -113,9 +113,3 @@ const PaymentSuccess = ({ params }: { params: { slug: string } }) => {
 };
 
 export default PaymentSuccess;
-   
-
-      
-      
-      
- 

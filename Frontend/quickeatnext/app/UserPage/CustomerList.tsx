@@ -293,8 +293,14 @@ const CustomerList = () => {
   const rows =
     customerData && customerData.length > 0
       ? customerData
-          .filter((customer) =>
-            customer.firstname.toLowerCase().includes(query)
+          .filter(
+            (customer) =>
+              customer.firstname.toLowerCase().includes(query) ||
+              customer.lastname.toLowerCase().includes(query) ||
+              customer.phoneno
+                .toString()
+                .toLowerCase()
+                .includes(query)
           )
           .map((customer, index) => ({
             _id: customer._id,

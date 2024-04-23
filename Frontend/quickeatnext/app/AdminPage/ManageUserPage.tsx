@@ -6,18 +6,20 @@ import { User } from "@/lib/reducers/userSlice/UserReducers";
 import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Counter } from "../Admin/AdminDashboard";
+import { Counter } from "../UserPage/AdminDashboard";
 import Swal from "sweetalert2";
 import { user } from "@/lib/reducers";
 
 const ManageUserPage = () => {
   const dispatch = useDispatch();
   const [sales, setsales] = useState<PaymentType[]>([]);
-  const users = useSelector((state:user) => state.user.users);
+  const [loading, setLoading] = useState<boolean>(false);
+  const users = useSelector((state: user) => state.user.users);
   useEffect(() => {
     dispatch(fetchUsers() as any);
   }, [dispatch]);
   useEffect(() => {
+    setLoading(true);
     async function getAllSales() {
       try {
         const response = await fetch(
@@ -25,6 +27,7 @@ const ManageUserPage = () => {
         );
         const data = await response.json();
         setsales(data.payments);
+        setTimeout(() => setLoading(false), 2000);
       } catch (error) {
         console.log(error);
       }
@@ -54,25 +57,19 @@ const ManageUserPage = () => {
         confirmButtonText: "Yes, delete it!",
       });
       if (confirm.isConfirmed) {
-        const response = await fetch(
-          `http://localhost:8000/auth/deleteuser/${id}`,
-          {
-            method: "DELETE",
+        try {
+          const response = await fetch(
+            `http://localhost:5000/auth/logout/${id}`
+          );
+          if (response.ok) {
+            Swal.fire({
+              title: "Deactive This User Account Successfully",
+              icon: "success",
+              timer: 1000,
+            });
           }
-        );
-        const data = await response.json();
-        if (response.ok) {
-          Swal.fire({
-            title: "Delete User Successfully",
-            icon: "success",
-            timer: 1000,
-          });
-        } else {
-          Swal.fire({
-            title: "Error:" + data.message,
-            icon: "error",
-            timer: 1000,
-          });
+        } catch (error) {
+          console.log("error");
         }
       }
     } catch (error) {

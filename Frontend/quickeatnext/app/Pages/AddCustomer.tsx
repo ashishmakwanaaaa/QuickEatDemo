@@ -4,9 +4,10 @@ import React, { useContext, useState } from "react";
 import StateLogin from "../LoginState/logincontext";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import { Customer } from "../Admin/CustomerList";
+import { Customer } from "../UserPage/CustomerList";
 import { useSelector } from "react-redux";
 import EmailIcon from "@mui/icons-material/Email";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 
 import { user } from "@/lib/reducers";
 
@@ -35,6 +36,7 @@ const AddCustomer = () => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(CustomerData),
     });
 
@@ -74,16 +76,20 @@ const AddCustomer = () => {
       <div
         className="absolute inset-0 flex flex-col gap-4 bg-gray-50 w-[900px] h-[620px] mx-auto p-5 mt-12 rounded-xl"
         style={{ boxShadow: "0 0 2em orange" }}
-        data-aos="fade-right"
       >
-        <h3 className="text-xl font-bold  text-center text-orange-500">
-          ADD CUSTOMER
-        </h3>
-        <div className="flex flex-col md:flex-row justify-start gap-5">
+        <div className="flex justify-between">
           <div
-            className="flex flex-col gap-2 items-start  w-full md:w-[55%]"
-            data-aos="fade-right"
+            onClick={() => router.push("/customerlist")}
+            className=" bg-orange-600 rounded-full w-8 h-8 flex items-center p-2 cursor-pointer justify-center text-white"
           >
+            <KeyboardBackspaceIcon />
+          </div>
+          <h3 className="text-xl font-bold  text-center text-orange-500 mr-[350px]">
+            ADD CUSTOMER
+          </h3>
+        </div>
+        <div className="flex flex-col md:flex-row justify-start gap-5">
+          <div className="flex flex-col gap-2 items-start  w-full md:w-[55%]">
             <label htmlFor="restaurantName" className="font-bold ">
               Customer's Firstname
             </label>
@@ -99,10 +105,7 @@ const AddCustomer = () => {
               className="p-2 rounded-md border-2 border-orange-500 w-full"
             />
           </div>
-          <div
-            className="flex flex-col gap-2 justify-start w-full md:w-[55%]"
-            data-aos="fade-right"
-          >
+          <div className="flex flex-col gap-2 justify-start w-full md:w-[55%]">
             <label htmlFor="restaurantName" className="font-bold  ">
               Customer's Lastname
             </label>
@@ -119,10 +122,7 @@ const AddCustomer = () => {
             />
           </div>
         </div>
-        <div
-          className="flex flex-col gap-2 items-start w-full"
-          data-aos="fade-right"
-        >
+        <div className="flex flex-col gap-2 items-start w-full">
           <label htmlFor="address" className="font-bold ">
             Email ID:
           </label>
@@ -156,10 +156,7 @@ const AddCustomer = () => {
         </div>
 
         <div className="flex flex-row md:flex-row justify-start gap-5">
-          <div
-            className="flex flex-col gap-2 items-start w-full"
-            data-aos="fade-right"
-          >
+          <div className="flex flex-col gap-2 items-start w-full">
             <label htmlFor="address" className="font-bold ">
               Address:
             </label>
@@ -175,10 +172,7 @@ const AddCustomer = () => {
             />
           </div>
           <div className="flex flex-col justify-start gap-2 ">
-            <div
-              className="flex flex-col gap-2 items-start   w-full md:w-[55%]"
-              data-aos="fade-right"
-            >
+            <div className="flex flex-col gap-2 items-start   w-full md:w-[55%]">
               <label htmlFor="restaurantName" className="font-bold ">
                 {" "}
                 Contact No:
@@ -198,10 +192,7 @@ const AddCustomer = () => {
                 className="p-2 rounded-md border-2 border-orange-500 w-[420px]"
               />
             </div>
-            <div
-              className="flex flex-col gap-2 items-start w-full md:w-[55%]"
-              data-aos="fade-right"
-            >
+            <div className="flex flex-col gap-2 items-start w-full md:w-[55%]">
               <label htmlFor="restaurantName" className="font-bold ">
                 State:
               </label>
@@ -220,10 +211,7 @@ const AddCustomer = () => {
           </div>
         </div>
         <div className="flex flex-row md:flex-row justify-start gap-5">
-          <div
-            className="flex flex-col gap-2 items-start  w-full md:w-[55%]"
-            data-aos="fade-right"
-          >
+          <div className="flex flex-col gap-2 items-start  w-full md:w-[55%]">
             <label htmlFor="restaurantName" className="font-bold ">
               City:
             </label>
@@ -239,10 +227,7 @@ const AddCustomer = () => {
               className="p-2 rounded-md border-2 border-orange-500 w-full"
             />
           </div>
-          <div
-            className="flex flex-col gap-2 items-start w-full md:w-[55%]"
-            data-aos="fade-right"
-          >
+          <div className="flex flex-col gap-2 items-start w-full md:w-[55%]">
             <label htmlFor="restaurantName" className="font-bold ">
               Pincode:
             </label>

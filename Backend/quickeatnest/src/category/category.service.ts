@@ -16,12 +16,12 @@ export class CategoryService {
 
   async AddCategory(categorydto: CategoryDto) {
     try {
-      const { categoryname, image,userId } = categorydto;
-      console.log(categoryname, image,userId);
+      const { categoryname, image, userId } = categorydto;
+      console.log(categoryname, image, userId);
       let catogory = await this.categorymodel.findOne({
         categoryname,
         image,
-        userId
+        userId,
       });
       if (catogory) {
         return {
@@ -32,7 +32,7 @@ export class CategoryService {
       let newcategory = await this.categorymodel.create({
         categoryname,
         image,
-        userId
+        userId,
       });
       newcategory.save();
       return { message: 'category Added Succesfully', newcategory };
@@ -41,9 +41,9 @@ export class CategoryService {
     }
   }
 
-  async getAllCatories(userid:string) {
+  async getAllCatories(userid: string) {
     try {
-      let categories = await this.categorymodel.find({userId:userid});
+      let categories = await this.categorymodel.find({ userId: userid });
       if (categories.length === 0) {
         return { message: 'Empty Data' };
       }
@@ -63,6 +63,25 @@ export class CategoryService {
       await category.deleteOne();
 
       return { message: 'Deleted Successfully', category };
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async UpdateCategory(id: string, categorydto: CategoryDto) {
+    try {
+      const category = await this.categorymodel.findById(id);
+      if (!category) {
+        throw new NotFoundException();
+      }
+      let updatedcategory = await this.categorymodel.findByIdAndUpdate(
+        id,
+        categorydto,
+        { new: true },
+      );
+      await updatedcategory.save();
+      return { message: 'Category Update Successfully', updatedcategory };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException();

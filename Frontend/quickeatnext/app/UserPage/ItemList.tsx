@@ -11,7 +11,7 @@ import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import { Select } from "antd";
 import Swal from "sweetalert2";
 import StateLogin from "../LoginState/logincontext";
 import { useSelector, useDispatch } from "react-redux";
@@ -50,6 +50,8 @@ const ItemList = () => {
   const [edititemdata, setEditItem] = useState<ItemType>({} as ItemType);
   const [query, setQuery] = useState<string>("");
   const [option, setOption] = useState<string>("");
+  const [active, setActive] = useState<number>(0);
+  const { Option } = Select;
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -169,10 +171,8 @@ const ItemList = () => {
     }
   };
 
-  const handleChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setOption(e.target.value);
+  const handleChange = (value: string) => {
+    setOption(value);
     console.log(option);
   };
 
@@ -233,29 +233,19 @@ const ItemList = () => {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="shadow-lg border text-sm border-orange-500 rounded-lg w-400 p-2"
+                className="shadow-lg border text-sm border-orange-500 rounded-md w-400 p-2"
                 placeholder="Search Item Here"
               />
               <FormControl variant="standard" style={{ width: "160px" }}>
-                <InputLabel
-                  id="demo-simple-select-label"
-                  style={{ color: "orange" }}
-                >
-                  Select One Option
-                </InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={option}
-                  onChange={handleChange}
+                  value={option} // wrapping in an object because of labelInValue
+                  onChange={handleChange} // directly accessing `value` property
+                  style={{ width: 150, height: 40 }}
                 >
-                  <MenuItem value="Price Highest">Price(High To Low)</MenuItem>
-                  <hr />
-                  <MenuItem value="Price Lowest">Price(Low To High)</MenuItem>
-                  <hr />
-                  <MenuItem value="Qty Highest">Qty(High To Low)</MenuItem>
-                  <hr />
-                  <MenuItem value="Qty Lowest">Qty(Low To High)</MenuItem>
+                  <Option value="Price Highest">Price (High To Low)</Option>
+                  <Option value="Price Lowest">Price (Low To High)</Option>
+                  <Option value="Qty Highest">Qty (High To Low)</Option>
+                  <Option value="Qty Lowest">Qty (Low To High)</Option>
                 </Select>
               </FormControl>
             </>
@@ -282,8 +272,15 @@ const ItemList = () => {
                     alt=""
                   />
                   <button
-                    onClick={() => setSelectedCategory(category.categoryname)}
-                    className="text-sm text-center"
+                    onClick={() => {
+                      setSelectedCategory(category.categoryname);
+                      setActive(index);
+                    }}
+                    className={`text-sm text-center ${
+                      active === index
+                        ? "bg-red-500 p-1 text-white rounded-md "
+                        : ""
+                    }`}
                   >
                     {category.categoryname}
                   </button>

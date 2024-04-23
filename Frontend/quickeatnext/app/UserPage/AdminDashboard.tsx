@@ -10,12 +10,7 @@ import { Customer } from "./CustomerList";
 import { ItemType } from "./ItemList";
 import StateLogin from "../LoginState/logincontext";
 
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -329,17 +324,17 @@ const AdminDashboard = () => {
           ) : (
             <>
               <div
-                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-red-600 drop-shadow-2xl h-44 mt-4"
+                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-red-500 drop-shadow-2xl h-44 mt-4"
                 // style={{ boxShadow: "0 0  1em grey" }}
               >
-                <h4 className="text-md text-red-600 dark:text-gray-300">
+                <h4 className="text-md text-red-500 dark:text-gray-300">
                   Customers
                 </h4>
-                <div className="rounded-full p-2 bg-red-600">
+                <div className="rounded-full p-2 bg-red-500">
                   <IoPeople color="white" />
                 </div>
 
-                <p className="text-3xl text-red-600 dark:text-gray-300">
+                <p className="text-3xl text-red-500 dark:text-gray-300">
                   <Counter
                     targetValue={
                       customers && customers.length > 0 && customers.length
@@ -349,15 +344,15 @@ const AdminDashboard = () => {
               </div>
               <div
                 // style={{ boxShadow: "0 0  1em grey" }}
-                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-green-800  drop-shadow-2xl h-44 mt-4"
+                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-green-600  drop-shadow-2xl h-44 mt-4"
               >
-                <h4 className="text-md text-green-800 dark:text-gray-300">
+                <h4 className="text-md text-green-600 dark:text-gray-300">
                   FoodItems
                 </h4>
-                <div className="bg-green-800 p-2 rounded-full">
+                <div className="bg-green-600 p-2 rounded-full">
                   <IoFastFood color="white" />
                 </div>
-                <p className="text-3xl text-green-800 dark:text-gray-300">
+                <p className="text-3xl text-green-600 dark:text-gray-300">
                   <Counter
                     targetValue={items && items.length > 0 && items.length}
                   />
@@ -365,41 +360,41 @@ const AdminDashboard = () => {
               </div>
               <div
                 // style={{ boxShadow: "0 0  1em grey" }}
-                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-blue-600  drop-shadow-2xl h-44 mt-4"
+                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-blue-400  drop-shadow-2xl h-44 mt-4"
               >
-                <h4 className="text-md text-blue-600 dark:text-gray-300">
+                <h4 className="text-md text-blue-400 dark:text-gray-300">
                   Total Sales
                 </h4>
-                <div className="bg-blue-600 rounded-full p-1 flex justify-center items-center w-10 h-10">
+                <div className="bg-blue-400 rounded-full p-1 flex justify-center items-center w-10 h-10">
                   <MonetizationOnIcon style={{ color: "white" }} />
                 </div>
-                <p className="text-3xl text-blue-600 dark:text-gray-300">
+                <p className="text-3xl text-blue-400 dark:text-gray-300">
                   &#x20B9; <Counter targetValue={totalAmount} />
                 </p>
               </div>
               <div
                 // style={{ boxShadow: "0 0  1em grey" }}
-                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-orange-600  drop-shadow-2xl h-44 mt-4"
+                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-orange-500  drop-shadow-2xl h-44 mt-4"
               >
-                <h4 className="text-md text-orange-600 dark:text-gray-300">
+                <h4 className="text-md text-orange-500 dark:text-gray-300">
                   Card Sales
                 </h4>
-                <div className="rounded-full p-2 bg-orange-600 w-10 h-10 flex justify-center items-center">
+                <div className="rounded-full p-2 bg-orange-500 w-10 h-10 flex justify-center items-center">
                   <CreditCardIcon style={{ color: "white" }} />
                 </div>
-                <p className="text-3xl text-orange-600 dark:text-gray-300">
+                <p className="text-3xl text-orange-500 dark:text-gray-300">
                   &#x20B9; <Counter targetValue={totalCardAmount} />
                 </p>
               </div>
-              <div className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-purple-600  drop-shadow-2xl h-44 mt-4">
-                <h4 className="text-md text-purple-700 dark:text-gray-300">
+              <div className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-purple-500  drop-shadow-2xl h-44 mt-4">
+                <h4 className="text-md text-purple-500 dark:text-gray-300">
                   Cash Sales
                 </h4>
-                <div className="bg-purple-700 rounded-full p-2 w-10 h-10 flex justify-center items-center">
+                <div className="bg-purple-500 rounded-full p-2 w-10 h-10 flex justify-center items-center">
                   {" "}
                   <MoneyIcon style={{ color: "white" }} />
                 </div>
-                <p className="text-3xl text-purple-700 dark:text-gray-300">
+                <p className="text-3xl text-purple-500 dark:text-gray-300">
                   &#x20B9; <Counter targetValue={totalCashAmount} />
                 </p>
               </div>
@@ -413,7 +408,7 @@ const AdminDashboard = () => {
             ) : (
               <>
                 <Doughnut data={finalData} options={options} />
-                <h1 className="text-center dark:text-gray-300  mt-2 capitalize text-orange-600 font-bold">
+                <h1 className="text-center dark:text-gray-300  mt-2 capitalize text-orange-500 font-bold">
                   Categories Wise Data
                 </h1>
               </>
@@ -470,7 +465,7 @@ const AdminDashboard = () => {
                 </div>
                 <div className=" flex flex-col gap-2 w-[500px] h-[700px] mr-16">
                   <Bar data={dataforbarchart} options={optionsforbarchart} />
-                  <h1 className="text-end dark:text-gray-300 capitalize text-orange-600 font-bold">
+                  <h1 className="text-end dark:text-gray-300 capitalize text-orange-500 font-bold">
                     Monthly Sales Record
                   </h1>
                 </div>

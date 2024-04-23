@@ -250,17 +250,13 @@ export class AuthService {
     }
   }
 
-  async deleteUser(id: string) {
+  async verifyToken(token: string): Promise<boolean> {
     try {
-      const user = await this.usermodel.findById(id);
-      if (!user) {
-        throw new NotFoundException();
-      }
-      await user.deleteOne();
-      return { message: 'User deleted', user };
+      // Assuming JWT for token verification
+      const decoded = this.jwtService.verify(token);
+      return !!decoded;
     } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException();
+      return false;
     }
   }
 }

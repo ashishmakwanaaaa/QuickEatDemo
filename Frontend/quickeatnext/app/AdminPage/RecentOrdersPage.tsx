@@ -19,6 +19,7 @@ interface OrderItem {
 
 const RecentOrdersPage = () => {
   const [order, setOrder] = useState<OrderItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const columns: GridColDef[] = [
     {
@@ -103,12 +104,14 @@ const RecentOrdersPage = () => {
   useEffect(() => {
     async function getAllOrder() {
       try {
+        setLoading(true);
         const response = await fetch(
           "http://localhost:5000/orders/getAllOrders"
         );
         const data = await response.json();
         console.log(data);
         setOrder(data.orders);
+        setTimeout(() => setLoading(false), 2000);
       } catch (error) {
         console.log(error);
       }
@@ -117,29 +120,30 @@ const RecentOrdersPage = () => {
   }, []);
   return (
     <>
-      <div
-        data-aos="fade-right"
-        className="flex flex-col w-full h-full gap-2 justify-start items-start"
-      >
+      <div className="flex flex-col w-full h-full gap-2 justify-start items-start">
         <h1 className="text-start capitalize text-black text-md font-bold">
           Recently Orders
         </h1>
-        <div className="w-[1100px] h-[600px] ml-2" data-aos="fade-right">
-          <DataGrid
-            style={{ fontFamily: "Poppins" }}
-            rows={rows}
-            columns={columns}
-            pagination
-            pageSizeOptions={[
-              10,
-              20,
-              30,
-              40,
-              100,
-              { value: 1000, label: "1,000" },
-            ]}
-          />
-        </div>
+        {loading ? (
+          <div className="animate-pulse bg-gray-300 w-[1100px] h-[600px] ml-2"></div>
+        ) : (
+          <div className="w-[1100px] h-[600px] ml-2">
+            <DataGrid
+              style={{ fontFamily: "Poppins" }}
+              rows={rows}
+              columns={columns}
+              pagination
+              pageSizeOptions={[
+                10,
+                20,
+                30,
+                40,
+                100,
+                { value: 1000, label: "1,000" },
+              ]}
+            />
+          </div>
+        )}
       </div>
     </>
   );

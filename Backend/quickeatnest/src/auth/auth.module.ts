@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from './auth.model';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { AuthGuard } from './auth.gaurd';
 
 @Module({
   imports: [
@@ -13,11 +14,12 @@ import { ConfigModule } from '@nestjs/config';
       secret: process.env.secretkey,
       signOptions: {
         expiresIn: '3d',
-      },                      
+      },
     }),
     MongooseModule.forFeature([{ name: 'users', schema: UserSchema }]),
   ],
   controllers: [AuthController],
   providers: [AuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}

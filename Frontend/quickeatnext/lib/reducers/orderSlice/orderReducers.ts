@@ -1,4 +1,4 @@
-import { OrderDataType } from "@/app/Admin/Orders";
+import { OrderDataType } from "@/app/UserPage/Orders";
 import { fetchSpecificOrder } from "@/lib/actions/orderAction";
 import { createSlice } from "@reduxjs/toolkit";
 

@@ -1,4 +1,4 @@
-import { Customer } from "@/app/Admin/CustomerList";
+import { Customer } from "@/app/UserPage/CustomerList";
 import { fetchCustomer, fetchCustomerById } from "@/lib/actions/customerAction";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -19,7 +19,7 @@ export const initialState: initialStateTypeForCustomer = {
     address: "",
     state: "",
     city: "",
-    pincode: ""
+    pincode: "",
   },
   loading: false,
   error: null,

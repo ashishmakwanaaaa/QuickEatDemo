@@ -237,18 +237,18 @@ const PaymentList = () => {
   // setRows(rowsArray);
   return (
     <>
-      <div className="flex justify-between w-[68rem]">
+      <div className="flex justify-between w-[68rem] mt-2">
         {loading ? (
-          <div className="animate-pulse bg-gray-300 rounded-md h-10 w-48"></div>
+          <div className="animate-pulse bg-gray-300 rounded-md h-10 w-48 ml-8"></div>
         ) : (
-          <h1 className="font-[Poppins] font-bold text-start ml-8">
+          <h1 className="font-[Poppins] font-bold text-start ml-10">
             Payment Details
           </h1>
         )}
         <div className="flex flex-row gap-2 w-1/2">
           {loading ? (
             <>
-              <div className="animate-pulse bg-gray-300 rounded-md h-10 w-1/3"></div>
+              <div className="animate-pulse bg-gray-300 rounded-md h-10 w-1/2 ml-36"></div>
               <div className="animate-pulse bg-orange-400 rounded-md h-10 w-10"></div>
               <div className="animate-pulse bg-red-500 rounded-md h-10 w-10"></div>
             </>
@@ -281,11 +281,11 @@ const PaymentList = () => {
         </div>
       </div>
 
-      <div className="w-[950px] h-4/5 mt-4 mx-auto">
+      <div className="w-[1000px] h-4/5 mt-4 mx-auto">
         {loading ? (
           <div className="animate-pulse bg-gray-300 rounded-lg w-[980px] h-[580px] mt-4 mx-auto"></div>
         ) : (
-          <div className="w-[980px] h-[580px] mt-4 mx-auto">
+          <div className="w-full h-full mt-4 mx-auto">
             <DataGrid
               style={{ fontFamily: "Poppins" }}
               rows={rows}

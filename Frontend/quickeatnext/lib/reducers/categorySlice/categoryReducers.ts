@@ -1,5 +1,5 @@
-import { CategoryType } from "@/app/Admin/CategoryList";
-import { ItemType } from "@/app/Admin/ItemList";
+import { CategoryType } from "@/app/UserPage/CategoryList";
+import { ItemType } from "@/app/UserPage/ItemList";
 import { fetchCategories } from "@/lib/actions/categoryAction";
 import { createSlice } from "@reduxjs/toolkit";
 

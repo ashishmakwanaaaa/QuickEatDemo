@@ -20,13 +20,16 @@ import { customer, order } from "@/lib/reducers";
 const CustomerProfile = ({ id }: { id: string }) => {
   const [customerorder, setCustomerOrder] = useState<OrderDataType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const specificorder = useSelector((state:order) => state.order.orders);
+  const specificorder = useSelector((state: order) => state.order.orders);
   const customer: Customer = useSelector(
     (state: customer) => state.customer.specificcustomer
   );
   useEffect(() => {
+    setLoading(true);
     dispatch(fetchCustomerById(id) as any);
+    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -133,116 +136,145 @@ const CustomerProfile = ({ id }: { id: string }) => {
     <>
       <div className="flex flex-col gap-3">
         <h1>Customer Profile</h1>
-        <div
-          style={{ boxShadow: "0 0  1em gray" }}
-          className="flex border flex-row  gap-5 border-gray-400  rounded-lg w-full h-full p-4 mt-2 "
-        >
-          <div className="w-1/3 text-center flex flex-col items-center gap-3">
-            <p className="bg-stone-800 text-white rounded-full w-48 h-48 flex items-center justify-center text-[80px] text-center">
-              {customer.firstname ? customer.firstname[0].toUpperCase() : ""}
-              {customer.lastname ? customer.lastname[0].toUpperCase() : ""}
-            </p>
-            <p className="text-center text-sm text-gray-500">
-              Customer's Amount
-            </p>
-            <p className="text-[40px] text-center">
-              &#x20B9; <Counter targetValue={sumoftotalAmount} />
-            </p>
-          </div>
-          <div className="flex w-full p-2 h-full  border-gray-400 rounded-lg flex-col gap-4 justify-start items-start">
-            <div className="flex flex-row gap-3 w-full">
-              <p
-                style={{ boxShadow: "0 0  1em gray" }}
-                className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
-              >
-                <div className="flex gap-10 flex-row justify-start">
-                  <p className=" text-black ">Customer Firstname:</p>
-                  {customer.firstname} &nbsp;
-                </div>
-              </p>
-              <p
-                style={{ boxShadow: "0 0  1em gray" }}
-                className="text-black text-sm flex font-normal gap-2  border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
-              >
-                <div className="flex gap-10 flex-row justify-start">
-                  <p className=" text-black ">Customer Lastname:</p>
-                  {customer.lastname} &nbsp;
-                </div>
-              </p>
+        {loading ? (
+          <div className="flex border flex-row gap-5 border-gray-400 rounded-lg w-full h-full p-4 mt-2">
+            <div className="w-1/3 text-center flex flex-col items-center gap-3">
+              <div className="animate-pulse bg-gray-300 rounded-full w-48 h-48"></div>
+              <div className="animate-pulse bg-gray-300 rounded-lg w-48 h-6"></div>
+              <div className="animate-pulse bg-gray-300 rounded-lg w-48 h-12"></div>
             </div>
-            <p
-              style={{ boxShadow: "0 0  1em gray" }}
-              className="text-black text-sm flex font-normal gap-2  border border-gray-400 rounded-lg p-2 drop-shadow-2xl  w-full"
-            >
-              <div className="flex gap-14 flex-row justify-start">
-                <p className=" text-black ">Customer EmailID:</p>
-                {customer.emailid} &nbsp;
+            <div className="flex w-full p-2 h-full border-gray-400 rounded-lg flex-col gap-4 justify-start items-start">
+              <div className="flex flex-row gap-3 w-full">
+                <div className="animate-pulse bg-gray-300 rounded-lg w-full h-10"></div>
+                <div className="animate-pulse bg-gray-300 rounded-lg w-full h-10"></div>
               </div>
-            </p>
-            <p
-              style={{ boxShadow: "0 0  1em gray" }}
-              className="text-black text-sm flex font-normal gap-2  border border-gray-400 rounded-lg p-2 drop-shadow-2xl  w-full"
-            >
-              <div className="flex gap-6 flex-row justify-start">
-                <p className=" text-black ">Customer Contact NO:</p>
-                {customer.phoneno} &nbsp;
+              <div className="animate-pulse bg-gray-300 rounded-lg w-full h-10"></div>
+              <div className="animate-pulse bg-gray-300 rounded-lg w-full h-10"></div>
+              <div className="animate-pulse bg-gray-300 rounded-lg w-full h-10"></div>
+              <div className="flex flex-row gap-8 w-full">
+                <div className="animate-pulse bg-gray-300 rounded-lg w-full h-10"></div>
+                <div className="animate-pulse bg-gray-300 rounded-lg w-full h-10"></div>
+                <div className="animate-pulse bg-gray-300 rounded-lg w-full h-10"></div>
               </div>
-            </p>
-            <p
-              style={{ boxShadow: "0 0  1em gray" }}
-              className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl 0 w-full"
-            >
-              <div className="flex gap-12 flex-row justify-start">
-                <p className=" text-black ">Customer Address:</p>
-                {customer.address} &nbsp;
-              </div>
-            </p>
-            <div className="flex flex-row gap-8 w-ful">
-              <p
-                style={{ boxShadow: "0 0  1em gray" }}
-                className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
-              >
-                <div className="flex gap-20 flex-row justify-start">
-                  <p className=" text-black ">State:</p>
-                  {customer.state} &nbsp;
-                </div>
-              </p>
-              <p
-                style={{ boxShadow: "0 0  1em gray" }}
-                className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
-              >
-                <div className="flex gap-20 flex-row justify-start">
-                  <p className=" text-black ">City:</p>
-                  {customer.city} &nbsp;
-                </div>
-              </p>
-              <p
-                style={{ boxShadow: "0 0  1em gray" }}
-                className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
-              >
-                <div className="flex gap-20 flex-row justify-start">
-                  <p className=" text-black ">Pincode:</p>
-                  {customer.pincode} &nbsp;
-                </div>
-              </p>
             </div>
           </div>
-        </div>
+        ) : (
+          <div
+            style={{ boxShadow: "0 0  1em gray" }}
+            className="flex border flex-row  gap-5 border-gray-400  rounded-lg w-full h-full p-4 mt-2 "
+          >
+            <div className="w-1/3 text-center flex flex-col items-center gap-3">
+              <p className="bg-stone-800 text-white rounded-full w-48 h-48 flex items-center justify-center text-[80px] text-center">
+                {customer.firstname ? customer.firstname[0].toUpperCase() : ""}
+                {customer.lastname ? customer.lastname[0].toUpperCase() : ""}
+              </p>
+              <p className="text-center text-sm text-gray-500">
+                Customer's Amount
+              </p>
+              <p className="text-[40px] text-center">
+                &#x20B9; <Counter targetValue={sumoftotalAmount} />
+              </p>
+            </div>
+            <div className="flex w-full p-2 h-full  border-gray-400 rounded-lg flex-col gap-4 justify-start items-start">
+              <div className="flex flex-row gap-3 w-full">
+                <p
+                  style={{ boxShadow: "0 0  1em gray" }}
+                  className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
+                >
+                  <div className="flex gap-10 flex-row justify-start">
+                    <p className=" text-black ">Customer Firstname:</p>
+                    {customer.firstname} &nbsp;
+                  </div>
+                </p>
+                <p
+                  style={{ boxShadow: "0 0  1em gray" }}
+                  className="text-black text-sm flex font-normal gap-2  border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
+                >
+                  <div className="flex gap-10 flex-row justify-start">
+                    <p className=" text-black ">Customer Lastname:</p>
+                    {customer.lastname} &nbsp;
+                  </div>
+                </p>
+              </div>
+              <p
+                style={{ boxShadow: "0 0  1em gray" }}
+                className="text-black text-sm flex font-normal gap-2  border border-gray-400 rounded-lg p-2 drop-shadow-2xl  w-full"
+              >
+                <div className="flex gap-14 flex-row justify-start">
+                  <p className=" text-black ">Customer EmailID:</p>
+                  {customer.emailid} &nbsp;
+                </div>
+              </p>
+              <p
+                style={{ boxShadow: "0 0  1em gray" }}
+                className="text-black text-sm flex font-normal gap-2  border border-gray-400 rounded-lg p-2 drop-shadow-2xl  w-full"
+              >
+                <div className="flex gap-6 flex-row justify-start">
+                  <p className=" text-black ">Customer Contact NO:</p>
+                  {customer.phoneno} &nbsp;
+                </div>
+              </p>
+              <p
+                style={{ boxShadow: "0 0  1em gray" }}
+                className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl 0 w-full"
+              >
+                <div className="flex gap-12 flex-row justify-start">
+                  <p className=" text-black ">Customer Address:</p>
+                  {customer.address} &nbsp;
+                </div>
+              </p>
+              <div className="flex flex-row gap-8 w-ful">
+                <p
+                  style={{ boxShadow: "0 0  1em gray" }}
+                  className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
+                >
+                  <div className="flex gap-20 flex-row justify-start">
+                    <p className=" text-black ">State:</p>
+                    {customer.state} &nbsp;
+                  </div>
+                </p>
+                <p
+                  style={{ boxShadow: "0 0  1em gray" }}
+                  className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
+                >
+                  <div className="flex gap-20 flex-row justify-start">
+                    <p className=" text-black ">City:</p>
+                    {customer.city} &nbsp;
+                  </div>
+                </p>
+                <p
+                  style={{ boxShadow: "0 0  1em gray" }}
+                  className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
+                >
+                  <div className="flex gap-20 flex-row justify-start">
+                    <p className=" text-black ">Pincode:</p>
+                    {customer.pincode} &nbsp;
+                  </div>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="w-[1000px] h-[300px] mt-4 mx-auto">
-          <DataGrid
-            style={{ fontFamily: "Poppins" }}
-            rows={rowsArray}
-            columns={columns}
-            pagination
-            pageSizeOptions={[
-              10,
-              20,
-              30,
-              40,
-              100,
-              { value: 1000, label: "1,000" },
-            ]}
-          />
+          {loading ? (
+            <div className="animate-pulse bg-gray-300 rounded-lg w-full h-full"></div>
+          ) : (
+            <DataGrid
+              style={{ fontFamily: "Poppins" }}
+              rows={rowsArray}
+              columns={columns}
+              pagination
+              pageSizeOptions={[
+                10,
+                20,
+                30,
+                40,
+                100,
+                { value: 1000, label: "1,000" },
+              ]}
+            />
+          )}
         </div>
         <Dialog
           style={{ width: "100%", height: "100%" }}

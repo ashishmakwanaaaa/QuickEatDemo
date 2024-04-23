@@ -35,13 +35,15 @@ const OrderListPage = () => {
   const [filteredRow, setFilteredRows] = useState<OrderDataType[]>([]);
   const [rows, setRows] = useState<OrderListRows[]>([]);
   const [data, setData] = useState<OrderListRows[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const user = useSelector((state: user) => state.user.user);
   const dispatch = useDispatch();
   const specificorder: OrderDataType = useSelector(
     (state: order) => state.order.orders
   );
   useEffect(() => {
-    async function FetchAllPayment() {
+    async function FetchAllOrders() {
+      setLoading(true);
       try {
         const response = await fetch(
           `http://localhost:5000/orders/getAllOrders/${user._id}`
@@ -49,11 +51,12 @@ const OrderListPage = () => {
         const data = await response.json();
         console.log(data);
         setOrders(data.orders);
+        setTimeout(() => setLoading(false), 2000);
       } catch (error) {
         console.log(error);
       }
     }
-    FetchAllPayment();
+    FetchAllOrders();
   }, []);
   useEffect(() => {
     if (!orders || orders.length === 0) {
@@ -192,48 +195,69 @@ const OrderListPage = () => {
   return (
     <>
       <div className="flex justify-between items-center w-[68rem]">
-        <h1 className="font-[Poppins] font-bold text-start">Order Details</h1>
+        {loading ? (
+          <div className="animate-pulse bg-gray-300 rounded-md h-10 w-48 ml-8"></div>
+        ) : (
+          <h1 className="font-[Poppins] font-bold text-start">Order Details</h1>
+        )}
         <div className="flex flex-row gap-2 w-1/2">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateRangePicker
-              slotProps={{ textField: { size: "small" } }}
-              value={selectedDates}
-              onChange={handleDateRangeChange}
-            />
-          </LocalizationProvider>
-          <button
-            className="bg-orange-400 text-white w-10 h-10  rounded-md"
-            onClick={filterRowsByDate}
-          >
-            <VisibilityIcon />
-          </button>
-          <button
-            className="bg-red-500 text-white w-10 h-10  rounded-md"
-            onClick={() => {
-              setRows(data);
-              setSelectedDates([null, null]);
-            }}
-          >
-            <CancelIcon />
-          </button>
+          {loading ? (
+            <>
+              <div className="animate-pulse bg-gray-300 rounded-md h-10 w-1/2 ml-36"></div>
+              <div className="animate-pulse bg-orange-400 rounded-md h-10 w-10"></div>
+              <div className="animate-pulse bg-red-500 rounded-md h-10 w-10"></div>
+            </>
+          ) : (
+            <>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateRangePicker
+                  slotProps={{ textField: { size: "small" } }}
+                  value={selectedDates}
+                  onChange={handleDateRangeChange}
+                />
+              </LocalizationProvider>
+              <button
+                className="bg-orange-400 text-white w-10 h-10 rounded-md"
+                onClick={filterRowsByDate}
+              >
+                <VisibilityIcon />
+              </button>
+              <button
+                className="bg-red-500 text-white w-10 h-10 rounded-md"
+                onClick={() => {
+                  setRows(data);
+                  setSelectedDates([null, null]);
+                }}
+              >
+                <CancelIcon />
+              </button>
+            </>
+          )}
         </div>
       </div>
-      <div className="w-[1000px] h-[600px] mt-4 mx-auto">
-        <DataGrid
-          style={{ fontFamily: "Poppins" }}
-          rows={rows}
-          columns={columns}
-          pagination
-          pageSizeOptions={[
-            10,
-            20,
-            30,
-            40,
-            100,
-            { value: 1000, label: "1,000" },
-          ]}
-        />
+      <div className="w-[950px] h-4/5 mt-4 mx-auto">
+        {loading ? (
+          <div className="animate-pulse bg-gray-300 rounded-lg w-[980px] h-[580px] mt-4 mx-auto"></div>
+        ) : (
+          <div className="w-[1000px] h-[600px] mt-4 mx-auto">
+            <DataGrid
+              style={{ fontFamily: "Poppins" }}
+              rows={rows}
+              columns={columns}
+              pagination
+              pageSizeOptions={[
+                10,
+                20,
+                30,
+                40,
+                100,
+                { value: 1000, label: "1,000" },
+              ]}
+            />
+          </div>
+        )}
       </div>
+
       <Dialog
         style={{ width: "100%", height: "100%" }}
         open={open}
@@ -262,7 +286,7 @@ const OrderListPage = () => {
               specificorder.selectedItem.map((order) => {
                 return (
                   <>
-                    <div className="flex flex-col items-center gap-2">
+                    <div className="flex flex-col items-start gap-2">
                       <img
                         className="w-32 h-32 rounded-3xl p-2"
                         src={order.image}
@@ -271,17 +295,27 @@ const OrderListPage = () => {
                       <p className="text-black font-bold text-lg">
                         {order.itemname}
                       </p>
-                      <p className="text-black font-bold text-lg">
-                        Qty: {order.qty}
+                      <p className="text-black flex items-center font-bold text-lg">
+                        Qty: &nbsp; &nbsp;{" "}
+                        <p className="font-normal text-lg"> {order.qty}</p>
                       </p>
-                      <p className="text-black font-bold text-lg">
-                        Price: {order.price}
+                      <p className="text-black flex items-center font-bold text-lg">
+                        Price:{" "}
+                        <p className="font-normal text-lg"> {order.price}</p>
                       </p>
-                      <p className="text-black font-bold text-lg">
-                        Offer: {order.upToOffer}
+                      <p className="text-black flex items-center font-bold text-lg">
+                        Offer:{" "}
+                        <p className="font-normal text-lg">
+                          {" "}
+                          {order.upToOffer}
+                        </p>
                       </p>
-                      <p className="text-black font-bold text-lg">
-                        FinalPrice: {order.totalPrice}
+                      <p className="text-black flex items-center font-bold text-lg">
+                        FinalPrice:{" "}
+                        <p className="font-normal text-lg">
+                          {" "}
+                          {order.totalPrice}
+                        </p>
                       </p>
                     </div>
                   </>

@@ -3,18 +3,16 @@
 import Dashboard from "../Pages/DashBoard";
 import LoginContext from "../LoginState/logincontext";
 import { useContext } from "react";
-import PaymentList from "../Admin/PaymentList";
+import PaymentList from "../UserPage/PaymentList";
 
 const ItemData = () => {
   const StateContext = useContext(LoginContext);
 
   return (
     <>
-      
-        <Dashboard>
-          <PaymentList />
-        </Dashboard>
-    
+      <Dashboard>
+        <PaymentList />
+      </Dashboard>
     </>
   );
 };

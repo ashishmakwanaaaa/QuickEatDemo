@@ -2,7 +2,7 @@ import { MouseEvent, useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { FaChair, FaTable } from "react-icons/fa";
-
+import { LuTable } from "react-icons/lu";
 import Button from "@mui/material/Button";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -19,6 +19,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useSelector } from "react-redux";
 import { user } from "@/lib/reducers";
 import { Dayjs } from "dayjs";
+import { FaTableColumns } from "react-icons/fa6";
 
 interface ItemTypeTableBooking {
   type: string;
@@ -27,13 +28,13 @@ interface ItemTypeTableBooking {
   y: number;
 }
 interface bookingdetailstype {
-  userId:string,
-  TableId:string,
-  Customername:string,
-  Customerphoneno:string,
-  Howmanypeople:number,
-  Time:Dayjs | null | any,
-  Date:Dayjs | null | any
+  userId: string;
+  TableId: string;
+  Customername: string;
+  Customerphoneno: string;
+  Howmanypeople: number;
+  Time: Dayjs | null | any;
+  Date: Dayjs | null | any;
 }
 
 const BookTable = () => {
@@ -41,7 +42,9 @@ const BookTable = () => {
   const [editMode, setEditMode] = useState<boolean>(true);
   const [bookedtable, setbookedtable] = useState<number[]>([]);
   const [open, setOpen] = useState<boolean>(false);
-  const user = useSelector((state:user) => state.user.user);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const user = useSelector((state: user) => state.user.user);
   console.log(user._id);
   const [bookingdetails, setbookingdetails] = useState<bookingdetailstype>({
     userId: user._id,
@@ -163,10 +166,12 @@ const BookTable = () => {
     // Check if the user is available
     if (user) {
       // Set userId in bookingdetails state
+      setLoading(true);
       setbookingdetails((prevDetails) => ({
         ...prevDetails,
         userId: user._id,
       }));
+      setTimeout(() => setLoading(false), 2000);
     }
 
     // Retrieve layout and booked chairs data from local storage
@@ -237,167 +242,172 @@ const BookTable = () => {
 
   return (
     <>
-      <div className="w-[150vh] bg-gray-700 text-white p-2 h-full rounded-xl">
-        <div className="flex justify-between">
-          <div className="flex flex-row gap-2">
-            {/* <h2 className="text-white font-[Poppins] text-sm">
+      {loading ? (
+        <div className="animate-pulse bg-gray-300 w-[150vh] h-full "></div>
+      ) : (
+        <div className="w-[150vh] bg-gray-700 text-white p-2 h-full rounded-xl">
+          <div className="flex justify-between">
+            <div className="flex flex-row gap-2">
+              {/* <h2 className="text-white font-[Poppins] text-sm">
               Choose Your Own Layout For Restrurant
             </h2> */}
-            <button
-              onClick={handleClickOpen}
-              className="bg-orange-700 text-white p-2 rounded-md text-sm"
-            >
-              Book &rarr;
-            </button>
+              <button
+                onClick={handleClickOpen}
+                className="bg-orange-700 text-white p-2 rounded-md text-sm"
+              >
+                Book &rarr;
+              </button>
+            </div>
+            <div className="flex flex-row gap-2">
+              <div className="flex items-center justify-center flex-row gap-1">
+                <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                <p className="text-xs text-orange-400 font-[Poppins] text-start">
+                  Booked
+                </p>
+              </div>
+              <div className="flex items-center justify-center flex-row gap-1">
+                <div className="w-2 h-2 bg-white rounded-full"></div>
+                <p className="text-xs text-white font-[Poppins] text-start">
+                  Available
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-row gap-2">
+              {/* <div> */}
+              <button
+                onClick={handleSave}
+                disabled={!editMode}
+                className={`bg-green-700 ${
+                  !editMode ? "cursor-not-allowed" : "cursor-pointer"
+                }  text-white p-2 text-center text-sm rounded-md font-[Poppins]`}
+              >
+                Save
+              </button>
+              <button
+                onClick={handleEdit}
+                disabled={editMode}
+                className={`bg-blue-500 ${
+                  editMode ? "cursor-not-allowed" : "cursor-pointer"
+                } text-white p-2 text-center text-sm rounded-md font-[Poppins]`}
+              >
+                Edit
+              </button>
+              <div
+                className="flex items-center text-sm   border-2 border-white p-2 rounded-lg"
+                draggable="true"
+                onDragStart={(e) => handleDragStart(e, "table2")}
+              >
+                <FaTableColumns />
+                (2)
+              </div>
+              <div
+                className="flex items-center text-sm   border-2 border-white p-2 rounded-lg"
+                draggable="true"
+                onDragStart={(e) => handleDragStart(e, "table4")}
+              >
+                <FaTable />
+                (4)
+              </div>
+              <div
+                className="flex items-center text-sm   border-2 border-white p-2 rounded-lg"
+                draggable="true"
+                onDragStart={(e) => handleDragStart(e, "table6")}
+              >
+                <LuTable />
+                (6)
+              </div>
+              <div
+                className="inline-block text-sm   border-2 border-white p-2 rounded-lg"
+                draggable="true"
+                onDragStart={(e) => handleDragStart(e, "chair")}
+              >
+                <FaChair />
+              </div>
+              {/* </div> */}
+            </div>
           </div>
-          <div className="flex flex-row gap-2">
-            <div className="flex items-center justify-center flex-row gap-1">
-              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-              <p className="text-xs text-orange-400 font-[Poppins] text-start">
-                Booked
-              </p>
-            </div>
-            <div className="flex items-center justify-center flex-row gap-1">
-              <div className="w-2 h-2 bg-white rounded-full"></div>
-              <p className="text-xs text-white font-[Poppins] text-start">
-                Available
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-row gap-2">
-            {/* <div> */}
-            <button
-              onClick={handleSave}
-              disabled={!editMode}
-              className={`bg-green-700 ${
-                !editMode ? "cursor-not-allowed" : "cursor-pointer"
-              }  text-white p-2 text-center text-sm rounded-md font-[Poppins]`}
-            >
-              Save
-            </button>
-            <button
-              onClick={handleEdit}
-              disabled={editMode}
-              className={`bg-blue-500 ${
-                editMode ? "cursor-not-allowed" : "cursor-pointer"
-              } text-white p-2 text-center text-sm rounded-md font-[Poppins]`}
-            >
-              Edit
-            </button>
-            <div
-              className="flex items-center text-sm   border-2 border-white p-2 rounded-lg"
-              draggable="true"
-              onDragStart={(e) => handleDragStart(e, "table2")}
-            >
-              <FaTable />
-              (2)
-            </div>
-            <div
-              className="flex items-center text-sm   border-2 border-white p-2 rounded-lg"
-              draggable="true"
-              onDragStart={(e) => handleDragStart(e, "table4")}
-            >
-              <FaTable />
-              (4)
-            </div>
-            <div
-              className="flex items-center text-sm   border-2 border-white p-2 rounded-lg"
-              draggable="true"
-              onDragStart={(e) => handleDragStart(e, "table6")}
-            >
-              <FaTable />
-              (6)
-            </div>
-            <div
-              className="inline-block text-sm   border-2 border-white p-2 rounded-lg"
-              draggable="true"
-              onDragStart={(e) => handleDragStart(e, "chair")}
-            >
-              <FaChair />
-            </div>
-            {/* </div> */}
-          </div>
-        </div>
-        <div className="min-h-[500px] relative">
-          <DndProvider backend={HTML5Backend}>
-            <div
-              className="absolute left-0 top-0 w-full h-full mt-14"
-              onDrop={handleDrop}
-              onDragOver={(e) => e.preventDefault()}
-            >
-              {items.map((item) => {
-                const onClickHandler = editMode
-                  ? () => handleRemove(item.id)
-                  : () => handleTableBook(item.id);
+          <div className="min-h-[500px] relative">
+            <DndProvider backend={HTML5Backend}>
+              <div
+                className="absolute left-0 top-0 w-full h-full mt-14"
+                onDrop={handleDrop}
+                onDragOver={(e) => e.preventDefault()}
+              >
+                {items.map((item) => {
+                  const onClickHandler = editMode
+                    ? () => handleRemove(item.id)
+                    : () => handleTableBook(item.id);
 
-                const isBooked = bookedtable.includes(item.id);
+                  const isBooked = bookedtable.includes(item.id);
 
-                if (item.type === "table2") {
-                  return (
-                    <>
+                  if (item.type === "table2") {
+                    return (
+                      <>
+                        <div
+                          key={item.id}
+                          className={`absolute border border-black p-2 bg-white text-black w-20 h-20  ${
+                            editMode ? "cursor-pointer" : "cursor-not-allowed"
+                          } rounded-md`}
+                          style={{ left: item.x, top: item.y }}
+                          onClick={onClickHandler}
+                        >
+                          <FaTableColumns size={60} />
+                        </div>
+                      </>
+                    );
+                  } else if (item.type === "table4") {
+                    return (
+                      <>
+                        <div
+                          key={item.id}
+                          className={`absolute border border-black p-1 flex items-center justify-center bg-white text-black w-36 h-24 ${
+                            editMode ? "cursor-pointer" : "cursor-not-allowed"
+                          } rounded-md`}
+                          style={{ left: item.x, top: item.y }}
+                          onClick={onClickHandler}
+                        >
+                          <FaTable size={90} />
+                        </div>
+                      </>
+                    );
+                  } else if (item.type === "table6") {
+                    return (
+                      <>
+                        <div
+                          key={item.id}
+                          className={`absolute border flex items-center justify-center  border-black p-1 bg-white text-black w-36 h-32  ${
+                            editMode ? "cursor-pointer" : "cursor-not-allowed"
+                          } rounded-full`}
+                          style={{ left: item.x, top: item.y }}
+                          onClick={onClickHandler}
+                        >
+                          <LuTable size={90} />
+                        </div>
+                      </>
+                    );
+                  } else if (item.type === "chair") {
+                    return (
                       <div
                         key={item.id}
-                        className={`absolute border border-black p-2 bg-white text-black w-20 h-20  ${
-                          editMode ? "cursor-pointer" : "cursor-not-allowed"
-                        } rounded-md`}
-                        style={{ left: item.x, top: item.y }}
-                        onClick={onClickHandler}
-                      >
-                        <FaTable size={60} />
-                      </div>
-                    </>
-                  );
-                } else if (item.type === "table4") {
-                  return (
-                    <>
-                      <div
-                        key={item.id}
-                        className={`absolute border border-black p-1 flex items-center justify-center bg-white text-black w-36 h-24 ${
-                          editMode ? "cursor-pointer" : "cursor-not-allowed"
-                        } rounded-md`}
-                        style={{ left: item.x, top: item.y }}
-                        onClick={onClickHandler}
-                      >
-                        <FaTable size={90} />
-                      </div>
-                    </>
-                  );
-                } else if (item.type === "table6") {
-                  return (
-                    <>
-                      <div
-                        key={item.id}
-                        className={`absolute border flex items-center justify-center  border-black p-1 bg-white text-black w-36 h-32  ${
-                          editMode ? "cursor-pointer" : "cursor-not-allowed"
+                        className={`absolute border border-black p-2 ${
+                          isBooked ? "bg-orange-700" : "bg-white"
+                        } text-black w-8 h-8 ${
+                          editMode ? "cursor-pointer" : "cursor-pointer"
                         } rounded-full`}
                         style={{ left: item.x, top: item.y }}
                         onClick={onClickHandler}
                       >
-                        <FaTable size={90} />
+                        <FaChair size={15} />
                       </div>
-                    </>
-                  );
-                } else if (item.type === "chair") {
-                  return (
-                    <div
-                      key={item.id}
-                      className={`absolute border border-black p-2 ${
-                        isBooked ? "bg-orange-700" : "bg-white"
-                      } text-black w-8 h-8 ${
-                        editMode ? "cursor-pointer" : "cursor-pointer"
-                      } rounded-full`}
-                      style={{ left: item.x, top: item.y }}
-                      onClick={onClickHandler}
-                    >
-                      <FaChair size={15} />
-                    </div>
-                  );
-                }
-              })}
-            </div>
-          </DndProvider>
+                    );
+                  }
+                })}
+              </div>
+            </DndProvider>
+          </div>
         </div>
-      </div>
+      )}
+
       <Dialog
         style={{ borderRadius: "20px" }}
         open={open}
@@ -504,9 +514,8 @@ const BookTable = () => {
                 onChange={(newValue) =>
                   setbookingdetails({ ...bookingdetails, Date: newValue })
                 }
-              
               />
-            </LocalizationProvider>   
+            </LocalizationProvider>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <TimePicker
                 label="Time"
@@ -514,7 +523,6 @@ const BookTable = () => {
                 onChange={(newValue) =>
                   setbookingdetails({ ...bookingdetails, Time: newValue })
                 }
-              
               />
             </LocalizationProvider>
           </div>

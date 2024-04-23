@@ -119,8 +119,5 @@ export class AuthController {
     return this.userservice.logout(id);
   }
 
-  @Delete('/deleteuser/:id')
-  deleteUser(@Param('id') id: string) {
-    return this.userservice.deleteUser(id);
-  }
+
 }

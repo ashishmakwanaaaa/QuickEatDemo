@@ -138,10 +138,7 @@ const Navbar = () => {
     <nav className="dark:bg-gray-900 bg-transparent sticky font-[Poppins] z-20 p-4  flex items-center justify-between  shadow-2xl rounded-lg">
       {/* Left side */}
       {!user.isActive ? (
-        <div
-          className="flex items-center cursor-pointer "
-          data-aos="fade-right"
-        >
+        <div className="flex items-center cursor-pointer ">
           <span className="text-black  font-bold text-3xl">
             Quick
             <span className="text-orange-500 shadow-orange text-3xl">Eat</span>
@@ -156,7 +153,7 @@ const Navbar = () => {
           </span>
         </div>
       ) : (
-        <div className="flex items-center" data-aos="fade-right">
+        <div className="flex items-center">
           <span className="text-black dark:text-gray-300  font-bold text-3xl">
             Welcome ,
             <span className="text-orange-500 shadow-orange text-3xl">
@@ -168,10 +165,7 @@ const Navbar = () => {
 
       {/* Center links */}
       {!user.isActive && (
-        <div
-          className="flex items-center space-x-4 gap-5"
-          data-aos="fade-right"
-        >
+        <div className="flex items-center space-x-4 gap-5">
           <Link
             href="/"
             className="text-black  gap-2 text-xl relative group flex items-center"
@@ -238,7 +232,7 @@ const Navbar = () => {
 
       {/* Right side */}
       {!user.isActive ? (
-        <div className="flex items-center space-x-4" data-aos="fade-right">
+        <div className="flex items-center space-x-4">
           <Link href="/login">
             <button className="bg-orange-500 border-2 border-orange-500 w-24  text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
               Login
@@ -251,10 +245,7 @@ const Navbar = () => {
           </Link>
         </div>
       ) : (
-        <div
-          className="flex flex-row items-center space-x-4 ml-[-70px]"
-          data-aos="fade-right"
-        >
+        <div className="flex flex-row items-center space-x-4 ml-[-70px]">
           {!user.isAdmin && (
             <>
               <Link href="/addcustomer">
@@ -292,9 +283,7 @@ const Navbar = () => {
           )}
           {dropdown && user.image && (
             <div
-              className={`absolute top-full bg-white border border-gray-300 rounded-md shadow-lg mt-6 z-10 ${
-                role === "Admin" ? "left-[-110px]" : "left-[221px]"
-              } transform -translate-x-1/2`}
+              className={`absolute top-full bg-white border border-gray-300 left-[1250px] rounded-md shadow-lg mt-2 z-10  transform -translate-x-1/2`}
             >
               <div className="w-72 h-full flex flex-col p-1 ">
                 <div className=" w-full h-12 ">

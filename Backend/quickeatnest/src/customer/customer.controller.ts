@@ -6,15 +6,18 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CustomerDto } from './dto/customer.dto';
 import { ObjectId } from 'mongoose';
+import { AuthGuard } from 'src/auth/auth.gaurd';
 
 @Controller('customer')
 export class CustomerController {
   constructor(private customerservice: CustomerService) {}
 
+  @UseGuards(AuthGuard)
   @Post('/addCustomer')
   AddCustomer(@Body() customerdto: CustomerDto) {
     return this.customerservice.AddCustomer(customerdto);

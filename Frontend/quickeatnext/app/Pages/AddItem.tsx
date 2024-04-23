@@ -4,9 +4,10 @@ import React, { useContext, useEffect, useState } from "react";
 import StateLogin from "../LoginState/logincontext";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import { CategoryType } from "../Admin/CategoryList";
+import { CategoryType } from "../UserPage/CategoryList";
 import { useSelector } from "react-redux";
 import { user } from "@/lib/reducers";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 
 const AddItem = () => {
   const router = useRouter();
@@ -15,7 +16,7 @@ const AddItem = () => {
   const userId = user._id;
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [Fooddata, setFooddata] = useState<{
-    userId:string;
+    userId: string;
     itemname: string;
     itemcategory: string;
     itemdescription: string;
@@ -30,7 +31,8 @@ const AddItem = () => {
     itemdescription: "",
     price: 0,
     quantity: 0,
-    image: "https://user-images.githubusercontent.com/11474775/72835684-ffb03180-3cac-11ea-88d7-82d5229c47ac.png",
+    image:
+      "https://user-images.githubusercontent.com/11474775/72835684-ffb03180-3cac-11ea-88d7-82d5229c47ac.png",
     upToOffer: 0,
   });
   useEffect(() => {
@@ -54,6 +56,7 @@ const AddItem = () => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(Fooddata),
     });
 
@@ -114,17 +117,21 @@ const AddItem = () => {
       <div
         className="absolute inset-0 flex flex-col gap-4 bg-gray-50 w-[800px] h-[620px] mx-auto p-5 mt-12 rounded-xl"
         style={{ boxShadow: "0 0 2em orange" }}
-        data-aos="fade-left"
       >
-        <h3 className="text-xl font-bold  text-center text-orange-500">
-          ADD FOOD ITEM
-        </h3>
+        <div className="flex justify-between">
+          <div
+            onClick={() => router.push("/customerlist")}
+            className=" bg-orange-600 rounded-full w-8 h-8 flex items-center p-2 cursor-pointer justify-center text-white"
+          >
+            <KeyboardBackspaceIcon />
+          </div>
+          <h3 className="text-xl font-bold  text-center text-orange-500 mr-[300px]">
+            ADD FOOD ITEM
+          </h3>
+        </div>
         <div className="flex flex-col justify-start gap-5">
           <div className="flex flex-row gap-2">
-            <div
-              className="flex flex-col gap-2 items-start  w-full md:w-[55%]"
-              data-aos="fade-left"
-            >
+            <div className="flex flex-col gap-2 items-start  w-full md:w-[55%]">
               <label htmlFor="restaurantName" className="font-bold ">
                 Item's Name
               </label>
@@ -140,10 +147,7 @@ const AddItem = () => {
                 className="p-2 rounded-md border-2 border-orange-500 w-full"
               />
             </div>
-            <div
-              className="flex flex-col gap-2 items-start  w-full md:w-[55%]"
-              data-aos="fade-left"
-            >
+            <div className="flex flex-col gap-2 items-start  w-full md:w-[55%]">
               <label htmlFor="restaurantName" className="font-bold ">
                 Item's Category
               </label>
@@ -159,22 +163,21 @@ const AddItem = () => {
                 <option value="" disabled selected>
                   Select Item Category
                 </option>
-                {categories && categories.length > 0  && categories.map((category, index) => {
-                  return (
-                    <>
-                      <option value={category.categoryname}>
-                        {category.categoryname}
-                      </option>
-                    </>
-                  );
-                })}
+                {categories &&
+                  categories.length > 0 &&
+                  categories.map((category, index) => {
+                    return (
+                      <>
+                        <option value={category.categoryname}>
+                          {category.categoryname}
+                        </option>
+                      </>
+                    );
+                  })}
               </select>
             </div>
           </div>
-          <div
-            className="flex flex-col gap-2 justify-start w-full md:w-[55%]"
-            data-aos="fade-left"
-          >
+          <div className="flex flex-col gap-2 justify-start w-full md:w-[55%]">
             <label htmlFor="restaurantName" className="font-bold  ">
               Item's Description
             </label>
@@ -190,7 +193,7 @@ const AddItem = () => {
             />
           </div>
           <div className="flex flex-row gap-2">
-            <div className="flex flex-col gap-2  w-full" data-aos="fade-left">
+            <div className="flex flex-col gap-2  w-full">
               <label htmlFor="address" className="font-bold ">
                 Item's Quantity
               </label>
@@ -200,16 +203,16 @@ const AddItem = () => {
                 type="number"
                 value={Fooddata.quantity}
                 onChange={(e) => {
-                  setFooddata({ ...Fooddata, quantity: parseInt(e.target.value) });
+                  setFooddata({
+                    ...Fooddata,
+                    quantity: parseInt(e.target.value),
+                  });
                 }}
                 placeholder="Enter Item Quantity"
                 className="p-2 rounded-md border-2 border-orange-500 w-full"
               />
             </div>
-            <div
-              className="flex flex-col gap-2 items-start w-full"
-              data-aos="fade-left"
-            >
+            <div className="flex flex-col gap-2 items-start w-full">
               <label htmlFor="address" className="font-bold ">
                 Item's Price:
               </label>
@@ -225,10 +228,7 @@ const AddItem = () => {
                 className="p-2 rounded-md border-2 border-orange-500 w-full"
               />
             </div>
-            <div
-              className="flex flex-col gap-2 items-start w-full"
-              data-aos="fade-left"
-            >
+            <div className="flex flex-col gap-2 items-start w-full">
               <label htmlFor="address" className="font-bold ">
                 Enter Offer:
               </label>
@@ -238,7 +238,10 @@ const AddItem = () => {
                 type="number"
                 value={Fooddata.upToOffer}
                 onChange={(e) =>
-                  setFooddata({ ...Fooddata, upToOffer: parseInt(e.target.value) })
+                  setFooddata({
+                    ...Fooddata,
+                    upToOffer: parseInt(e.target.value),
+                  })
                 }
                 placeholder="Enter Item Price"
                 className="p-2 rounded-md border-2 border-orange-500 w-full"

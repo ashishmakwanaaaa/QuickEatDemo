@@ -1,9 +1,9 @@
 "use client";
-import Orders from "@/app/Admin/Orders";
+import Orders from "@/app/UserPage/Orders";
 import DashBoard from "@/app/Pages/DashBoard";
 import LoginContext from "@/app/LoginState/logincontext";
 import { useContext } from "react";
-import CustomerProfile from "@/app/Admin/CustomerProfile";
+import CustomerProfile from "@/app/UserPage/CustomerProfile";
 import { useParams, usePathname } from "next/navigation";
 
 const orderpage = ({ params }: { params: { slug: string } }) => {
