@@ -7,15 +7,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers } from "@/lib/actions/userAction";
 import { User } from "@/lib/reducers/userSlice/UserReducers";
 import { user } from "@/lib/reducers";
+import { useAppDispatch } from "@/lib/store";
 
 const ViewAllRestrurant = () => {
   const [mapInitialized, setMapInitialized] = useState(false);
   const users = useSelector((state:user) => state.user.users);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    dispatch(fetchUsers() as any);
+    dispatch(fetchUsers());
   }, [dispatch]);
 
   useEffect(() => {

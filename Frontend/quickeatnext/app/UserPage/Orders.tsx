@@ -15,7 +15,7 @@ import Slide from "@mui/material/Slide";
 import Swal from "sweetalert2";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-import { MdDelete } from "react-icons/md";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import TextField from "@mui/material/TextField";
 import { useRouter } from "next/navigation";
 import { TransitionProps } from "@mui/material/transitions";
@@ -80,6 +80,7 @@ const Orders = ({ id }: { id: string }) => {
   const items: ItemType[] = useSelector((state: item) => state.item.items);
   const user = useSelector((state: user) => state.user.user);
   const userId = user._id;
+  const router = useRouter();
   const customer: Customer = useSelector(
     (state: customer) => state.customer.specificcustomer
   );
@@ -189,6 +190,7 @@ const Orders = ({ id }: { id: string }) => {
               quantity: [item.quantity + 1],
               itemname: [item.itemname],
             }),
+            credentials: "include",
           }
         );
 
@@ -248,6 +250,7 @@ const Orders = ({ id }: { id: string }) => {
             quantity: updatedItems.map((item) => item.quantity),
             itemname: updatedItems.map((item) => item.itemname),
           }),
+          credentials: "include",
         }
       );
 
@@ -410,8 +413,15 @@ const Orders = ({ id }: { id: string }) => {
           ) : (
             <>
               <p className="text-lg text-black">
-                <span className="text-black font-bold">Customer Name</span>:
-                {customer.firstname} {customer.lastname}
+                <span className="text-black font-bold flex items-center gap-3">
+                  <div
+                    onClick={() => router.push("/customerlist")}
+                    className=" bg-stone-800 rounded-full w-7 h-7 flex items-center p-2 cursor-pointer justify-center text-white"
+                  >
+                    <KeyboardBackspaceIcon />
+                  </div>
+                  Customer Name :{customer.firstname} {customer.lastname}
+                </span>
               </p>
               <p>
                 <Badge badgeContent={selectedItem.length} color="primary">

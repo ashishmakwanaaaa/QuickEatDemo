@@ -21,6 +21,7 @@ import StateLogin from "../LoginState/logincontext";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "@/lib/actions/categoryAction";
 import { category, user } from "@/lib/reducers";
+import { useAppDispatch } from "@/lib/store";
 
 export interface CategoryType {
   _id?: string;
@@ -50,13 +51,13 @@ const CategoriesList = () => {
       "https://user-images.githubusercontent.com/11474775/72835684-ffb03180-3cac-11ea-88d7-82d5229c47ac.png",
     userId,
   });
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const categories = useSelector(
     (state: category) => state.category.categories
   );
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchCategories(userId) as any);
+    dispatch(fetchCategories(userId));
     setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   console.log(categories);
@@ -90,7 +91,7 @@ const CategoriesList = () => {
           icon: "success",
           timer: 1000,
         });
-        dispatch(fetchCategories(userId) as any);
+        dispatch(fetchCategories(userId));
       } else {
         Swal.fire({
           title: "Error : " + data.message,
@@ -115,6 +116,7 @@ const CategoriesList = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify(categoryData),
         }
       );
@@ -127,7 +129,7 @@ const CategoriesList = () => {
           timer: 1000,
         });
         setInput({ categoryname: "", image: "" });
-        dispatch(fetchCategories(userId) as any);
+        dispatch(fetchCategories(userId));
       } else {
         Swal.fire({
           title: "Error: " + data.message,
@@ -164,7 +166,7 @@ const CategoriesList = () => {
           timer: 1000,
         });
         setInput({ categoryname: "", image: "" });
-        dispatch(fetchCategories(userId) as any);
+        dispatch(fetchCategories(userId));
       } else {
         Swal.fire({
           title: "Error: " + data.message,

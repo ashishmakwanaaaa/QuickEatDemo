@@ -1,6 +1,6 @@
 "use client";
 
-import AdminDashboard from "../UserPage/AdminDashboard";
+import AdminDashboard from "../UserPage/UserDashboard";
 import DashBoard from "../Pages/DashBoard";
 import LoginContext from "@/app/LoginState/logincontext";
 import { useContext } from "react";

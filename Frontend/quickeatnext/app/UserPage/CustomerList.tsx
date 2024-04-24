@@ -21,6 +21,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomer } from "@/lib/actions/customerAction";
 import { customer, user } from "@/lib/reducers";
+import { useAppDispatch } from "@/lib/store";
 
 export interface Customer {
   _id?: string;
@@ -56,7 +57,7 @@ const CustomerList = () => {
   };
   const user = useSelector((state: user) => state.user.user);
   const userId = user._id;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const customerData: Customer[] = useSelector(
     (state: customer) => state.customer.customer
   );
@@ -123,7 +124,7 @@ const CustomerList = () => {
             timer: 1000,
           });
         }
-        dispatch(fetchCustomer(userId) as any);
+        dispatch(fetchCustomer(userId));
       }
     } catch (error) {
       window.alert(error);
@@ -161,7 +162,7 @@ const CustomerList = () => {
             icon: "success",
             timer: 1000,
           });
-          dispatch(fetchCustomer(userId) as any);
+          dispatch(fetchCustomer(userId));
         } else {
           Swal.fire({
             title: "Delete Failed",
@@ -182,7 +183,7 @@ const CustomerList = () => {
   };
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchCustomer(userId) as any);
+    dispatch(fetchCustomer(userId));
     setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
 

@@ -8,20 +8,22 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { DataGrid } from "@mui/x-data-grid";
-import { Counter } from "./AdminDashboard";
+import { Counter } from "./UserDashboard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomerById } from "@/lib/actions/customerAction";
 import { initialStateTypeForCustomer } from "@/lib/reducers/customerSlice/customerReducers";
 import { fetchSpecificOrder } from "@/lib/actions/orderAction";
 import { customer, order } from "@/lib/reducers";
+import { useRouter } from "next/navigation";
 
 const CustomerProfile = ({ id }: { id: string }) => {
   const [customerorder, setCustomerOrder] = useState<OrderDataType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
+  const router = useRouter();
   const specificorder = useSelector((state: order) => state.order.orders);
   const customer: Customer = useSelector(
     (state: customer) => state.customer.specificcustomer
@@ -135,7 +137,15 @@ const CustomerProfile = ({ id }: { id: string }) => {
   return (
     <>
       <div className="flex flex-col gap-3">
-        <h1>Customer Profile</h1>
+        <h1 className="flex items-center gap-3">
+          <div
+            onClick={() => router.push("/customerlist")}
+            className=" bg-stone-800 rounded-full w-8 h-8 flex items-center p-2 cursor-pointer justify-center text-white"
+          >
+            <KeyboardBackspaceIcon />
+          </div>
+          Customer Profile
+        </h1>
         {loading ? (
           <div className="flex border flex-row gap-5 border-gray-400 rounded-lg w-full h-full p-4 mt-2">
             <div className="w-1/3 text-center flex flex-col items-center gap-3">
@@ -318,7 +328,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
                           {order.itemname}
                         </p>
                         <p className="text-black font-bold text-lg">
-                          Qty: {order.quantity}
+                          Qty: {order.qty}
                         </p>
                         <p className="text-black font-bold text-lg">
                           Price: {order.price}

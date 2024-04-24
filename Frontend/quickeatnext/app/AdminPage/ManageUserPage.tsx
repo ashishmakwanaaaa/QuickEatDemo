@@ -6,17 +6,18 @@ import { User } from "@/lib/reducers/userSlice/UserReducers";
 import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Counter } from "../UserPage/AdminDashboard";
+import { Counter } from "../UserPage/UserDashboard";
 import Swal from "sweetalert2";
 import { user } from "@/lib/reducers";
+import { useAppDispatch } from "@/lib/store";
 
 const ManageUserPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [sales, setsales] = useState<PaymentType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const users = useSelector((state: user) => state.user.users);
   useEffect(() => {
-    dispatch(fetchUsers() as any);
+    dispatch(fetchUsers());
   }, [dispatch]);
   useEffect(() => {
     setLoading(true);

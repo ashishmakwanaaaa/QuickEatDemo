@@ -12,11 +12,11 @@ import { ItemsService } from './items.service';
 import { ItemDto } from './dto/items.dto';
 import { AuthGuard } from 'src/auth/auth.gaurd';
 
+@UseGuards(AuthGuard)
 @Controller('items')
 export class ItemsController {
   constructor(private itemsservice: ItemsService) {}
 
-  @UseGuards(AuthGuard)
   @Post('/addItem')
   AddItem(@Body() itemdto: ItemDto) {
     return this.itemsservice.AddItem(itemdto);

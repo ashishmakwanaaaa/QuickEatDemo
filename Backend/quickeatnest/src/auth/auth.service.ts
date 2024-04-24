@@ -150,10 +150,10 @@ export class AuthService {
     }
   }
 
-  async changepsw(ownername: string, chnagepswdto: ChangePassworDto) {
+  async changepsw(id: string, chnagepswdto: ChangePassworDto) {
     try {
       const { oldpassword, newpassword, newchangepassword } = chnagepswdto;
-      const user = await this.usermodel.findOne({ ownername });
+      const user = await this.usermodel.findById(id);
       if (!user) {
         throw new NotFoundException();
       }

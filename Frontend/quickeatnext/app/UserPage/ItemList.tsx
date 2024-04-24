@@ -22,6 +22,7 @@ import { CategoryType } from "./CategoryList";
 import { fetchItems } from "@/lib/actions/itemAction";
 import { fetchCategories } from "@/lib/actions/categoryAction";
 import { category, item, user } from "@/lib/reducers";
+import { useAppDispatch } from "@/lib/store";
 
 export interface ItemType {
   _id: string;
@@ -49,12 +50,11 @@ const ItemList = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [edititemdata, setEditItem] = useState<ItemType>({} as ItemType);
   const [query, setQuery] = useState<string>("");
-  const [option, setOption] = useState<string>("");
-  const [active, setActive] = useState<number>(0);
+  const [option, setOption] = useState<string>("Filter");
   const { Option } = Select;
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const items: ItemType[] = useSelector((state: item) => state.item.items);
   const categories: CategoryType[] = useSelector(
     (state: category) => state.category.categories
@@ -88,6 +88,7 @@ const ItemList = () => {
             headers: {
               "Content-Type": "application/json",
             },
+            credentials: "include",
             body: JSON.stringify(edititemdata),
           }
         );
@@ -99,7 +100,7 @@ const ItemList = () => {
             icon: "success",
             timer: 2000,
           });
-          dispatch(fetchItems(userId) as any);
+          dispatch(fetchItems(userId));
         }
       } catch (error) {
         console.log(error);
@@ -124,6 +125,7 @@ const ItemList = () => {
           `http://localhost:5000/items/deleteItem/${itemId}`,
           {
             method: "DELETE",
+            credentials: "include",
           }
         );
 
@@ -133,7 +135,7 @@ const ItemList = () => {
             icon: "success",
             timer: 1000,
           });
-          dispatch(fetchItems(userId) as any);
+          dispatch(fetchItems(userId));
         } else {
           Swal.fire({
             title: "Delete Failed",
@@ -178,12 +180,12 @@ const ItemList = () => {
 
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchItems(userId) as any);
+    dispatch(fetchItems(userId));
     setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchCategories(userId) as any);
+    dispatch(fetchCategories(userId));
     setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   const filteredItems: ItemType[] =
@@ -274,10 +276,9 @@ const ItemList = () => {
                   <button
                     onClick={() => {
                       setSelectedCategory(category.categoryname);
-                      setActive(index);
                     }}
                     className={`text-sm text-center ${
-                      active === index
+                      selectedCategory === category.categoryname
                         ? "bg-red-500 p-1 text-white rounded-md "
                         : ""
                     }`}

@@ -35,6 +35,7 @@ import {
 } from "@/lib/reducers/paymentSlice/paymentReducers";
 import { payment, user } from "@/lib/reducers";
 import { Dispatch } from "redux";
+import { useAppDispatch } from "@/lib/store";
 
 const PaymentList = () => {
   const [rows, setRows] = useState<PaymentType[]>([]);
@@ -46,7 +47,7 @@ const PaymentList = () => {
   const [invoiceid, setInvoiceId] = useState<number>(0);
   const StateContext = useContext(LoginContext);
   const user = useSelector((state: user) => state.user.user);
-  const dispatch = useDispatch<Dispatch>();
+  const dispatch = useAppDispatch();
   const payments: PaymentType[] = useSelector(
     (state: payment) => state.payment.payments
   );
@@ -104,7 +105,7 @@ const PaymentList = () => {
   let currentDate = new Date().toJSON().slice(0, 10);
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchPayments(userId) as any);
+    dispatch(fetchPayments(userId));
     setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   useEffect(() => {
@@ -285,7 +286,7 @@ const PaymentList = () => {
         {loading ? (
           <div className="animate-pulse bg-gray-300 rounded-lg w-[980px] h-[580px] mt-4 mx-auto"></div>
         ) : (
-          <div className="w-full h-full mt-4 mx-auto">
+          <div className="w-full h-[600px] mt-4 mx-auto">
             <DataGrid
               style={{ fontFamily: "Poppins" }}
               rows={rows}

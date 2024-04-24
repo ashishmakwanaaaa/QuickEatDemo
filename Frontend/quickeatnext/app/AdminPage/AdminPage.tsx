@@ -5,7 +5,7 @@ import { MdNotificationsActive } from "react-icons/md";
 import { PiBowlFoodBold } from "react-icons/pi";
 import { FaUsers } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { Counter } from "../UserPage/AdminDashboard";
+import { Counter } from "../UserPage/UserDashboard";
 import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
@@ -15,6 +15,7 @@ import { fetchUsers } from "@/lib/actions/userAction";
 import ApexCharts from "apexcharts";
 import { User } from "@/lib/reducers/userSlice/UserReducers";
 import { OrderDataType } from "../UserPage/Orders";
+import { useAppDispatch } from "@/lib/store";
 
 interface monthlyDataType {
   month: number;
@@ -28,7 +29,7 @@ const AdminPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [monthlyData, setMonthlyData] = useState<monthlyDataType[]>([]);
   /*  ++++++++++++++++++++++ */
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const user = useSelector((state: user) => state.user.users);
   const activeuser = useSelector((state: user) => state.user.activeusers);
   console.log(user, activeuser);
@@ -89,7 +90,7 @@ const AdminPage = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchUsers() as any);
+    dispatch(fetchUsers());
   }, [dispatch]);
 
   useEffect(() => {
@@ -130,7 +131,9 @@ const AdminPage = () => {
   useEffect(() => {
     async function getAllItems() {
       try {
-        const response = await fetch("http://localhost:5000/items/getitems");
+        const response = await fetch("http://localhost:5000/items/getitems", {
+          credentials: "include",
+        });
         const data = await response.json();
         console.log(data);
         setItems(data.items);
@@ -155,12 +158,13 @@ const AdminPage = () => {
     );
     // console.log(ordersByDays);
     const sortedDays = Object.keys(ordersByDays).sort((a, b) => {
+      console.log(a, b);
       const [aDay, aMonth] = a.split("-").map(Number); // Split combined key into month and day
       const [bDay, bMonth] = b.split("-").map(Number);
-      if (aDay !== bDay) {
-        return bDay - aDay; // Sort by month first
+      if (aMonth !== bMonth) {
+        return aMonth - bMonth; // Then sort by day within the same month
       }
-      return bMonth - aMonth; // Then sort by day within the same month
+      return aDay - bDay; // Sort by month first
     });
     // console.log(sortedDays)
     const data = sortedDays.map((day) => ordersByDays[day]);

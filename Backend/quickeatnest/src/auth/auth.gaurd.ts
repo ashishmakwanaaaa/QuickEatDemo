@@ -1,6 +1,6 @@
 // src/guards/auth.guard.ts
 
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 
@@ -13,9 +13,8 @@ export class AuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies['token'];
-    console.log(request, 'TOKEN>>>>>>>.');
     if (!token) {
-      return false;
+      throw new UnauthorizedException("You are not authenticated");
     }
 
     return this.authService.verifyToken(token);

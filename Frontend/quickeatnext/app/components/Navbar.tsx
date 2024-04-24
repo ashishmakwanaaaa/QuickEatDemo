@@ -105,7 +105,7 @@ const Navbar = () => {
     try {
       e.preventDefault();
       const response = await fetch(
-        `http://localhost:5000/auth/updatepassword/${StateContext.ownername}`,
+        `http://localhost:5000/auth/updatepassword/${userId}`,
         {
           method: "POST",
           headers: {

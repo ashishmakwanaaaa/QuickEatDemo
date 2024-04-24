@@ -31,6 +31,7 @@ import { initialStateTypeForItems } from "@/lib/reducers/ItemSlice/itemReducers"
 import { PaymentData, fetchPayments } from "@/lib/actions/paymentAction";
 import { customer, item, payment, user } from "@/lib/reducers";
 import { PaymentType } from "@/lib/reducers/paymentSlice/paymentReducers";
+import { useAppDispatch } from "@/lib/store";
 
 ChartJS.register(
   CategoryScale,
@@ -99,7 +100,7 @@ const AdminDashboard = () => {
   const StateContext = useContext(StateLogin);
   const user = useSelector((state: user) => state.user.user);
   const userId = user._id;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const items = useSelector((state: item) => state.item.items);
   const customers: Customer[] = useSelector(
     (state: customer) => state.customer.customer
@@ -131,17 +132,17 @@ const AdminDashboard = () => {
   console.log(typeof totalAmount);
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchCustomer(userId) as any);
+    dispatch(fetchCustomer(userId));
     setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchItems(userId) as any);
+    dispatch(fetchItems(userId));
     setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchPayments(userId) as any);
+    dispatch(fetchPayments(userId));
     setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   useEffect(() => {
@@ -325,16 +326,16 @@ const AdminDashboard = () => {
             <>
               <div
                 className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-red-500 drop-shadow-2xl h-44 mt-4"
-                // style={{ boxShadow: "0 0  1em grey" }}
+                style={{ boxShadow: "0 0 0.1em red" }}
               >
-                <h4 className="text-md text-red-500 dark:text-gray-300">
+                <h4 className="text-md text-red-500 dark:text-red-500">
                   Customers
                 </h4>
                 <div className="rounded-full p-2 bg-red-500">
                   <IoPeople color="white" />
                 </div>
 
-                <p className="text-3xl text-red-500 dark:text-gray-300">
+                <p className="text-3xl text-red-500 dark:text-red-500">
                   <Counter
                     targetValue={
                       customers && customers.length > 0 && customers.length
@@ -343,80 +344,89 @@ const AdminDashboard = () => {
                 </p>
               </div>
               <div
-                // style={{ boxShadow: "0 0  1em grey" }}
+                style={{ boxShadow: "0 0 0.1em green" }}
                 className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-green-600  drop-shadow-2xl h-44 mt-4"
               >
-                <h4 className="text-md text-green-600 dark:text-gray-300">
+                <h4 className="text-md text-green-600 dark:text-green-600">
                   FoodItems
                 </h4>
                 <div className="bg-green-600 p-2 rounded-full">
                   <IoFastFood color="white" />
                 </div>
-                <p className="text-3xl text-green-600 dark:text-gray-300">
+                <p className="text-3xl text-green-600 dark:text-green-600">
                   <Counter
                     targetValue={items && items.length > 0 && items.length}
                   />
                 </p>
               </div>
               <div
-                // style={{ boxShadow: "0 0  1em grey" }}
+                style={{ boxShadow: "0 0 0.1em blue" }}
                 className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-blue-400  drop-shadow-2xl h-44 mt-4"
               >
-                <h4 className="text-md text-blue-400 dark:text-gray-300">
+                <h4 className="text-md text-blue-400 dark:text-blue-400">
                   Total Sales
                 </h4>
                 <div className="bg-blue-400 rounded-full p-1 flex justify-center items-center w-10 h-10">
                   <MonetizationOnIcon style={{ color: "white" }} />
                 </div>
-                <p className="text-3xl text-blue-400 dark:text-gray-300">
+                <p className="text-3xl text-blue-400 dark:text-blue-400">
                   &#x20B9; <Counter targetValue={totalAmount} />
                 </p>
               </div>
               <div
-                // style={{ boxShadow: "0 0  1em grey" }}
+                style={{ boxShadow: "0 0 0.1em orange" }}
                 className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-orange-500  drop-shadow-2xl h-44 mt-4"
               >
-                <h4 className="text-md text-orange-500 dark:text-gray-300">
+                <h4 className="text-md text-orange-500 dark:text-orange-500">
                   Card Sales
                 </h4>
                 <div className="rounded-full p-2 bg-orange-500 w-10 h-10 flex justify-center items-center">
                   <CreditCardIcon style={{ color: "white" }} />
                 </div>
-                <p className="text-3xl text-orange-500 dark:text-gray-300">
+                <p className="text-3xl text-orange-500 dark:text-orange-500">
                   &#x20B9; <Counter targetValue={totalCardAmount} />
                 </p>
               </div>
-              <div className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-purple-500  drop-shadow-2xl h-44 mt-4">
-                <h4 className="text-md text-purple-500 dark:text-gray-300">
+              <div
+                style={{ boxShadow: "0 0 0.1em purple" }}
+                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-purple-500  drop-shadow-2xl h-44 mt-4"
+              >
+                <h4 className="text-md text-purple-500 dark:text-purple-500">
                   Cash Sales
                 </h4>
                 <div className="bg-purple-500 rounded-full p-2 w-10 h-10 flex justify-center items-center">
                   {" "}
                   <MoneyIcon style={{ color: "white" }} />
                 </div>
-                <p className="text-3xl text-purple-500 dark:text-gray-300">
+                <p className="text-3xl text-purple-500 dark:text-purple-500">
                   &#x20B9; <Counter targetValue={totalCashAmount} />
                 </p>
               </div>
             </>
           )}
         </div>
-        <div className="flex flex-row justify-between w-full h-full mt-5 z-20">
-          <div className="flex  flex-col items-center  justify-center h-[260px] mt-10 w-[400px] gap-8">
+        <div className="flex justify-between w-full h-full mt-5 z-20">
+          <div className="flex ml-[-25px] flex-col items-center drop-shadow-2xl rounded-xl  justify-center h-[260px] mt-10 w-[400px] gap-8">
             {loading ? (
-              <div className="animate-pulse bg-gray-300 rounded-xl w-[400px] h-[260px]"></div>
+              <div className="animate-pulse bg-gray-300 rounded-xl w-[400px] h-[450px] ml-[60px]"></div>
             ) : (
-              <>
+              <div
+                style={{ boxShadow: "0 0 0.4em gray" }}
+                className="rounded-lg p-2 mt-6 h-[350px]"
+              >
                 <Doughnut data={finalData} options={options} />
                 <h1 className="text-center dark:text-gray-300  mt-2 capitalize text-orange-500 font-bold">
                   Categories Wise Data
                 </h1>
-              </>
+              </div>
             )}
           </div>
-          <div className="flex flex-col items-end  justify-center mt-3 ">
+          <div
+            className="flex flex-col items-end rounded-lg h-[360px] p-2 justify-center drop-shadow-2xl mr-4 "
+            style={{ boxShadow: "0 0 0.4em gray" }}
+          >
             {loading ? (
-              <div className="animate-pulse bg-gray-300 rounded-xl w-[500px] h-[300px] mt-[-330px]"></div>
+              <div className="animate-pulse bg-gray-300 rounded-xl w-[500px] h-[300px]"></div>
             ) : (
               <>
                 <div className="flex flex-row gap-2 justify-start items-start mr-16">

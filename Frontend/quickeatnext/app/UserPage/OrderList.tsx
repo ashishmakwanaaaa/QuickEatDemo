@@ -17,6 +17,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSpecificOrder } from "@/lib/actions/orderAction";
 import { order, user } from "@/lib/reducers";
+import { useAppDispatch } from "@/lib/store";
 
 export interface OrderListRows {
   id: number;
@@ -37,7 +38,7 @@ const OrderListPage = () => {
   const [data, setData] = useState<OrderListRows[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const user = useSelector((state: user) => state.user.user);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const specificorder: OrderDataType = useSelector(
     (state: order) => state.order.orders
   );
@@ -94,7 +95,7 @@ const OrderListPage = () => {
   };
   const handleClickOpen = async (row: any) => {
     setOpen(true);
-    dispatch(fetchSpecificOrder(row._id) as any);
+    dispatch(fetchSpecificOrder(row._id));
     console.log(row);
   };
   console.log(specificorder);
@@ -198,7 +199,9 @@ const OrderListPage = () => {
         {loading ? (
           <div className="animate-pulse bg-gray-300 rounded-md h-10 w-48 ml-8"></div>
         ) : (
-          <h1 className="font-[Poppins] font-bold text-start">Order Details</h1>
+          <h1 className="font-[Poppins] font-bold text-start ml-16">
+            Order Details
+          </h1>
         )}
         <div className="flex flex-row gap-2 w-1/2">
           {loading ? (

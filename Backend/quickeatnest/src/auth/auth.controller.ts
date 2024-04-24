@@ -79,12 +79,12 @@ export class AuthController {
     return this.userservice.resetpsw(id, password);
   }
 
-  @Post('/updatepassword/:ownername')
+  @Post('/updatepassword/:id')
   changepsw(
-    @Param('ownername') ownername: string,
+    @Param('id') id: string,
     @Body() chnagepswdto: ChangePassworDto,
   ) {
-    return this.userservice.changepsw(ownername, chnagepswdto);
+    return this.userservice.changepsw(id, chnagepswdto);
   }
 
   @Get('/getUser/:name')

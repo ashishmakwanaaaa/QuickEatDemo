@@ -55,7 +55,7 @@ const MyProfilePage = () => {
   };
   const updateProfile = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    const updatedUser = { ...user }; // shallow copy
+    const updatedUser = { ...user };
     console.log(image, resimage);
     if (image || resimage) {
       const formData = new FormData();
