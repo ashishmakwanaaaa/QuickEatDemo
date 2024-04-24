@@ -11,14 +11,14 @@ export class OrdersController {
     return this.ordersrices.createOrder(orderdto);
   }
 
-  @Get('/top5sellingitems')
-  getTop5Items() {
-    return this.ordersrices.getTop5Items();
+  @Get('/top5sellingitems/:userid')
+  getTop5Items(@Param('userid') userid:string) {
+    return this.ordersrices.getTop5Items(userid);
   }
 
-  @Get('/getAllOrders')
-  getAllOrders() {
-    return this.ordersrices.getAllOrders();
+  @Get('/getAllOrders/:userid')
+  getAllOrders(@Param("userid") userid:string) {
+    return this.ordersrices.getAllOrders(userid);
   }
 
   @Get('/getOneOrder/:id')
@@ -34,5 +34,10 @@ export class OrdersController {
   @Get('/customerorder/:id')
   getCustomerOrder(@Param('id') id: string) {
     return this.ordersrices.getCustomerOrder(id);
+  }
+
+  @Get('/getAllOrders')
+  getAllOrder(){
+    return this.ordersrices.getAllOrder()
   }
 }

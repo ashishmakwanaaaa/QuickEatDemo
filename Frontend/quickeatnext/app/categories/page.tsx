@@ -2,17 +2,15 @@
 import DashBoard from "../Pages/DashBoard";
 import LoginContext from "../LoginState/logincontext";
 import { useContext } from "react";
-import CategoriesList from "../Admin/CategoryList";
+import CategoriesList from "../UserPage/CategoryList";
 const CategoryData = () => {
   const StateContext = useContext(LoginContext);
 
   return (
     <>
-      {StateContext.login && (
-        <DashBoard>
-          <CategoriesList />
-        </DashBoard>
-      )}
+      <DashBoard>
+        <CategoriesList />
+      </DashBoard>
     </>
   );
 };

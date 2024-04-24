@@ -5,7 +5,11 @@ import AddCustomer from "../Pages/AddCustomer";
 const CategoryData = () => {
   const StateContext = useContext(LoginContext);
 
-  return <>{StateContext.login && <AddCustomer />}</>;
+  return (
+    <>
+      <AddCustomer />
+    </>
+  );
 };
 
 export default CategoryData;

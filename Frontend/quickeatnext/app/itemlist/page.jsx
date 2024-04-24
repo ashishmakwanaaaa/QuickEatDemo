@@ -1,7 +1,7 @@
 "use client";
 
 import Dashboard from "../Pages/DashBoard";
-import ItemList from "../Admin/ItemList";
+import ItemList from "../UserPage/ItemList";
 import LoginContext from "../LoginState/logincontext";
 import { useContext } from "react";
 
@@ -10,11 +10,9 @@ const ItemData = () => {
 
   return (
     <>
-      {StateContext.login && (
-        <Dashboard>
-          <ItemList />
-        </Dashboard>
-      )}
+      <Dashboard>
+        <ItemList />
+      </Dashboard>
     </>
   );
 };

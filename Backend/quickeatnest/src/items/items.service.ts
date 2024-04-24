@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -14,6 +15,7 @@ export class ItemsService {
 
   async AddItem(itemdto: ItemDto) {
     const {
+      userId,
       itemname,
       itemdescription,
       price,
@@ -23,11 +25,12 @@ export class ItemsService {
       itemcategory,
     } = itemdto;
     try {
-      let item = await this.itemsmodel.findOne({ itemname });
+      let item = await this.itemsmodel.findOne({ itemname,userId });
       if (item) {
-        return { message: 'Item Has Already Exists' };
+        throw new ConflictException({ message: 'Item Has Already Exists' });
       }
       item = await this.itemsmodel.create({
+        userId,
         itemdescription,
         itemname,
         price,
@@ -43,9 +46,9 @@ export class ItemsService {
     }
   }
 
-  async getAllItems() {
+  async getAllItems(userId: string) {
     try {
-      let items = await this.itemsmodel.find();
+      let items = await this.itemsmodel.find({ userId });
       if (items.length === 0) {
         throw new NotFoundException();
       }
@@ -87,15 +90,33 @@ export class ItemsService {
     }
   }
 
-  async updateQuantity(quantity: number, itemname: string) {
+  async updateQuantity(quantities: [number], itemnames: [string]) {
     try {
-      let item = await this.itemsmodel.findOne({ itemname });
-      if (!item) {
-        throw new NotFoundException();
+      console.log(quantities, itemnames);
+      for (let i = 0; i < itemnames.length; i++) {
+        const item = itemnames[i];
+        const qty = quantities[i];
+        let items = await this.itemsmodel.findOne({ itemname: item });
+        items.quantity = qty;
+        await items.save();
+        console.log(items);
+        if (!items) {
+          throw new NotFoundException(`Item not found with name: ${item}`);
+        }
+
+        console.log(`Item quantity updated successfully for: ${item}`);
       }
-      item.quantity = quantity;
-      await item.save();
-      return { messsage: 'Item Quantity Update Successfully', item };
+      return { messsage: 'Item Quantity Update Successfully' };
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
+  async getallitems(){
+    try {
+      const items = await this.itemsmodel.find();
+      if(items.length === 0){throw new NotFoundException()}
+      return {message:"All Items",items}
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException();

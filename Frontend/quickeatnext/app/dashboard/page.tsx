@@ -1,19 +1,18 @@
 "use client";
 
-import AdminDashboard from "../Admin/AdminDashboard";
+import AdminDashboard from "../UserPage/UserDashboard";
 import DashBoard from "../Pages/DashBoard";
 import LoginContext from "@/app/LoginState/logincontext";
 import { useContext } from "react";
 
 const DashBoardPage = () => {
   const StateContext = useContext(LoginContext);
+  console.log(StateContext);
   return (
     <>
-      {StateContext.login && (
-        <DashBoard>
-          <AdminDashboard />
-        </DashBoard>
-      )}
+      <DashBoard>
+        <AdminDashboard />
+      </DashBoard>
     </>
   );
 };

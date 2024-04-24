@@ -6,10 +6,13 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { ItemDto } from './dto/items.dto';
+import { AuthGuard } from 'src/auth/auth.gaurd';
 
+@UseGuards(AuthGuard)
 @Controller('items')
 export class ItemsController {
   constructor(private itemsservice: ItemsService) {}
@@ -19,9 +22,11 @@ export class ItemsController {
     return this.itemsservice.AddItem(itemdto);
   }
 
-  @Get('/getAllItems')
-  getAllItems() {
-    return this.itemsservice.getAllItems();
+  @Get('/getAllItems/:userId')
+  getAllItems(@Param('userId') userId: string) {
+    console.log(userId);
+
+    return this.itemsservice.getAllItems(userId);
   }
 
   @Patch('/updateItem/:id')
@@ -36,11 +41,14 @@ export class ItemsController {
 
   @Patch('/updateQuantity')
   updateQuantity(
-    @Body('quantity') quantity: number,
-    @Body('itemname') itemname: string,
+    @Body('quantity') quantity: [number],
+    @Body('itemname') itemname: [string],
   ) {
     return this.itemsservice.updateQuantity(quantity, itemname);
   }
 
-  
+  @Get('/getitems')
+  getallitems() {
+    return this.itemsservice.getallitems();
+  }
 }

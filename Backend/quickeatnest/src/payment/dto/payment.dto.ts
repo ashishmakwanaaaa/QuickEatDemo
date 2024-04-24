@@ -13,6 +13,10 @@ export class BillingDto {
 
 export class PaymentDto {
   @IsNotEmpty()
+  userId:string
+  @IsNotEmpty()
+  customerID:string
+  @IsNotEmpty()
   email: string;
 
   @IsNotEmpty()

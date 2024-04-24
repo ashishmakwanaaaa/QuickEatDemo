@@ -12,12 +12,14 @@ import Button from "@mui/material/Button";
 import LoginContext from "../LoginState/logincontext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "@/lib/actions/userAction";
+import { user } from "@/lib/reducers";
 
 const Login = (): React.JSX.Element => {
   const router = useRouter();
 
-  const StateContext = useContext(LoginContext);
-
+  const dispatc = useDispatch();
   const [formData, setFormData] = useState<{
     emailid: string;
     password: string;
@@ -36,48 +38,46 @@ const Login = (): React.JSX.Element => {
   const handleClose: () => void = () => {
     setOpen(false);
     router.push("/signup");
-    
   };
-
+  const StateContext = useContext(LoginContext);
+  const { dispatch } = StateContext;
+  const user = useSelector((state:user) => state.user.user);
+  console.log(user);
   async function validateUser(): Promise<void> {
     console.log(formData);
-    const url = "http://localhost:5000/auth/login";
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
-      },
-      body: JSON.stringify(formData),
-    });
-    const data = await res.json();
-    console.log(res);
-    console.log(data);
-
-    if (res.status === 201) {
+    const response = await dispatc(fetchUser(formData) as any);
+    console.log(response);
+    if (dispatch && response.payload !== undefined) {
+      dispatch({
+        type: "LOGIN",
+        payload: {
+          login: true,
+          restaurantname: user.restaurantname,
+          ownername: user.ownername,
+          userid: user._id,
+          image: user.image,
+          resimage: user.resimage,
+        },
+      });
       StateContext.login = true;
+      localStorage.setItem("login", StateContext.login.toString());
       Swal.fire({
         icon: "success",
         title: "Successfully Login",
         timer: 3000,
       });
-      StateContext.restaurantname = data.user.restaurantname;
-      StateContext.ownername = data.user.ownername;
+
       console.log(StateContext);
-      {
-        StateContext.login && router.push("/dashboard");
-      }
+      localStorage.setItem("role", user.isAdmin ? "Admin" : "User");
+      router.push("/");
     } else {
       Swal.fire({
         icon: "error",
-        text: "Error:   " + data.message,
+        text: "Invalid Credentials:",
         timer: 3000,
       });
     }
   }
-  console.log(StateContext);
-
-  // console.log(StateContext)
 
   const handleSubmit = (e: { preventDefault: () => void }): void => {
     try {
@@ -132,7 +132,7 @@ const Login = (): React.JSX.Element => {
           muted
         >
           <source
-            src="https://player.vimeo.com/external/376213205.sd.mp4?s=ee88744690535ad6c6598cfed6f940ef03fa3f49&profile_id=164&oauth2_token_id=57447761"
+            src="https://videos.pexels.com/video-files/852122/852122-sd_640_360_30fps.mp4"
             type="video/mp4"
           />
         </video>

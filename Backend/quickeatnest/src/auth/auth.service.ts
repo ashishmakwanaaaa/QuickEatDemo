@@ -4,6 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -15,7 +16,7 @@ import * as nodemailer from 'nodemailer';
 import { JwtService } from '@nestjs/jwt';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -27,8 +28,8 @@ export class AuthService {
   transported = nodemailer.createTransport({
     service: process.env.service,
     auth: {
-      user: process.env.user,
-      pass: process.env.pass,
+      user: process.env.userforemail,
+      pass: process.env.passforemail,
     },
   });
 
@@ -40,8 +41,10 @@ export class AuthService {
         ownername,
         emailid,
         password,
-        confirmpassowrd,
-        address,
+
+        lat,
+        long,
+        confirmpassword,
       } = signupdto;
       let user = await this.usermodel.findOne({ emailid });
       if (user) {
@@ -53,8 +56,10 @@ export class AuthService {
         ownername,
         emailid,
         password: hashedpassword,
-        confirmpassword: confirmpassowrd,
-        address,
+
+        lat,
+        long,
+        confirmpassword: confirmpassword,
       });
       await user.save();
       return { user, message: 'User Signup Successfully' };
@@ -64,24 +69,24 @@ export class AuthService {
     }
   }
 
-  async login(logindto: UserLoginDto) {
-    try {
-      const { emailid, password } = logindto;
-      let user = await this.usermodel.findOne({ emailid });
-      if (!user) {
-        throw new NotFoundException();
-      }
-      const decode = await bcrypt.compare(password, user.password);
-      console.log(decode, password, user.password);
-      if (!decode) {
-        throw new HttpException('Wrong Password', HttpStatus.UNAUTHORIZED);
-      }
-      const token = await this.jwtService.sign({ id: user._id });
-      return { message: 'Login Successfully', user, token };
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException();
+  async login(logindto: UserLoginDto, res: Response) {
+    const { emailid, password } = logindto;
+    let user = await this.usermodel.findOne({ emailid });
+    if (!user) {
+      throw new NotFoundException('Wrong Email!....Please enter correct email');
     }
+    user.isActive = true;
+    await user.save();
+    const decode = await bcrypt.compare(password, user.password);
+    console.log(decode, password, user.password);
+    if (!decode) {
+      throw new UnauthorizedException('Wrong Password');
+    }
+    const token = await this.jwtService.sign({
+      id: user._id,
+      isadmin: user.isAdmin,
+    });
+    return { message: 'Login Successfully', user, token };
   }
 
   async forgotpsw(email: string) {
@@ -97,7 +102,7 @@ export class AuthService {
           from: 'quickeatwithus123@gmail.com',
           to: email,
           subject: 'Reset Your Password',
-          text: `This Link Is Valid For 2 minutes http://localhost:3001/forgotpassword/${user._id}/${token}`,
+          text: `This Link Is Valid For 2 minutes http://localhost:3000/forgotpassword/${user._id}/${token}`,
         };
         this.transported.sendMail(mailOptions, (err, info) => {
           if (!err) {
@@ -145,10 +150,10 @@ export class AuthService {
     }
   }
 
-  async changepsw(ownername: string, chnagepswdto: ChangePassworDto) {
+  async changepsw(id: string, chnagepswdto: ChangePassworDto) {
     try {
       const { oldpassword, newpassword, newchangepassword } = chnagepswdto;
-      const user = await this.usermodel.findOne({ ownername });
+      const user = await this.usermodel.findById(id);
       if (!user) {
         throw new NotFoundException();
       }
@@ -183,44 +188,75 @@ export class AuthService {
   }
 
   async updateProfile(usersignupdto: UserSignUpDto, id: string) {
-    console.log(usersignupdto);
+    // console.log('User SignUP DTO', usersignupdto);
+    const { image, resimage } = usersignupdto;
     try {
-      const { image } = usersignupdto;
       let user = await this.usermodel.findById(id);
       if (!user) {
         throw new NotFoundException();
       }
 
-      // Handle file uploads
-      if (image) {
-        usersignupdto.image = this.handleFileUpload(image);
-      }
-
-      // Update user document
-      const updatedUser = await this.usermodel.findByIdAndUpdate(
+      let updateuser = await this.usermodel.findByIdAndUpdate(
         id,
-        usersignupdto,
+        {
+          ...usersignupdto,
+          image,
+          resimage,
+        },
         { new: true },
       );
-
-      return { message: 'Profile Updated Successfully', user: updatedUser };
+      await updateuser.save();
+      console.log(updateuser);
+      return { message: 'Profile Updated Successfully', updateuser };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('Failed to update profile');
     }
   }
 
-  private handleFileUpload(file: File): string {
-    const randomName = Array(32)
-      .fill(null)
-      .map(() => Math.round(Math.random() * 16).toString(16))
-      .join('');
-    return `${randomName}${this.editFileName(file.originalname)}`;
+  async getAllUser() {
+    try {
+      const users = await this.usermodel.find({ isAdmin: false });
+      if (users.length === 0) {
+        throw new NotFoundException();
+      }
+      console.log('User List: ', users);
+      const activeusers = await this.usermodel.find({
+        isActive: true,
+        isAdmin: false,
+      });
+      console.log(activeusers);
+      // if (activeusers.length === 0) {
+      //   throw new NotFoundException();
+      // }
+      return { message: 'All User', users, activeusers };
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
   }
 
-  private editFileName(filename: string): string {
-    const name = filename.split('.')[0];
-    const fileExtName = extname(filename);
-    return `${name}${fileExtName}`;
+  async logout(id: string) {
+    try {
+      const user = await this.usermodel.findById(id);
+      if (!user) {
+        throw new InternalServerErrorException();
+      }
+      user.isActive = false;
+      await user.save();
+      return { message: 'User Logout Successfully', user };
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async verifyToken(token: string): Promise<boolean> {
+    try {
+      // Assuming JWT for token verification
+      const decoded = this.jwtService.verify(token);
+      return !!decoded;
+    } catch (error) {
+      return false;
+    }
   }
 }

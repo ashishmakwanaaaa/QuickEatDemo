@@ -16,13 +16,20 @@ export class UserSignUpDto {
   password: string;
 
   @IsNotEmpty()
-  address: string;
+  confirmpassword: string;
 
-  @IsNotEmpty()
-  confirmpassowrd: string;
-
-  @IsNotEmpty()
+  // @IsNotEmpty()
   image: Multer.File;
+
+  resimage: Multer.File;
+
+  isAdmin: boolean;
+
+  isActive: boolean;
+
+  lat: string;
+
+  long: string;
 }
 
 export class UserLoginDto {

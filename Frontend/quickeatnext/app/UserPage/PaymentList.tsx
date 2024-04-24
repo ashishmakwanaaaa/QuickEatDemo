@@ -1,6 +1,12 @@
 "use client";
 
-import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCellParams,
+  GridColDef,
+  GridRowParams,
+  GridRowSelectionApi,
+} from "@mui/x-data-grid";
 import { useContext, useEffect, useState } from "react";
 import { OrderDataType } from "./Orders";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
@@ -11,28 +17,44 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import LoginContext from "../LoginState/logincontext";
 import jsPDF from "jspdf";
-import { DateRangePicker } from "@mui/x-date-pickers-pro";
+import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import dayjs, { Dayjs } from "dayjs";
 import Swal from "sweetalert2";
 import CancelIcon from "@mui/icons-material/Cancel";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchPayments,
+  FetchPaymentsPayload,
+} from "@/lib/actions/paymentAction";
+import {
+  PaymentType,
+  initialStateTypeForPayment,
+} from "@/lib/reducers/paymentSlice/paymentReducers";
+import { payment, user } from "@/lib/reducers";
+import { Dispatch } from "redux";
+import { useAppDispatch } from "@/lib/store";
 
 const PaymentList = () => {
-  const [payments, setPayments] = useState([]);
-  const [rows, setRows] = useState([]);
-  const [data, setData] = useState([]);
+  const [rows, setRows] = useState<PaymentType[]>([]);
+  const [data, setData] = useState<PaymentType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [order, setOrder] = useState<OrderDataType[]>([]);
-  const [filteredRow, setFilteredRows] = useState([]);
+  const [filteredRow, setFilteredRows] = useState<PaymentType[]>([]);
   const [invoiceid, setInvoiceId] = useState<number>(0);
   const StateContext = useContext(LoginContext);
-
+  const user = useSelector((state: user) => state.user.user);
+  const dispatch = useAppDispatch();
+  const payments: PaymentType[] = useSelector(
+    (state: payment) => state.payment.payments
+  );
   const [selectedDates, setSelectedDates] = useState<
     [Dayjs | null, Dayjs | null]
   >([null, null]);
-  console.log("SelectDate" + selectedDates);
+  const userId = user._id;
   const handleDateRangeChange = (dates: [Dayjs | null, Dayjs | null]) => {
     if (dates[0]) {
       dates[0] = dates[0].startOf("day");
@@ -42,11 +64,12 @@ const PaymentList = () => {
     }
     setSelectedDates(dates);
   };
+  console.log("<<<order", order);
   const filterRowsByDate = () => {
     console.log(selectedDates);
     const [startDate, endDate] = selectedDates;
 
-    const filteredData = payments.filter((payment) => {
+    const filteredData: PaymentType[] = payments.filter((payment) => {
       const paymentDate = dayjs(payment.Date.split("T")[0]);
       return (
         paymentDate.isSame(startDate, "day") ||
@@ -64,60 +87,57 @@ const PaymentList = () => {
     setRows(filteredRowsWithIds);
   }, [filteredRow]);
 
-  const filteredRowsWithIds = filteredRow.map((payment, index) => ({
-    id: index + 1,
-    Date: payment.Date.split("T")[0],
-    customername: payment.cardHoldername,
-    customeremail: payment.email,
-    amount: payment.amount,
-    city: payment.billingaddress.city,
-    method: payment.paymentMethod,
-    invoice: "Invoice",
-  }));
+  const filteredRowsWithIds: PaymentType[] = filteredRow.map(
+    (payment, index) =>
+      ({
+        id: index + 1,
+        Date: payment.Date.split("T")[0],
+        cardHoldername: payment.cardHoldername,
+        email: payment.email,
+        amount: payment.amount,
+        billingaddress: payment?.billingaddress?.city,
+        paymentMethod: payment.paymentMethod,
+        invoice: "Invoice",
+      } as PaymentType)
+  );
 
   console.log(StateContext);
   let currentDate = new Date().toJSON().slice(0, 10);
   useEffect(() => {
-    async function FetchAllPayment() {
-      try {
-        const response = await fetch(
-          "http://localhost:5000/payment/allpayment"
-        );
-        const data = await response.json();
-        console.log(data);
-        setPayments(data.payments);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    FetchAllPayment();
-  }, []);
+    setLoading(true);
+    dispatch(fetchPayments(userId));
+    setTimeout(() => setLoading(false), 2000);
+  }, [dispatch, userId]);
   useEffect(() => {
     if (!payments || payments.length === 0) {
       setRows([]);
       setData([]);
       return;
     }
-    const rowsArray = payments.map((payment, index) => ({
-      id: index + 1,
-      Date: payment.Date.split("T")[0],
-      customername: payment.cardHoldername,
-      customeremail: payment.email,
-      amount: payment.amount,
-      city: payment.billingaddress.city,
-      method: payment.paymentMethod,
-      invoice: "Invoice",
-    }));
+    const rowsArray: PaymentType[] = payments.map(
+      (payment, index) =>
+        (({
+          id: index + 1,
+          Date: payment.Date.split("T")[0],
+          cardHoldername: payment.cardHoldername,
+          email: payment.email,
+          amount: payment.amount,
+          billingaddress: payment?.billingaddress?.city,
+          paymentMethod: payment.paymentMethod,
+          invoice: "Invoice",
+        } as unknown) as PaymentType)
+    );
 
     setRows(rowsArray);
     setData(rowsArray);
   }, [payments]);
+  console.log(payments);
   const handleClickOpen = async (row: any) => {
     setOpen(true);
     setInvoiceId(row.id);
     try {
       const response = await fetch(
-        `http://localhost:5000/orders/getOrder/${row.Date}/${row.customeremail}`
+        `http://localhost:5000/orders/getOrder/${row.Date}/${row.email}`
       );
       const data = await response.json();
       setOrder(data.orders);
@@ -133,7 +153,7 @@ const PaymentList = () => {
   const handleGenerateFile = async () => {
     try {
       setOpen(false);
-      const doc = new jsPDF("p", "pt", "a4", true);
+      const doc = new jsPDF("p", "pt", "a6", true);
       const dialogContent = document.getElementById("invoice-dialog-content");
       if (dialogContent) {
         const HtmlContent = dialogContent.innerHTML;
@@ -154,13 +174,7 @@ const PaymentList = () => {
     }
   };
   console.log(payments);
-  const columns: {
-    field: string;
-    headerName: string;
-    width: number;
-    cellClassName?: string;
-    renderCell?: (params: GridRowSelectionApi) => Element;
-  }[] = [
+  const columns: GridColDef[] = [
     {
       field: "id",
 
@@ -174,13 +188,13 @@ const PaymentList = () => {
       width: 170,
     },
     {
-      field: "customername",
+      field: "cardHoldername",
 
       headerName: "Customer Name",
       width: 150,
     },
     {
-      field: "customeremail",
+      field: "email",
 
       headerName: "Email",
       width: 240,
@@ -192,13 +206,13 @@ const PaymentList = () => {
       width: 120,
     },
     {
-      field: "city",
+      field: "billingaddress",
 
       headerName: "City",
       width: 100,
     },
     {
-      field: "method",
+      field: "paymentMethod",
 
       headerName: "Payment Method",
       cellClassName: "text-green-800 font-bold text-center capitalize",
@@ -209,7 +223,7 @@ const PaymentList = () => {
 
       headerName: "Generate Invoice",
       width: 120,
-      renderCell: (params: GridRowSelectionApi) => (
+      renderCell: (params: GridCellParams) => (
         <Button
           onClick={() => handleClickOpen(params.row)}
           style={{ color: "red", padding: "2px" }}
@@ -224,54 +238,73 @@ const PaymentList = () => {
   // setRows(rowsArray);
   return (
     <>
-      <div className="flex justify-between">
-        <h1 className="font-[Poppins] font-bold text-start ml-8">
-          Payment Details
-        </h1>
+      <div className="flex justify-between w-[68rem] mt-2">
+        {loading ? (
+          <div className="animate-pulse bg-gray-300 rounded-md h-10 w-48 ml-8"></div>
+        ) : (
+          <h1 className="font-[Poppins] font-bold text-start ml-10">
+            Payment Details
+          </h1>
+        )}
         <div className="flex flex-row gap-2 w-1/2">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateRangePicker
-              slotProps={{ textField: { size: "small" } }}
-              value={selectedDates}
-              onChange={handleDateRangeChange}
-            />
-          </LocalizationProvider>
-          <button
-            className="bg-orange-400 text-white w-10 h-10  rounded-md"
-            onClick={filterRowsByDate}
-          >
-            <VisibilityIcon />
-          </button>
-          <button
-            className="bg-red-500 text-white w-10 h-10  rounded-md"
-            onClick={() => {
-              setRows(data);
-              setSelectedDates([null, null]);
-            }}
-          >
-            <CancelIcon />
-          </button>
+          {loading ? (
+            <>
+              <div className="animate-pulse bg-gray-300 rounded-md h-10 w-1/2 ml-36"></div>
+              <div className="animate-pulse bg-orange-400 rounded-md h-10 w-10"></div>
+              <div className="animate-pulse bg-red-500 rounded-md h-10 w-10"></div>
+            </>
+          ) : (
+            <>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateRangePicker
+                  slotProps={{ textField: { size: "small" } }}
+                  value={selectedDates}
+                  onChange={handleDateRangeChange}
+                />
+              </LocalizationProvider>
+              <button
+                className="bg-orange-400 text-white w-10 h-10 rounded-md"
+                onClick={filterRowsByDate}
+              >
+                <VisibilityIcon />
+              </button>
+              <button
+                className="bg-red-500 text-white w-10 h-10 rounded-md"
+                onClick={() => {
+                  setRows(data);
+                  setSelectedDates([null, null]);
+                }}
+              >
+                <CancelIcon />
+              </button>
+            </>
+          )}
         </div>
       </div>
 
-      <div className="w-[950px] h-4/5 mt-4 mx-auto">
-        <div className="w-[980px] h-[580px] mt-4 mx-auto">
-          <DataGrid
-            style={{ fontFamily: "Poppins" }}
-            rows={rows}
-            columns={columns}
-            pagination
-            pageSizeOptions={[
-              10,
-              20,
-              30,
-              40,
-              100,
-              { value: 1000, label: "1,000" },
-            ]}
-          />
-        </div>
+      <div className="w-[1000px] h-4/5 mt-4 mx-auto">
+        {loading ? (
+          <div className="animate-pulse bg-gray-300 rounded-lg w-[980px] h-[580px] mt-4 mx-auto"></div>
+        ) : (
+          <div className="w-full h-[600px] mt-4 mx-auto">
+            <DataGrid
+              style={{ fontFamily: "Poppins" }}
+              rows={rows}
+              columns={columns}
+              pagination
+              pageSizeOptions={[
+                10,
+                20,
+                30,
+                40,
+                100,
+                { value: 1000, label: "1,000" },
+              ]}
+            />
+          </div>
+        )}
       </div>
+
       <Dialog
         maxWidth="xl"
         open={open}
@@ -290,7 +323,7 @@ const PaymentList = () => {
       >
         <DialogTitle>Generate Invoice</DialogTitle>
         <DialogContent>
-          {order.map((item, index) => {
+          {order?.map((item, index) => {
             return (
               <>
                 <div
@@ -350,7 +383,7 @@ const PaymentList = () => {
                       {item.selectedItem.map((key, index) => (
                         <tr key={index} className="border-b">
                           <td className="px-4 py-2">{key.itemname}</td>
-                          <td className="px-4 py-2">{key.quantity}</td>
+                          <td className="px-4 py-2">{key.qty}</td>
                           <td className="px-4 py-2">{key.totalPrice}</td>
                         </tr>
                       ))}

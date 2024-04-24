@@ -11,6 +11,10 @@ import { PaymentModule } from './payment/payment.module';
 import { CategoryModule } from './category/category.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { TablebookingModule } from './tablebooking/tablebooking.module';
+
 
 @Module({
   imports: [
@@ -20,15 +24,21 @@ import { ConfigModule } from '@nestjs/config';
       `mongodb+srv://${process.env.username}:${process.env.password}@${process.env.cluster}.69lknpi.mongodb.net/${process.env.database}?retryWrites=true&w=majority`,
     ),
     MulterModule.register({
-      dest: './uploads',
+      dest: './imageupload',
     }),
     CustomerModule,
     ItemsModule,
     OrdersModule,
     PaymentModule,
     CategoryModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'), // Path to your uploads folder
+      serveRoot: '/uploads', // URL path at which to serve the static assets
+    }),
+    TablebookingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
+console.log(process.env)

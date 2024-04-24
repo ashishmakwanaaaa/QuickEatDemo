@@ -15,17 +15,19 @@ const SignUp = (): React.JSX.Element => {
   const [formData, setFormData] = useState<{
     restaurantname: string;
     ownername: string;
-    address: string;
     emailid: string;
+    lat: string;
+    long: string;
     password: string;
-    confirmpassowrd: string;
+    confirmpassword: string;
   }>({
     restaurantname: "",
     ownername: "",
-    address: "",
     emailid: "",
+    lat: "",
+    long: "",
     password: "",
-    confirmpassowrd: "",
+    confirmpassword: "",
   });
   useEffect(() => {
     AOS.init({
@@ -65,15 +67,18 @@ const SignUp = (): React.JSX.Element => {
         timer: 1000,
       });
 
-      setFormData({
-        restaurantname: "",
-        ownername: "",
-        address: "",
-        emailid: "",
-        password: "",
-        confirmpassowrd: "",
-      });
-      router.push("/login");
+      // setFormData({
+      //   restaurantname: "",
+      //   ownername: "",
+      //   address: "",
+      //   emailid: "",
+      //   password: "",
+      //   city: "",
+      //   lat: "",
+      //   long: "",
+      //   confirmpassword: "",
+      // });
+      // router.push("/login");
     } else {
       Swal.fire({
         icon: "error",
@@ -91,7 +96,7 @@ const SignUp = (): React.JSX.Element => {
     e.preventDefault();
     try {
       let password = formData.password;
-      let confirmpassword = formData.confirmpassowrd;
+      let confirmpassword = formData.confirmpassword;
 
       if (password !== confirmpassword) {
         Swal.fire({
@@ -101,7 +106,21 @@ const SignUp = (): React.JSX.Element => {
           timer: 3000,
         });
       } else {
-        addUser();
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            const { latitude, longitude } = pos.coords;
+            console.log(typeof latitude, typeof longitude);
+            setFormData({
+              ...formData,
+              lat: latitude.toString(),
+              long: longitude.toString(),
+            });
+            addUser();
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
       }
     } catch (error) {
       window.alert(error);
@@ -114,13 +133,13 @@ const SignUp = (): React.JSX.Element => {
       <div className="fixed inset-0 z-0">
         <video
           ref={videoRef}
-          className="w-full h-full object-cover opacity-90 "
+          className="w-full h-full  object-cover opacity-90 "
           autoPlay
           loop
           muted
         >
           <source
-            src="https://player.vimeo.com/external/392581454.sd.mp4?s=21f79ea157a661627f9850c1b17e53b537f5fb32&profile_id=164&oauth2_token_id=57447761"
+            src="https://media.istockphoto.com/id/1162153594/video/cook-sprinkling-salt-on-skillet.mp4?s=mp4-640x640-is&k=20&c=k7LOi6u2Z5-YzHikFhbF2e0FqtpwUVWEEkwtMCMiCSM="
             type="video/mp4"
           />
         </video>
@@ -128,7 +147,7 @@ const SignUp = (): React.JSX.Element => {
       </div>
 
       {/* Signup Box */}
-      <div className="relative z-10 w-full md:w-[90%] lg:w-[70%] xl:w-[50%] 2xl:w-[40%] mx-auto bg-white p-8 rounded-lg text-center mt-5 opacity-90">
+      <div className="relative z-10 w-full md:w-[90%] lg:w-[70%] xl:w-[50%] 2xl:w-[40%] mx-auto bg-white p-8 rounded-lg text-center mt-32 opacity-90">
         <span
           className="text-black font-bold text-lg text-center"
           data-aos="zoom-in"
@@ -179,24 +198,7 @@ const SignUp = (): React.JSX.Element => {
               />
             </div>
           </div>
-          <div
-            className="flex flex-col gap-2 items-start w-full"
-            data-aos="fade-right"
-          >
-            <label htmlFor="address" className="font-bold">
-              Address:
-            </label>
-            <textarea
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={(e) =>
-                setFormData({ ...formData, address: e.target.value })
-              }
-              placeholder="Enter Restaurant Address"
-              className="p-2 rounded-md border-2 border-orange-500 w-full h-32"
-            />
-          </div>
+
           <div
             className="flex flex-col gap-2 items-start w-full"
             data-aos="fade-right"
@@ -271,9 +273,9 @@ const SignUp = (): React.JSX.Element => {
                 type="password"
                 id="restaurantPsw"
                 name="restaurantPsw"
-                value={formData.confirmpassowrd}
+                value={formData.confirmpassword}
                 onChange={(e) =>
-                  setFormData({ ...formData, confirmpassowrd: e.target.value })
+                  setFormData({ ...formData, confirmpassword: e.target.value })
                 }
                 placeholder="Enter Confirm Password"
                 className="p-2 rounded-md border-2 border-orange-500 w-full"

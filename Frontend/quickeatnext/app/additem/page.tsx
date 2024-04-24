@@ -5,7 +5,12 @@ import AddItem from "../Pages/AddItem";
 const CategoryData = () => {
   const StateContext = useContext(LoginContext);
 
-  return <>{StateContext.login && <AddItem />}</>;
+  return (
+    <>
+      {" "}
+      <AddItem />
+    </>
+  );
 };
 
 export default CategoryData;

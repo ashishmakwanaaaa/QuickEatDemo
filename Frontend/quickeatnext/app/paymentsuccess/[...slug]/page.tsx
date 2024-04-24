@@ -1,35 +1,27 @@
 "use client";
 
-import { Customer } from "@/app/Admin/CustomerList";
+import { Customer } from "@/app/UserPage/CustomerList";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import LoginContext from "@/app/LoginState/logincontext";
 
 const PaymentSuccess = ({ params }: { params: { slug: string } }) => {
-  console.log(params);
+  // console.log(params);
   const customerid = params.slug[0];
   const amount = params.slug[1];
   const router = useRouter();
-  const [customer, setCustomer] = useState<Customer>({});
+  const [customer, setCustomer] = useState<Customer>({} as Customer);
   const [paymentproceed, setPaymentProceed] = useState<boolean>(false);
   const customerID = customerid;
   const StateLogin = useContext(LoginContext);
-  console.log(StateLogin);
+  const userId = StateLogin.userid;
+  // console.log(StateLogin);
+  // console.log(customer.emailid);
 
-  async function FetchCustomer(customerId: string) {
-    const response = await fetch(
-      `http://localhost:5000/customer/getCustomer/${customerId}`
-    );
-    const data = await response.json();
-    console.log(data);
-    setCustomer(data.customer);
-  }
-  console.log(customer.emailid);
-  useEffect(() => {
-    FetchCustomer(customerID);
-  }, []);
   const CardData = {
+    userId: customer.userId,
+    customerID: customerID,
     email: customer?.emailid,
     cardHoldername: customer?.firstname + " " + customer?.lastname,
     billingaddress: {
@@ -40,53 +32,54 @@ const PaymentSuccess = ({ params }: { params: { slug: string } }) => {
     amount: amount,
     paymentMethod: "card",
   };
-  console.log(CardData);
-  useEffect(() => {
-    if (customer.emailid && !paymentproceed) {
-      const CardData = {
-        email: customer.emailid,
-        cardHoldername: customer.firstname + " " + customer.lastname,
-        billingaddress: {
-          city: customer.city,
-          pincode: customer.pincode,
-          state: customer.state,
-        },
-        amount: amount,
-        paymentMethod: "card",
-      };
-      console.log(CardData);
 
-      const storePayment = async () => {
-        try {
-          const response = await fetch(
-            "http://localhost:5000/payment/createPayment",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(CardData),
-            }
-          );
-          const data = await response.json();
-          console.log(response);
-          console.log(data);
-          if (response.ok) {
-            setPaymentProceed(true);
-            Swal.fire({
-              title: "Payment With Card Successfully",
-              icon: "success",
-              timer: 1000,
-            });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/customer/getCustomer/${customerID}`
+        );
+        const data = await response.json();
+        console.log(data);
+        setCustomer(data.customer);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const storePayment = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/payment/createPayment",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(CardData),
           }
-        } catch (error) {
-          console.log(error);
+        );
+        const data = await response.json();
+        console.log(response);
+        console.log(data);
+        if (response.ok) {
+          setPaymentProceed(true);
+          Swal.fire({
+            title: "Payment With Card Successfully",
+            icon: "success",
+            timer: 1000,
+          });
         }
-      };
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (customer.emailid && !paymentproceed) {
       storePayment();
+    } else if (!customer.emailid) {
+      fetchData();
     }
   }, [customer]);
-
   return (
     <>
       <div className="font-[Poppins] flex flex-col items-center justify-center h-screen drop-shadow-2xl">

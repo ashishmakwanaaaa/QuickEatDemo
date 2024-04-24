@@ -18,6 +18,7 @@ export class OrdersService {
     // console.log(orderdto);
     try {
       const {
+        userId,
         customerID,
         customerfirstname,
         customerlastname,
@@ -27,13 +28,14 @@ export class OrdersService {
         totalAmount,
       } = orderdto;
       let order = await this.ordermode.create({
+        userId,
         customerID,
         customerfirstname,
         customerlastname,
         customeremailid,
         customerphoneno,
         selectedItem,
-        totalAmount,
+        totalAmount: totalAmount.toFixed(2),
       });
       await order.save();
       return { message: 'Order Created', order };
@@ -43,24 +45,29 @@ export class OrdersService {
     }
   }
 
-  async getTop5Items() {
+  async getTop5Items(userid: string) {
     try {
+      console.log(userid);
       let top5items = await this.ordermode.aggregate([
+        {
+          $match: { $expr: { $eq: ['$userId', { $toObjectId: userid }] } },
+        },
         {
           $unwind: '$selectedItem',
         },
         {
           $group: {
             _id: '$selectedItem.itemcategory',
-            count: { $sum: '$selectedItem.quantity' },
+            count: { $sum: '$selectedItem.qty' },
           },
         },
         {
           $sort: {
             count: -1,
           },
-        }
+        },
       ]);
+      console.log('Top 5 Items: ', top5items);
       return { message: 'top 5 selling items', top5items };
     } catch (error) {
       console.log(error);
@@ -100,9 +107,9 @@ export class OrdersService {
     }
   }
 
-  async getAllOrders() {
+  async getAllOrders(userid: string) {
     try {
-      let orders = await this.ordermode.find();
+      let orders = await this.ordermode.find({ userId: userid });
       if (orders.length === 0) {
         throw new NotFoundException();
       }
@@ -115,6 +122,7 @@ export class OrdersService {
 
   async getSingleOrder(id: string) {
     try {
+      console.log(id);
       let order = await this.ordermode.findById(id);
       if (!order) {
         throw new NotFoundException();
@@ -135,6 +143,22 @@ export class OrdersService {
       return { message: 'Orders Find', order };
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async getAllOrder() {
+    try {
+      const orders = await this.ordermode
+        .find()
+        .populate('userId')
+        .sort({ Date: -1 });
+      if (orders.length === 0) {
+        throw new NotFoundException();
+      }
+      return { message: 'All Orders', orders };
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
     }
   }
 }

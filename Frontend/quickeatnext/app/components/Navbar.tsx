@@ -19,6 +19,9 @@ import "aos/dist/aos.css";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import LoginContext from "../LoginState/logincontext";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "@/lib/reducers/userSlice/UserReducers";
+import { user } from "@/lib/reducers";
 
 // import { Link, resolvePath, useNavigate } from "react-router-dom";
 
@@ -32,7 +35,12 @@ const Navbar = () => {
     });
   }, []);
   const StateContext = useContext(LoginContext);
+  const user = useSelector((state: user) => state.user.user);
+  console.log(user, StateContext);
+  const userId = user._id;
   const router = useRouter();
+  const dispatch = useDispatch();
+  // const user = useSelector((state) => state.user.user);
   const pathname = usePathname();
   console.log(pathname[1]);
   // const { login, restaurantname, ownername } = useContext(LoginContext);
@@ -48,7 +56,9 @@ const Navbar = () => {
 
   const [dropdown, setDropDown] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-
+  const role = localStorage.getItem("role") || "";
+  const login = localStorage.getItem("login");
+  console.log(role);
   const handleDropDown: () => void = () => {
     setDropDown(!dropdown);
   };
@@ -59,10 +69,28 @@ const Navbar = () => {
     setOpen(false);
   };
   //   const navigate = useNavigate();
-  const handleLogout = () => {
+  console.log("Before Logout", user);
+  const handleLogout = async (id: string) => {
     StateContext.login = false;
-    router.push("/login");
+    dispatch(logoutUser());
+
+    try {
+      const response = await fetch(`http://localhost:5000/auth/logout/${id}`);
+      const data = await response.json();
+      if (response.ok) {
+        Swal.fire({
+          title: "Logout Successfully",
+          icon: "success",
+          timer: 1000,
+        });
+
+        router.push("/login");
+      }
+    } catch (error) {
+      console.log("error");
+    }
   };
+  console.log("After Logout", user);
   const handleChangePassword = async (e: {
     preventDefault: () => void;
   }): Promise<void> => {
@@ -77,7 +105,7 @@ const Navbar = () => {
     try {
       e.preventDefault();
       const response = await fetch(
-        `http://localhost:5000/auth/updatepassword/${StateContext.ownername}`,
+        `http://localhost:5000/auth/updatepassword/${userId}`,
         {
           method: "POST",
           headers: {
@@ -107,10 +135,10 @@ const Navbar = () => {
 
   //   const LoginContext = useContext(LoginContext);
   return (
-    <nav className="bg-transparent sticky font-[Poppins] z-20 p-4  flex items-center justify-between  shadow-2xl rounded-full">
+    <nav className="dark:bg-gray-900 bg-transparent sticky font-[Poppins] z-20 p-4  flex items-center justify-between  shadow-2xl rounded-lg">
       {/* Left side */}
-      {!StateContext.login ? (
-        <div className="flex items-center " data-aos="fade-right">
+      {!user.isActive ? (
+        <div className="flex items-center cursor-pointer ">
           <span className="text-black  font-bold text-3xl">
             Quick
             <span className="text-orange-500 shadow-orange text-3xl">Eat</span>
@@ -125,22 +153,19 @@ const Navbar = () => {
           </span>
         </div>
       ) : (
-        <div className="flex items-center" data-aos="fade-right">
-          <span className="text-black  font-bold text-3xl">
+        <div className="flex items-center">
+          <span className="text-black dark:text-gray-300  font-bold text-3xl">
             Welcome ,
             <span className="text-orange-500 shadow-orange text-3xl">
-              {StateContext.restaurantname}
+              {!user.isAdmin ? user.restaurantname : user.ownername}
             </span>
           </span>
         </div>
       )}
 
       {/* Center links */}
-      {!StateContext.login && (
-        <div
-          className="flex items-center space-x-4 gap-5"
-          data-aos="fade-right"
-        >
+      {!user.isActive && (
+        <div className="flex items-center space-x-4 gap-5">
           <Link
             href="/"
             className="text-black  gap-2 text-xl relative group flex items-center"
@@ -206,8 +231,8 @@ const Navbar = () => {
       )}
 
       {/* Right side */}
-      {!StateContext.login ? (
-        <div className="flex items-center space-x-4" data-aos="fade-right">
+      {!user.isActive ? (
+        <div className="flex items-center space-x-4">
           <Link href="/login">
             <button className="bg-orange-500 border-2 border-orange-500 w-24  text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
               Login
@@ -220,30 +245,46 @@ const Navbar = () => {
           </Link>
         </div>
       ) : (
-        <div
-          className="flex flex-row items-center space-x-4 ml-[-70px]"
-          data-aos="fade-right"
-        >
-          <Link href="/addcustomer">
-            <button className="bg-orange-500 border-2 border-orange-500 w-44  text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
-              Add Customer +
-            </button>
-          </Link>
-          <Link href="/additem">
-            <button className="bg-orange-500 border-2 border-orange-500 text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
-              Add Food +
-            </button>
-          </Link>
-          <div className="w-12 h-12 rounded-full ml-[36] bg-black text-white">
-            <p
+        <div className="flex flex-row items-center space-x-4 ml-[-70px]">
+          {!user.isAdmin && (
+            <>
+              <Link href="/addcustomer">
+                <button className="bg-orange-500 border-2 border-orange-500 w-44  text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
+                  Add Customer +
+                </button>
+              </Link>
+              <Link href="/additem">
+                <button className="bg-orange-500 border-2 border-orange-500 text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
+                  Add Food +
+                </button>
+              </Link>
+            </>
+          )}
+          {user.image ? (
+            <div
+              className="w-12 h-12 rounded-full ml-[36] cursor-pointer "
               onClick={handleDropDown}
-              className="text-center text-2xl  mt-2 cursor-pointer"
             >
-              {StateContext.ownername[0]}
-            </p>
-          </div>
-          {dropdown && (
-            <div className="absolute top-full bg-white border border-gray-300 rounded-md shadow-lg mt-4 z-10 left-[220px] transform -translate-x-1/2">
+              <img
+                className="rounded-full"
+                src={`http://localhost:5000/uploads/` + user.image}
+                alt=""
+              />
+            </div>
+          ) : (
+            <div className="w-12 h-12 cursor-pointer rounded-full ml-[36] bg-black text-white">
+              <p
+                onClick={handleDropDown}
+                className="text-center text-2xl  mt-2 cursor-pointer"
+              >
+                {user.ownername[0]}
+              </p>
+            </div>
+          )}
+          {dropdown && user.image && (
+            <div
+              className={`absolute top-full bg-white border border-gray-300 left-[1250px] rounded-md shadow-lg mt-2 z-10  transform -translate-x-1/2`}
+            >
               <div className="w-72 h-full flex flex-col p-1 ">
                 <div className=" w-full h-12 ">
                   <img
@@ -252,12 +293,16 @@ const Navbar = () => {
                     alt=""
                   />
                 </div>
-                <div className="w-16 h-16 rounded-full ml-[36] mt-[-14px] bg-black m-auto text-white">
+                <div className="w-16 h-16 rounded-full ml-[36] mt-[-20px] m-auto text-white">
                   <p
                     onClick={handleDropDown}
-                    className=" text-center text-2xl  mt-4 cursor-pointer"
+                    className=" text-center text-2xl mt-1 cursor-pointer"
                   >
-                    {StateContext.ownername[0]}
+                    <img
+                      className="rounded-full"
+                      src={`http://localhost:5000/uploads/` + user.image}
+                      alt=""
+                    />
                   </p>
                 </div>
 
@@ -286,7 +331,7 @@ const Navbar = () => {
                 <hr className="border" />
                 <ul className="p-4">
                   <li
-                    onClick={handleLogout}
+                    onClick={() => handleLogout(user._id)}
                     className="px-4 py-2 flex items-center hover:rounded-md hover:ml-2 transform duration-300 cursor-pointer text-md hover:bg-black hover:text-white"
                   >
                     <LogoutIcon /> Logout

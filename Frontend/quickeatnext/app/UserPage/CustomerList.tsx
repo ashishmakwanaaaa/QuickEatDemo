@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import Button from "@mui/material/Button";
@@ -12,10 +12,20 @@ import Swal from "sweetalert2";
 import "aos/dist/aos.css";
 import AOS from "aos";
 import { useRouter } from "next/navigation";
-import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCellParams,
+  GridColDef,
+  GridRowSelectionApi,
+} from "@mui/x-data-grid";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCustomer } from "@/lib/actions/customerAction";
+import { customer, user } from "@/lib/reducers";
+import { useAppDispatch } from "@/lib/store";
 
 export interface Customer {
   _id?: string;
+  userId: string;
   firstname: string;
   lastname: string;
   emailid: string;
@@ -36,16 +46,22 @@ const CustomerList = () => {
     });
   }, []);
 
-  const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [query, setQuery] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
-  const [editCustomer, setEditCustomer] = useState<Customer>({});
+  const [editCustomer, setEditCustomer] = useState<Customer>({} as Customer);
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const getRandomColor = (): string => {
     return "#" + Math.floor(Math.random() * 16777215).toString(16);
   };
-
+  const user = useSelector((state: user) => state.user.user);
+  const userId = user._id;
+  const dispatch = useAppDispatch();
+  const customerData: Customer[] = useSelector(
+    (state: customer) => state.customer.customer
+  );
+  console.log(customerData);
   const handleClickOpen = async (id: string) => {
     console.log(id);
     try {
@@ -108,7 +124,7 @@ const CustomerList = () => {
             timer: 1000,
           });
         }
-        FetchData();
+        dispatch(fetchCustomer(userId));
       }
     } catch (error) {
       window.alert(error);
@@ -146,7 +162,7 @@ const CustomerList = () => {
             icon: "success",
             timer: 1000,
           });
-          FetchData();
+          dispatch(fetchCustomer(userId));
         } else {
           Swal.fire({
             title: "Delete Failed",
@@ -165,19 +181,13 @@ const CustomerList = () => {
       }
     }
   };
-
-  async function FetchData() {
-    const response = await fetch(
-      "http://localhost:5000/customer/getAllCustomer"
-    );
-    const data = await response.json();
-    console.log(data);
-    setCustomerData(data.customers);
-  }
   useEffect(() => {
-    FetchData();
-  }, []);
-  const columns = [
+    setLoading(true);
+    dispatch(fetchCustomer(userId));
+    setTimeout(() => setLoading(false), 2000);
+  }, [dispatch, userId]);
+
+  const columns: GridColDef[] = [
     {
       field: "id",
       // headerClassName: "bg-black text-white font-bold",
@@ -190,7 +200,7 @@ const CustomerList = () => {
         `text-black w-10 h-10 text-sm font-bold m-auto cursor-pointer p-2`,
       headerName: "Profile",
       width: 100,
-      renderCell: (params) => {
+      renderCell: (params: { row: { Profile: any; _id: any } }) => {
         const initials = params.row.Profile;
         const randomColor = getRandomColor();
         const profileStyle = {
@@ -198,14 +208,16 @@ const CustomerList = () => {
         };
 
         return (
-          <div className="flex items-start justify-start">
+          <div className="flex  items-start justify-start  m-auto w-[68rem]">
             <div
               className="rounded-full w-10 h-10 mt-1 flex items-center justify-center"
               style={profileStyle}
             >
               <span
                 onClick={() => {
-                  router.push(`customerprofile/${params.row._id}`);
+                  router.push(
+                    `/customerlist/customerprofile/${params.row._id}`
+                  );
                 }}
                 className="text-white font-bold text-sm"
               >
@@ -241,7 +253,7 @@ const CustomerList = () => {
       cellClassName:
         "text-orange-600 text-md font-bold m-auto cursor-pointer p-2",
       width: 90,
-      renderCell: (params: { row: object }) => (
+      renderCell: (params: GridCellParams) => (
         <button
           onClick={() => handleOrder(params.row._id)}
           className="text-orange-600 font-bold text-md"
@@ -255,7 +267,7 @@ const CustomerList = () => {
       headerName: "Edit",
       cellClassName: "text-green-800 font-bold text-center capitalize",
       width: 100,
-      renderCell: (params: GridRowSelectionApi) => (
+      renderCell: (params: GridCellParams) => (
         <Button
           onClick={() => handleClickOpen(params.row._id)}
           style={{ color: "green", padding: "2px", fontSize: "20px" }}
@@ -269,7 +281,7 @@ const CustomerList = () => {
       // headerClassName: "bg-black text-white font-bold",
       headerName: "Delete",
       width: 60,
-      renderCell: (params: GridRowSelectionApi) => (
+      renderCell: (params: GridCellParams) => (
         <Button
           onClick={() => handelDeleteCustomer(params.row._id)}
           style={{ color: "red", padding: "2px", fontSize: "20px" }}
@@ -279,55 +291,86 @@ const CustomerList = () => {
       ),
     },
   ];
-  const rows = customerData
-    .filter((customer) => customer.firstname.toLowerCase().includes(query))
-    .map((customer, index) => ({
-      _id: customer._id,
-      id: index + 1,
-      Profile:
-        customer.firstname[0].toUpperCase() +
-        "" +
-        customer.lastname[0].toUpperCase(),
-      firstname: customer.firstname,
-      lastname: customer.lastname,
-      contact: customer.phoneno,
-      takeorder: "Order",
-      edit: "Edit",
-      delete: "Delete",
-    }));
+  const rows =
+    customerData && customerData.length > 0
+      ? customerData
+          .filter(
+            (customer) =>
+              customer.firstname.toLowerCase().includes(query) ||
+              customer.lastname.toLowerCase().includes(query) ||
+              customer.phoneno
+                .toString()
+                .toLowerCase()
+                .includes(query)
+          )
+          .map((customer, index) => ({
+            _id: customer._id,
+            id: index + 1,
+            Profile:
+              customer.firstname[0].toUpperCase() +
+              "" +
+              customer.lastname[0].toUpperCase(),
+            firstname: customer.firstname,
+            lastname: customer.lastname,
+            contact: customer.phoneno,
+            takeorder: "Order",
+            edit: "Edit",
+            delete: "Delete",
+          }))
+      : [];
   console.log(customerData);
 
   return (
     <div className="font-[Poppins] flex flex-col mt-4 gap-3 justify-center items-center">
       <div className="flex justify-between items-center gap-[400px]">
-        <h1 className="font-bold text-start">Customer Details</h1>
-        <input
-          type="text"
-          name=""
-          id=""
-          value={query}
-          data-aos="fade-right"
-          onChange={(e) => setQuery(e.target.value)}
-          className="border text-sm border-orange-500 rounded-lg p-2"
-          placeholder="Search Customer Here"
-        />
+        {loading ? (
+          <div className="animate-pulse rounded-xl bg-gray-300 w-[250px] h-[50px]"></div>
+        ) : (
+          <h1 className="font-bold text-start">Customer Details</h1>
+        )}
+
+        {loading ? (
+          <div className="animate-pulse rounded-lg bg-gray-300 w-[250px] h-[50px]"></div>
+        ) : (
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="border text-sm border-orange-500 rounded-lg p-2"
+            placeholder="Search Customer Here"
+          />
+        )}
       </div>
-      <div className="w-[900px] h-[600px]" data-aos="fade-right">
-        <DataGrid
-          style={{ fontFamily: "Poppins" }}
-          rows={rows}
-          columns={columns}
-          pagination
-          pageSizeOptions={[
-            10,
-            20,
-            30,
-            40,
-            100,
-            { value: 1000, label: "1,000" },
-          ]}
-        />
-      </div>
+      {loading ? (
+        <div className="animate-pulse rounded-xl w-[900px] h-[600px] bg-gray-300"></div>
+      ) : (
+        <div className="w-[900px] h-[600px]">
+          {customerData && customerData.length > 0 ? (
+            <DataGrid
+              style={{ fontFamily: "Poppins" }}
+              rows={rows}
+              columns={columns}
+              pagination
+              pageSizeOptions={[
+                10,
+                20,
+                30,
+                40,
+                100,
+                { value: 1000, label: "1,000" },
+              ]}
+            />
+          ) : (
+            <>
+              <div className="m-auto flex flex-col w-1/2 h-1/2 ">
+                <h1 className="text-center mt-48 text-2xl text-bold text-orange-600">
+                  No Data
+                </h1>
+              </div>
+            </>
+          )}
+        </div>
+      )}
       <Dialog
         style={{ borderRadius: "20px" }}
         open={open}

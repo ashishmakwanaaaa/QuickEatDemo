@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Badge from "@mui/material/Badge";
 import "aos/dist/aos.css";
@@ -13,12 +13,19 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import Swal from "sweetalert2";
-import { MdDelete } from "react-icons/md";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import TextField from "@mui/material/TextField";
 import { useRouter } from "next/navigation";
 import { TransitionProps } from "@mui/material/transitions";
-import { Customer } from "@/app/Admin/CustomerList";
-import { ItemType } from "@/app/Admin/ItemList";
+import { Customer } from "@/app/UserPage/CustomerList";
+import { ItemType } from "@/app/UserPage/ItemList";
+import StateLogin from "../LoginState/logincontext";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchItems } from "@/lib/actions/itemAction";
+import { fetchCustomerById } from "@/lib/actions/customerAction";
+import { customer, item, user } from "@/lib/reducers";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -28,16 +35,12 @@ const Transition = React.forwardRef(function Transition(
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-interface SelectedItemType {
-  filter(arg0: (_: any, i: any) => boolean): unknown;
-  reduce(
-    arg0: (total: any, item: { totalPrice: any }) => number,
-    arg1: number
-  ): unknown;
+interface SelectedItemType extends ItemType {
   _id: string;
   itemname: string;
   itemdescription: string;
   price: number;
+  qty: number;
   quantity: number;
   totalPrice: number;
   upToOffer: number;
@@ -46,17 +49,19 @@ interface SelectedItemType {
 
 export interface OrderDataType {
   _id: any;
+  userId: string;
   customerID: string | undefined;
   customerfirstname: string;
   customerlastname: string;
   customeremailid: string;
   customerphoneno: number;
   selectedItem: SelectedItemType[];
-  totalAmount: number | unknown;
-  Date: Date;
+  totalAmount: number | unknown | any;
+  Date: string | Date | any;
 }
 
 const Orders = ({ id }: { id: string }) => {
+  console.log(id);
   useEffect(() => {
     AOS.init({
       offset: 200,
@@ -65,15 +70,21 @@ const Orders = ({ id }: { id: string }) => {
       once: true,
     });
   }, []);
-  const router = useRouter();
-  const customerID = id;
-  //   console.log(customerID);
-  const [customer, setCustomer] = useState<Customer>({});
-  const [items, setItems] = useState<ItemType[]>([]);
+
   const [selectedItem, setSelectedItem] = useState<SelectedItemType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [open2, setOpen2] = useState<boolean>(false);
-
+  const [loading, setLoading] = useState<boolean>(false);
+  const StateContext = useContext(StateLogin);
+  const dispatch = useDispatch();
+  const items: ItemType[] = useSelector((state: item) => state.item.items);
+  const user = useSelector((state: user) => state.user.user);
+  const userId = user._id;
+  const router = useRouter();
+  const customer: Customer = useSelector(
+    (state: customer) => state.customer.specificcustomer
+  );
+  console.log(customer);
   const TotalAmount = selectedItem.reduce(
     (total: any, item: { totalPrice: any }) =>
       Number(total) + Number(item.totalPrice),
@@ -81,18 +92,11 @@ const Orders = ({ id }: { id: string }) => {
   );
 
   useEffect(() => {
-    async function FetchCustomer(customerId: string) {
-      const response = await fetch(
-        `http://localhost:5000/customer/getCustomer/${customerId}`
-      );
-      const data = await response.json();
-      console.log(data);
-      setCustomer(data.customer);
-    }
-    FetchCustomer(customerID);
-  }, []);
+    dispatch(fetchCustomerById(id) as any);
+  }, [dispatch, userId]);
 
   const OrderData: OrderDataType = {
+    userId,
     customerID: customer._id,
     customerfirstname: customer.firstname,
     customerlastname: customer.lastname,
@@ -101,9 +105,12 @@ const Orders = ({ id }: { id: string }) => {
     selectedItem: selectedItem,
     totalAmount: TotalAmount,
     Date: new Date(),
+    _id: undefined,
   };
 
   const CashData = {
+    userId,
+    customerID: OrderData.customerID,
     email: OrderData.customeremailid,
     cardHoldername:
       OrderData.customerfirstname + " " + OrderData.customerlastname,
@@ -117,45 +124,37 @@ const Orders = ({ id }: { id: string }) => {
     paymentMethod: "cash",
   };
 
-  async function FetchItems() {
-    const response = await fetch("http://localhost:5000/items/getAllItems");
-    const data = await response.json();
-    console.log(data);
-    setItems(data.items);
-  }
+  console.log(typeof customer.userId);
 
   useEffect(() => {
-    FetchItems();
-  }, []);
+    setLoading(true);
+    dispatch(fetchItems(userId) as any);
+    setTimeout(() => setLoading(false), 2000);
+  }, [dispatch, userId]);
 
-  const handleRemoveItem = async (
-    item: ItemType,
-    index: string | number | any
-  ) => {
-    setOpen(false);
-    const confirm = await Swal.fire({
-      title: "Are You Sure You Want to Delete This Item From Your Cart?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    });
+  const handleRemoveItem = async (item: SelectedItemType) => {
+    try {
+      let updatedItems: SelectedItemType[] = [];
+      if (item.qty > 1) {
+        updatedItems = selectedItem.map((selected) => {
+          if (selected.itemname === item.itemname) {
+            const updatedQuantity = selected.qty - 1;
+            const updatedPrice =
+              selected.price - (selected.upToOffer * selected.price) / 100;
+            const updatedTotalPrice = updatedQuantity * updatedPrice;
+            return {
+              ...selected,
+              qty: updatedQuantity,
+              quantity: item.quantity + 1,
+              totalPrice: updatedTotalPrice,
+            };
+          }
+          return selected;
+        });
 
-    if (confirm.isConfirmed) {
-      const removeQuantity = selectedItem[index].quantity;
+        setSelectedItem(updatedItems);
 
-      const updateItems = items.map((original) =>
-        original.itemname === item.itemname
-          ? { ...original, quantity: original.quantity + removeQuantity }
-          : original
-      );
-      const updateSelectedItem = selectedItem.filter((_, i) => i !== index);
-      setItems(updateItems);
-      setSelectedItem(updateSelectedItem);
-
-      try {
+        // Call your API to decrease the actual quantity of the item by 1 on the backend
         const response = await fetch(
           "http://localhost:5000/items/updateQuantity",
           {
@@ -164,64 +163,81 @@ const Orders = ({ id }: { id: string }) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              quantity: updateItems.find((i) => i.itemname === item.itemname)
-                .quantity,
-              itemname: item.itemname,
+              quantity: updatedItems.map((item) => item.quantity),
+              itemname: updatedItems.map((item) => item.itemname),
             }),
           }
         );
+
         const data = await response.json();
-        if (response.ok) {
-          Swal.fire({
-            title: "Delete Successfully Item From Cart",
-            icon: "success",
-            timer: 1000,
-          });
-        } else {
-          Swal.fire({
-            title: "Delete Failed",
-            text:
-              data.message || "Failed to delete Item. Please try again later.",
-            icon: "error",
-          });
-        }
         console.log(data);
-      } catch (error) {
-        console.log(error.message);
+        dispatch(fetchItems(userId) as any);
+      } else {
+        // If item quantity is 1, remove the item from the cart
+        updatedItems = selectedItem.filter(
+          (selected) => selected._id !== item._id
+        );
+        // Call your API to increase the actual quantity of the item by 1 on the backend
+        setSelectedItem(updatedItems);
+        const response = await fetch(
+          "http://localhost:5000/items/updateQuantity",
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              quantity: [item.quantity + 1],
+              itemname: [item.itemname],
+            }),
+            credentials: "include",
+          }
+        );
+
+        const data = await response.json();
+        console.log(data);
+        dispatch(fetchItems(userId) as any);
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const handleAddItem = async (item: ItemType) => {
-    item.quantity = item.quantity - 1;
     const existingItem = selectedItem.find(
       (selected) => selected.itemname === item.itemname
     );
+    let updatedItems: SelectedItemType[] = [];
     if (existingItem) {
-      const updateItems: SelectedItemType[] = selectedItem.map((selected) => {
+      updatedItems = selectedItem.map((selected) => {
         if (selected.itemname === item.itemname) {
-          const updateQuntity: number = selected.quantity + 1;
-          const updatedPrice: number =
-            item.price - (item.upToOffer * item.price) / 100;
-          const updateTotalPrice: number = updateQuntity * updatedPrice;
+          const updatedQuantity = selected.qty + 1;
+          const updatedPrice = item.price - (item.upToOffer * item.price) / 100;
+          const updatedTotalPrice = updatedQuantity * updatedPrice;
           return {
             ...selected,
-            quantity: updateQuntity,
-            totalPrice: updateTotalPrice,
+            qty: updatedQuantity,
+            quantity: item.quantity - 1,
+            totalPrice: updatedTotalPrice,
           };
         }
         return selected;
       });
-      setSelectedItem(updateItems);
+      setSelectedItem(updatedItems);
     } else {
-      const updatedPrice: number =
-        item.price - (item.upToOffer * item.price) / 100;
-      setSelectedItem([
+      const updatedPrice = item.price - (item.upToOffer * item.price) / 100;
+      updatedItems = [
         ...selectedItem,
-        { ...item, quantity: 1, totalPrice: updatedPrice },
-      ]);
+        {
+          ...item,
+          qty: 1,
+          quantity: item.quantity - 1,
+          totalPrice: updatedPrice,
+        },
+      ];
+      setSelectedItem(updatedItems);
     }
-
+    console.log(updatedItems);
     try {
       const response = await fetch(
         "http://localhost:5000/items/updateQuantity",
@@ -231,17 +247,22 @@ const Orders = ({ id }: { id: string }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            quantity: item.quantity,
-            itemname: item.itemname,
+            quantity: updatedItems.map((item) => item.quantity),
+            itemname: updatedItems.map((item) => item.itemname),
           }),
+          credentials: "include",
         }
       );
+
       const data = await response.json();
       console.log(data);
+      dispatch(fetchItems(userId) as any);
+      console.log(data);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   };
+  console.log(selectedItem);
   const CreateOrder = async () => {
     try {
       console.log(OrderData);
@@ -377,88 +398,123 @@ const Orders = ({ id }: { id: string }) => {
     }
   };
 
-  console.log(selectedItem);
-
   return (
     <>
       <div className="font-[Poppins]  p-2 flex flex-col gap-4 w-full h-full">
-        <div className="flex flex-row gap-3 items-center justify-between rounded-xl p-4  border-b-2 border-gray-500">
-          <p className="text-lg  text-black " data-aos="fade-down">
-            <span className="text-black font-bold ">Customer Name</span>:{" "}
-            {customer.firstname} {customer.lastname}
-          </p>
-          <p data-aos="fade-down">
-            <Badge badgeContent={selectedItem.length} color="primary">
-              View Cart{" "}
-              <ShoppingCartIcon
-                className="cursor-pointer text-orange-500"
-                onClick={() => setOpen(true)}
-              />
-            </Badge>
-          </p>
-        </div>
-        <div className="grid grid-cols-5 gap-4">
-          {items.map((item, index) => (
-            <div
-              key={index}
-              className="relative flex flex-col gap-2 items-center drop-shadow-2xl rounded-2xl p-2 h-full"
-              data-aos="fade-right"
-              style={{ boxShadow: "0 0 0.5em gray" }}
-            >
-              <div
-                className="rounded-2xl  overflow-hidden drop-shadow-2xl"
-                style={{ width: "100%", height: "150px", overflow: "hidden" }}
-              >
-                <img
-                  src={item.image}
-                  className="w-full h-[150px] rounded-lg cursor-pointer object-cover"
-                />
-                <div className="absolute bottom-0 left-0 w-full">
-                  <div className="relative z-20 p-2">
-                    <p className="text-white text-lg font-bold ">Up To</p>
-                    <p className="text-orange-500 text-lg font-bold  ">
-                      {item.upToOffer}% Off
-                    </p>
+        <div className="flex flex-row gap-3 items-center justify-between rounded-xl p-4 border-b-2 border-gray-500">
+          {loading ? (
+            <>
+              <div className="animate-pulse bg-gray-300 rounded-md h-6 w-[900px]"></div>
+              <div className="animate-pulse flex items-center gap-2">
+                <div className="bg-gray-300 h-6 w-10 rounded-full"></div>
+                <div className="bg-gray-300 h-6 w-10 rounded-lg"></div>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="text-lg text-black">
+                <span className="text-black font-bold flex items-center gap-3">
+                  <div
+                    onClick={() => router.push("/customerlist")}
+                    className=" bg-stone-800 rounded-full w-7 h-7 flex items-center p-2 cursor-pointer justify-center text-white"
+                  >
+                    <KeyboardBackspaceIcon />
                   </div>
-                  <div className="absolute bottom-0 left-0 w-full h-28 bg-gradient-to-t from-black"></div>
+                  Customer Name :{customer.firstname} {customer.lastname}
+                </span>
+              </p>
+              <p>
+                <Badge badgeContent={selectedItem.length} color="primary">
+                  View Cart
+                  <ShoppingCartIcon
+                    className="cursor-pointer text-orange-500"
+                    onClick={() => setOpen(true)}
+                  />
+                </Badge>
+              </p>
+            </>
+          )}
+        </div>
+
+        <div className="grid grid-cols-5 gap-4">
+          {loading
+            ? Array.from({ length: 5 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="animate-pulse flex flex-col items-center rounded-2xl p-2 h-full"
+                >
+                  <div className="bg-gray-300 rounded-2xl h-40 w-full"></div>
+                  <div className="bg-gray-300 h-6 w-3/4 rounded-lg mt-2"></div>
+                  <div className="bg-gray-300 h-6 w-3/4 rounded-lg mt-2"></div>
+                  <div className="bg-gray-300 h-6 w-3/4 rounded-lg mt-2"></div>
                 </div>
-              </div>
-              <button
-                disabled={item.quantity === 0}
-                className={`bg-white text-orange-500  p-2 w-[110px] mx-auto text-sm z-10 mt-[-20px] mb-2 font-bold 
-    ${item.quantity === 0 ? "opacity-50 cursor-not-allowed" : "rounded-md"}`}
-                onClick={() => handleAddItem(item)}
-              >
-                Add To Cart
-              </button>
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-row justify-start items-start gap-2">
-                  <span className="text-sm  font-bold  text-orange-500">
-                    Name:
-                  </span>
-                  <span className="font-bold  text-black text-sm">
-                    {item.itemname}
-                  </span>
+              ))
+            : items &&
+              items.length > 0 &&
+              items.map((item, index) => (
+                <div
+                  key={index}
+                  className="relative flex flex-col gap-2 items-center drop-shadow-2xl rounded-2xl p-2 h-full"
+                  style={{ boxShadow: "0 0 0.5em gray" }}
+                >
+                  <div
+                    className="rounded-2xl  overflow-hidden drop-shadow-2xl"
+                    style={{
+                      width: "100%",
+                      height: "150px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <img
+                      src={item.image}
+                      className="w-full h-[150px] rounded-lg cursor-pointer object-cover"
+                    />
+                    <div className="absolute bottom-0 left-0 w-full">
+                      <div className="relative z-20 p-2">
+                        <p className="text-white text-lg font-bold ">Up To</p>
+                        <p className="text-orange-500 text-lg font-bold  ">
+                          {item.upToOffer}% Off
+                        </p>
+                      </div>
+                      <div className="absolute bottom-0 left-0 w-full h-28 bg-gradient-to-t from-black"></div>
+                    </div>
+                  </div>
+                  <button
+                    disabled={item.quantity === 0}
+                    className={`bg-white text-orange-500  p-2 w-[110px] mx-auto text-sm z-10 mt-[-20px] mb-2 font-bold 
+      ${item.quantity === 0 ? "opacity-50 cursor-not-allowed" : "rounded-md"}`}
+                    onClick={() => handleAddItem(item)}
+                  >
+                    Add To Cart
+                  </button>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-row justify-start items-start gap-2">
+                      <span className="text-sm  font-bold  text-orange-500">
+                        Name:
+                      </span>
+                      <span className="font-bold  text-black text-sm">
+                        {item.itemname}
+                      </span>
+                    </div>
+                    <div className="flex flex-row justify-start items-start gap-2">
+                      <span className="text-sm font-bold  text-orange-500">
+                        Quantity:
+                      </span>
+                      <span className="font-bold  text-black text-sm">
+                        {item.quantity}
+                      </span>
+                    </div>
+                    <div className="flex flex-row justify-start items-start gap-8">
+                      <span className="text-sm font-bold  text-orange-500">
+                        Price:
+                      </span>
+                      <span className="font-bold  text-black text-sm">
+                        &#8377;{item.price}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-row justify-start items-start gap-2">
-                  <span className="text-sm font-bold  text-orange-500">
-                    Quantity:
-                  </span>
-                  <span className="font-bold  text-black text-sm">
-                    {item.quantity}
-                  </span>
-                </div>
-                <div className="flex flex-row justify-start items-start gap-8">
-                  <span className="text-sm font-bold  text-orange-500">
-                    Price:
-                  </span>
-                  <span className="font-bold  text-black text-sm">
-                    &#8377;{item.price}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
+              ))}
         </div>
       </div>
       <Dialog
@@ -505,30 +561,37 @@ const Orders = ({ id }: { id: string }) => {
                               {selected.itemname}
                             </span>
                           </div>
-                          <div className="flex items-center gap-4">
-                            <span className="text-sm font-bold  text-orange-500 w-36">
-                              Quantity:
+                          <div className="flex items-center ">
+                            <span className="text-sm font-bold text-orange-500 w-20">
+                              Qty:
                             </span>
-                            <span className="font-bold  text-black text-sm w-full">
-                              {selected.quantity}
-                            </span>
+                            <div className="flex flex-row items-center gap-2 justify-start">
+                              <button
+                                onClick={() => handleAddItem(selected)}
+                                className="border border-orange-600 text-orange-600 rounded-md hover:bg-orange-600 hover:text-white transform duration-300"
+                              >
+                                <AddIcon />
+                              </button>
+                              <span className="font-bold text-sm w-full bg-orange-600 text-white px-2 py-1 rounded-md">
+                                {selected.qty}
+                              </span>
+                              <button
+                                onClick={() => handleRemoveItem(selected)}
+                                className=" border border-orange-600 text-orange-600 rounded-md hover:bg-orange-600 hover:text-white transform duration-300"
+                              >
+                                <RemoveIcon />
+                              </button>
+                            </div>
                           </div>
+
                           <div className="flex items-center gap-4">
                             <span className="text-sm font-bold  text-orange-500 w-36">
                               Price:
                             </span>
                             <span className="font-bold  text-black text-sm w-full">
-                              &#8377;{selected.totalPrice}
+                              &#8377;{selected.totalPrice.toFixed(2)}
                             </span>
                           </div>
-                        </div>
-                        <div className="flex justify-center-items-center">
-                          <p
-                            className="text-3xl cursor-pointer text-red-800 inline-block align-middle"
-                            onClick={() => handleRemoveItem(selected, index)}
-                          >
-                            <MdDelete />
-                          </p>
                         </div>
                       </div>
                     </div>
@@ -553,7 +616,7 @@ const Orders = ({ id }: { id: string }) => {
                   Total Amount:
                 </span>
                 <span className="font-bold  text-black text-2xl w-full">
-                  &#8377;{TotalAmount}
+                  &#8377;{TotalAmount.toFixed(2)}
                 </span>
               </div>
             )}

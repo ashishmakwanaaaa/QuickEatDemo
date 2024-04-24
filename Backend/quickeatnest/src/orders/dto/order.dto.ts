@@ -2,6 +2,9 @@ import { IsNotEmpty } from 'class-validator';
 
 export class OrderDto {
   @IsNotEmpty()
+  userId: string;
+
+  @IsNotEmpty()
   customerID: string;
 
   @IsNotEmpty()
@@ -39,4 +42,5 @@ export class SelectedDto {
   price: number;
   upToOffer: number;
   quantity: any;
+  qty:number;
 }
