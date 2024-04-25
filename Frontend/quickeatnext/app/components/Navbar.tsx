@@ -35,6 +35,7 @@ const Navbar = () => {
     });
   }, []);
   const StateContext = useContext(LoginContext);
+  const [openmenu, setOpenMenu] = useState<boolean>(false);
   const user = useSelector((state: user) => state.user.user);
   console.log(user, StateContext);
   const userId = user._id;
@@ -75,15 +76,17 @@ const Navbar = () => {
     dispatch(logoutUser());
 
     try {
-      const response = await fetch(`http://localhost:5000/auth/logout/${id}`);
+      const response = await fetch(`http://localhost:5000/auth/logout/${id}`, {
+        credentials: "include",
+      });
       const data = await response.json();
       if (response.ok) {
+        console.log(response);
         Swal.fire({
           title: "Logout Successfully",
           icon: "success",
           timer: 1000,
         });
-
         router.push("/login");
       }
     } catch (error) {
@@ -138,20 +141,33 @@ const Navbar = () => {
     <nav className="dark:bg-gray-900 bg-transparent sticky font-[Poppins] z-20 p-4  flex items-center justify-between  shadow-2xl rounded-lg">
       {/* Left side */}
       {!user.isActive ? (
-        <div className="flex items-center cursor-pointer ">
-          <span className="text-black  font-bold text-3xl">
-            Quick
-            <span className="text-orange-500 shadow-orange text-3xl">Eat</span>
-          </span>
-          <span>
-            {" "}
-            <img
-              src="https://cdn.vectorstock.com/i/1000x1000/26/10/food-fork-spoon-fruit-orange-logo-vector-24042610.webp"
-              alt="QuickEat Logo"
-              className="h-6 w-12 rounded-full object-cover"
-            />
-          </span>
-        </div>
+        <>
+          <div className="flex items-center cursor-pointer ">
+            <span className="text-black  font-bold text-3xl">
+              Quick
+              <span className="text-orange-500 shadow-orange text-3xl">
+                Eat
+              </span>
+            </span>
+            <span>
+              {" "}
+              <img
+                src="https://cdn.vectorstock.com/i/1000x1000/26/10/food-fork-spoon-fruit-orange-logo-vector-24042610.webp"
+                alt="QuickEat Logo"
+                className="h-6 w-12 rounded-full object-cover"
+              />
+            </span>
+          </div>
+          <button
+            className="text-3xl text-orange-500 md:hidden"
+            onClick={() => {
+              console.log("Ashish");
+              setOpenMenu(!openmenu);
+            }}
+          >
+            {openmenu ? "✖" : "☰"}
+          </button>
+        </>
       ) : (
         <div className="flex items-center">
           <span className="text-black dark:text-gray-300  font-bold text-3xl">
@@ -165,7 +181,11 @@ const Navbar = () => {
 
       {/* Center links */}
       {!user.isActive && (
-        <div className="flex items-center space-x-4 gap-5">
+        <div
+          className={`md:flex items-center space-x-4 ${
+            openmenu ? "flex" : "hidden"
+          } flex-col md:flex-row absolute md:relative top-full left-0 right-0 bg-white gap-5 md:bg-transparent p-4 md:p-0 rounded-lg shadow-lg md:shadow-none`}
+        >
           <Link
             href="/"
             className="text-black  gap-2 text-xl relative group flex items-center"

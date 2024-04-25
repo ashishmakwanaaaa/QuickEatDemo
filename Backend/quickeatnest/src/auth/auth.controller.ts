@@ -80,10 +80,7 @@ export class AuthController {
   }
 
   @Post('/updatepassword/:id')
-  changepsw(
-    @Param('id') id: string,
-    @Body() chnagepswdto: ChangePassworDto,
-  ) {
+  changepsw(@Param('id') id: string, @Body() chnagepswdto: ChangePassworDto) {
     return this.userservice.changepsw(id, chnagepswdto);
   }
 
@@ -115,9 +112,9 @@ export class AuthController {
   }
 
   @Get('/logout/:id')
-  logout(@Param('id') id: string) {
+  logout(@Param('id') id: string, @Res() res: Response) {
+    res.clearCookie('token').send({ status: 'ok' });
+    console.log(res);
     return this.userservice.logout(id);
   }
-
-
 }

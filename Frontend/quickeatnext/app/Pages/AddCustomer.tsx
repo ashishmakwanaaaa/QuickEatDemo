@@ -71,26 +71,32 @@ const AddCustomer = () => {
   };
 
   return (
-    <div className="font-[Poppins] relative bg-[url('https://www.shutterstock.com/image-vector/set-healthy-unhealthy-products-fast-600nw-2253591061.jpg')] bg-cover bg-center bg-no-repeat backdrop-blur-lg bg-opacity-100 p-8 rounded-lg h-screen flex items-center justify-center">
+    <div className="font-[Poppins] relative bg-[url('https://www.shutterstock.com/image-vector/set-healthy-unhealthy-products-fast-600nw-2253591061.jpg')] bg-cover bg-center bg-no-repeat backdrop-blur-lg bg-opacity-100 p-8 rounded-lg min-h-screen flex items-center justify-center">
       <div className="absolute inset-0 bg-black opacity-40"></div>
       <div
-        className="absolute inset-0 flex flex-col gap-4 bg-gray-50 w-[900px] h-[620px] mx-auto p-5 mt-12 rounded-xl"
-        style={{ boxShadow: "0 0 2em orange" }}
+        className="absolute inset-0 flex flex-col h-[620px] gap-4 bg-gray-50 mx-auto p-5 mt-12 rounded-xl"
+        style={{
+          boxShadow: "0 0 2em orange",
+          width: "90%",
+          maxWidth: "900px",
+          // height: "auto",
+          // maxHeight: "620px",
+        }}
       >
         <div className="flex justify-between">
           <div
             onClick={() => router.push("/customerlist")}
-            className=" bg-orange-600 rounded-full w-8 h-8 flex items-center p-2 cursor-pointer justify-center text-white"
+            className="bg-orange-600 rounded-full w-8 h-8 flex items-center justify-center text-white cursor-pointer"
           >
             <KeyboardBackspaceIcon />
           </div>
-          <h3 className="text-xl font-bold  text-center text-orange-500 mr-[350px]">
+          <h3 className="text-xl font-bold text-center text-orange-500 flex-1">
             ADD CUSTOMER
           </h3>
         </div>
-        <div className="flex flex-col md:flex-row justify-start gap-5">
-          <div className="flex flex-col gap-2 items-start  w-full md:w-[55%]">
-            <label htmlFor="restaurantName" className="font-bold ">
+        <div className="flex flex-col md:flex-row justify-between gap-5">
+          <div className="flex flex-col gap-2 w-full">
+            <label htmlFor="customerName" className="font-bold ">
               Customer's Firstname
             </label>
             <input
@@ -105,8 +111,8 @@ const AddCustomer = () => {
               className="p-2 rounded-md border-2 border-orange-500 w-full"
             />
           </div>
-          <div className="flex flex-col gap-2 justify-start w-full md:w-[55%]">
-            <label htmlFor="restaurantName" className="font-bold  ">
+          <div className="flex flex-col gap-2 w-full">
+            <label htmlFor="customername" className="font-bold">
               Customer's Lastname
             </label>
             <input
@@ -122,42 +128,41 @@ const AddCustomer = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-2 items-start w-full">
-          <label htmlFor="address" className="font-bold ">
+        <div className="flex flex-col gap-2 w-full">
+          <label htmlFor="address" className="font-bold">
             Email ID:
           </label>
-          <div className="flex flex-row w-full">
+          <div className="flex w-full">
             <div className="bg-orange-600 p-2 rounded-bl-md rounded-tl-md text-white flex items-center justify-center">
-              <EmailIcon style={{ color: "white" }} />
+              <EmailIcon />
             </div>
             <input
+              type="email"
               id="address"
               name="address"
-              type="email"
               value={CustomerData.emailid}
               onChange={(e) => {
-                const emaill = e.target.value;
-                if (!emaill.includes("@")) {
+                const email = e.target.value;
+                if (!email.includes("@")) {
                   setEmail(true);
                 } else {
                   setEmail(false);
                 }
-                setCustomerData({ ...CustomerData, emailid: e.target.value });
+                setCustomerData({ ...CustomerData, emailid: email });
               }}
               placeholder="Enter Email Address"
               className="p-2 rounded-tr-md rounded-br-md border-2 border-orange-500 w-full"
             />
           </div>
           {email && (
-            <p className="text-red-600 text-sm font-bold ">
-              Please enter valid email address
+            <p className="text-red-600 text-sm font-bold">
+              Please enter a valid email address
             </p>
           )}
         </div>
-
-        <div className="flex flex-row md:flex-row justify-start gap-5">
-          <div className="flex flex-col gap-2 items-start w-full">
-            <label htmlFor="address" className="font-bold ">
+        <div className="flex flex-col md:flex-row justify-between gap-5">
+          <div className="flex flex-col gap-2 w-full">
+            <label htmlFor="address" className="font-bold">
               Address:
             </label>
             <textarea
@@ -171,48 +176,43 @@ const AddCustomer = () => {
               className="p-2 rounded-md border-2 border-orange-500 w-full h-32"
             />
           </div>
-          <div className="flex flex-col justify-start gap-2 ">
-            <div className="flex flex-col gap-2 items-start   w-full md:w-[55%]">
-              <label htmlFor="restaurantName" className="font-bold ">
-                {" "}
-                Contact No:
-              </label>
-              <input
-                type="text"
-                id="customerName"
-                name="customerName"
-                value={CustomerData.phoneno}
-                onChange={(e) =>
-                  setCustomerData({
-                    ...CustomerData,
-                    phoneno: parseInt(e.target.value),
-                  })
-                }
-                placeholder="Enter Customer Contact No"
-                className="p-2 rounded-md border-2 border-orange-500 w-[420px]"
-              />
-            </div>
-            <div className="flex flex-col gap-2 items-start w-full md:w-[55%]">
-              <label htmlFor="restaurantName" className="font-bold ">
-                State:
-              </label>
-              <input
-                type="text"
-                id="customername"
-                name="customername"
-                value={CustomerData.state}
-                onChange={(e) =>
-                  setCustomerData({ ...CustomerData, state: e.target.value })
-                }
-                placeholder="Enter Customer State"
-                className="p-2 rounded-md border-2 border-orange-500 w-[420px]"
-              />
-            </div>
+          <div className="flex flex-col gap-2 w-full">
+            <label htmlFor="customerName" className="font-bold">
+              Contact No:
+            </label>
+            <input
+              type="text"
+              id="customerName"
+              name="customerName"
+              value={CustomerData.phoneno}
+              onChange={(e) =>
+                setCustomerData({
+                  ...CustomerData,
+                  phoneno: parseInt(e.target.value),
+                })
+              }
+              placeholder="Enter Customer Contact No"
+              className="p-2 rounded-md border-2 border-orange-500 w-full"
+            />
+            <label htmlFor="restaurantName" className="font-bold ">
+              State:
+            </label>
+            <input
+              type="text"
+              id="customername"
+              name="customername"
+              value={CustomerData.state}
+              onChange={(e) =>
+                setCustomerData({ ...CustomerData, state: e.target.value })
+              }
+              placeholder="Enter Customer State"
+              className="p-2 rounded-md border-2 border-orange-500 w-[420px]"
+            />
           </div>
         </div>
-        <div className="flex flex-row md:flex-row justify-start gap-5">
-          <div className="flex flex-col gap-2 items-start  w-full md:w-[55%]">
-            <label htmlFor="restaurantName" className="font-bold ">
+        <div className="flex flex-col md:flex-row justify-between gap-5">
+          <div className="flex flex-col gap-2 w-full">
+            <label htmlFor="customerName" className="font-bold">
               City:
             </label>
             <input
@@ -227,8 +227,8 @@ const AddCustomer = () => {
               className="p-2 rounded-md border-2 border-orange-500 w-full"
             />
           </div>
-          <div className="flex flex-col gap-2 items-start w-full md:w-[55%]">
-            <label htmlFor="restaurantName" className="font-bold ">
+          <div className="flex flex-col gap-2 w-full">
+            <label htmlFor="customername" className="font-bold">
               Pincode:
             </label>
             <input
@@ -249,7 +249,7 @@ const AddCustomer = () => {
         </div>
         <button
           onClick={handleClick}
-          className="w-full bg-orange-500 hover:text-orange-500 hover:bg-transparent transition-all duration-500 hover:border-orange-500 hover:border font-bold text-lg text-white p-2 mt-4 rounded-lg"
+          className="w-full bg-orange-500 text-white p-2 mt-4 rounded-lg hover:bg-transparent hover:text-orange-500 hover:border-orange-500 hover:border transition-all duration-500 font-bold text-lg"
         >
           Add Customer &rarr;
         </button>
