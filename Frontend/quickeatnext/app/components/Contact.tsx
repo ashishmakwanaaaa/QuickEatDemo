@@ -10,7 +10,13 @@ import Swal from "sweetalert2";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-const Contact = () => {
+const Contact: React.FC = () => {
+  const serviceid: string | undefined | any = process.env.NEXT_PUBLIC_serviceId;
+  const templatedid: string | undefined | any =
+    process.env.NEXT_PUBLIC_templateId;
+  const userIdforemailjsservice: string | undefined =
+    process.env.NEXT_PUBLIC_userId;
+
   useEffect(() => {
     AOS.init({
       offset: 200,
@@ -19,13 +25,17 @@ const Contact = () => {
       once: true,
     });
   });
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    from_name: string;
+    to_name: string;
+    message: string;
+  }>({
     from_name: "",
     to_name: "",
     message: "",
   });
 
-  const handleChange = (e: { target: { name: any; value: any } }) => {
+  const handleChange = (e: { target: { name: string; value: string } }) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -40,38 +50,44 @@ const Contact = () => {
       to_name: formData.to_name,
       message: formData.message,
     };
-
-    emailjs
-      .send(
-        "service_1mygi7h",
-        "template_kpptflx",
-        templateParams,
-        "u002GheV__IQcQxJc"
-      )
-      .then((response) => {
-        console.log("Email sent successfully:", response);
-
-        Swal.fire({
-          icon: "success",
-          title: "Email Send Successfully",
-          showConfirmButton: false,
-          timer: 3000,
-        });
-        setFormData({
-          from_name: "",
-          to_name: "",
-          message: "",
-        });
-      })
-      .catch((error) => {
-        console.error("Email sending failed:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong!",
-          timer: 3000,
-        });
+    if (
+      formData.from_name === "" ||
+      formData.to_name === "" ||
+      formData.message === ""
+    ) {
+      Swal.fire({
+        text: "Please Fill All The Fields",
+        icon: "warning",
+        timer: 1000,
       });
+    } else {
+      emailjs
+        .send(serviceid, templatedid, templateParams, userIdforemailjsservice)
+        .then((response) => {
+          console.log("Email sent successfully:", response);
+
+          Swal.fire({
+            icon: "success",
+            title: "Email Send Successfully",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          setFormData({
+            from_name: "",
+            to_name: "",
+            message: "",
+          });
+        })
+        .catch((error) => {
+          console.error("Email sending failed:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+            timer: 3000,
+          });
+        });
+    }
   };
 
   return (

@@ -155,7 +155,7 @@ const ItemList = () => {
     }
   };
 
-  const accessKey = "a4mMmS84fey6hObwQS_BnYxSWcQRXnNGM-rGCq_1A6w";
+  const accessKey = process.env.NEXT_PUBLIC_accesskeyunsplash
   const generateImage = async (name: string) => {
     try {
       const response = await fetch(
