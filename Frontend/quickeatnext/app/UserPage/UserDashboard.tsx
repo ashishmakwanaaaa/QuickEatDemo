@@ -32,6 +32,7 @@ import { PaymentData, fetchPayments } from "@/lib/actions/paymentAction";
 import { customer, item, payment, user } from "@/lib/reducers";
 import { PaymentType } from "@/lib/reducers/paymentSlice/paymentReducers";
 import { useAppDispatch } from "@/lib/store";
+import { Counter } from "../components/Counter";
 
 ChartJS.register(
   CategoryScale,
@@ -63,24 +64,6 @@ interface monthlyDatatype {
   day: number;
   totalAmount: number;
 }
-
-export const Counter = ({ targetValue }: { targetValue: any }) => {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    const increment = Math.max(1, Math.floor(targetValue / 100));
-    console.log(increment); // Increment by 1% of the target value
-    const timer = setInterval(() => {
-      setCount((prevCount) => {
-        const nextCount = Math.min(prevCount + increment, targetValue);
-        return nextCount;
-      });
-    }, 20);
-
-    return () => clearInterval(timer);
-  }, [targetValue]);
-
-  return count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
 
 const AdminDashboard = () => {
   const [monthlyData, setMonthlyData] = useState<monthlyDatatype[]>([]);

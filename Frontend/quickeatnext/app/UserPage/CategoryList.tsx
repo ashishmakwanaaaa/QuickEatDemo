@@ -202,11 +202,13 @@ const CategoriesList = () => {
     {
       field: "id",
       headerName: "ID",
+      cellClassName:"dark:text-white",
       width: 200,
     },
     {
       field: "name",
       headerName: "Category Name",
+      cellClassName:"dark:text-white",
       width: 200,
     },
     {

@@ -177,50 +177,48 @@ const PaymentList = () => {
   const columns: GridColDef[] = [
     {
       field: "id",
-
+      cellClassName:"dark:text-white",
       headerName: "ID",
       width: 90,
     },
     {
       field: "Date",
-
+      cellClassName:"dark:text-white",
       headerName: "Date Of Payment",
       width: 170,
     },
     {
       field: "cardHoldername",
-
+      cellClassName:"dark:text-white",
       headerName: "Customer Name",
       width: 150,
     },
     {
       field: "email",
-
+      cellClassName:"dark:text-white",
       headerName: "Email",
       width: 240,
     },
     {
       field: "amount",
-
+      cellClassName:"dark:text-white",
       headerName: "Total Amount",
       width: 120,
     },
     {
       field: "billingaddress",
-
+      cellClassName:"dark:text-white",
       headerName: "City",
       width: 100,
     },
     {
       field: "paymentMethod",
-
       headerName: "Payment Method",
       cellClassName: "text-green-800 font-bold text-center capitalize",
       width: 120,
     },
     {
       field: "invoice",
-
       headerName: "Generate Invoice",
       width: 120,
       renderCell: (params: GridCellParams) => (
