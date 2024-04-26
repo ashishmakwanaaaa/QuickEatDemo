@@ -15,6 +15,7 @@ export async function middleware(request: NextRequest) {
     "/category",
     "/paymentlist",
     "/orderlist",
+    "/adminside"
   ];
 
   // Check if the current route is a protected route
@@ -34,6 +35,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/login",
+    "/adminside",
     "/dashboard",
     "/customerlist/customerprofile/id",
     "/customerlist",

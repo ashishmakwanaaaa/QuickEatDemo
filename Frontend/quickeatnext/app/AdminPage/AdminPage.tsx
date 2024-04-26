@@ -5,7 +5,6 @@ import { MdNotificationsActive } from "react-icons/md";
 import { PiBowlFoodBold } from "react-icons/pi";
 import { FaUsers } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { Counter } from "../UserPage/UserDashboard";
 import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
@@ -16,6 +15,16 @@ import ApexCharts from "apexcharts";
 import { User } from "@/lib/reducers/userSlice/UserReducers";
 import { OrderDataType } from "../UserPage/Orders";
 import { useAppDispatch } from "@/lib/store";
+import { Counter } from "../components/Counter";
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
 interface monthlyDataType {
   month: number;
@@ -35,6 +44,15 @@ const AdminPage = () => {
   console.log(user, activeuser);
   const [allCashPayment, setAllCashPayment] = useState<PaymentType[]>([]);
   const [allCardPayment, setAllCardPayment] = useState<PaymentType[]>([]);
+
+  Chart.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+  );
 
   const lables = [
     "Jan",
@@ -460,17 +478,25 @@ const AdminPage = () => {
                         </p>
                         <div className="w-full">
                           <div
-                            className="bg-orange-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                            className="bg-orange-600 font-bold text-xs text-blue-100 text-center p-0.5 leading-none rounded-full transition-width duration-500 ease-in-out"
                             style={{ width: `${cashPaymentPercentage}%` }}
                           >
-                            {Math.round(cashPaymentPercentage)}%
+                            <Counter
+                              targetValue={Math.round(cashPaymentPercentage)}
+                            />
+                            %
                           </div>
                           {/* Display remaining percentage as green segment (representing card payments) */}
                           <div
-                            className="bg-black text-xs font-medium text-green-100 text-center p-0.5 leading-none rounded-full"
+                            className="bg-black text-xs font-bold text-green-100 text-center p-0.5 leading-none rounded-full"
                             style={{ width: `${100 - cashPaymentPercentage}%` }}
                           >
-                            {100 - Math.round(cashPaymentPercentage)}%
+                            <Counter
+                              targetValue={
+                                100 - Math.round(cashPaymentPercentage)
+                              }
+                            />
+                            %
                           </div>
                         </div>
                       </div>

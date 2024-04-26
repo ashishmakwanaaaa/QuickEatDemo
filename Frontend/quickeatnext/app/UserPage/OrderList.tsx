@@ -146,31 +146,30 @@ const OrderListPage = () => {
   }[] = [
     {
       field: "id",
-      // headerClassName: "bg-black text-white font-bold",
+      cellClassName:"dark:text-white",
       headerName: "ID",
       width: 90,
     },
     {
       field: "Date",
-      // headerClassName: "bg-black text-white font-bold",
+      cellClassName:"dark:text-white",
       headerName: "Date Of Order",
       width: 170,
     },
     {
       field: "customername",
-      // headerClassName: "bg-black text-white font-bold",
+      cellClassName:"dark:text-white",
       headerName: "Customer Name",
       width: 150,
     },
     {
       field: "customeremail",
-      // headerClassName: "bg-black text-white font-bold",
+      cellClassName:"dark:text-white",
       headerName: "Email",
       width: 220,
     },
     {
       field: "customerphoneno",
-      // headerClassName: "bg-black text-white font-bold",
       headerName: "Contact No",
       cellClassName: "text-green-800 font-bold text-center capitalize",
       width: 120,

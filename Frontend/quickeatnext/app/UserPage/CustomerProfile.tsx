@@ -10,13 +10,13 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { DataGrid } from "@mui/x-data-grid";
-import { Counter } from "./UserDashboard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomerById } from "@/lib/actions/customerAction";
 import { initialStateTypeForCustomer } from "@/lib/reducers/customerSlice/customerReducers";
 import { fetchSpecificOrder } from "@/lib/actions/orderAction";
 import { customer, order } from "@/lib/reducers";
 import { useRouter } from "next/navigation";
+import { Counter } from "../components/Counter";
 
 const CustomerProfile = ({ id }: { id: string }) => {
   const [customerorder, setCustomerOrder] = useState<OrderDataType[]>([]);
@@ -77,37 +77,37 @@ const CustomerProfile = ({ id }: { id: string }) => {
     {
       field: "id",
       // headerClassName: "bg-black text-white font-bold",
+      cellClassName: "dark:text-white",
       headerName: "ID",
       width: 90,
     },
     {
       field: "Date",
-      // headerClassName: "bg-black text-white font-bold",
+      cellClassName: "dark:text-white",
       headerName: "Date Of Order",
       width: 170,
     },
     {
       field: "customername",
-      // headerClassName: "bg-black text-white font-bold",
+      cellClassName:"dark:text-white",
       headerName: "Customer Name",
       width: 150,
     },
     {
       field: "customeremail",
-      // headerClassName: "bg-black text-white font-bold",
+      cellClassName:"dark:text-white",
       headerName: "Email",
       width: 220,
     },
     {
       field: "customerphoneno",
-      // headerClassName: "bg-black text-white font-bold",
       headerName: "Contact No",
       cellClassName: "text-green-800 font-bold text-center capitalize",
       width: 120,
     },
     {
       field: "amount",
-      // headerClassName: "bg-black text-white font-bold",
+      cellClassName:"dark:text-white",
       headerName: "Total Amount",
       width: 120,
     },
@@ -189,75 +189,85 @@ const CustomerProfile = ({ id }: { id: string }) => {
               <div className="flex flex-row gap-3 w-full">
                 <p
                   style={{ boxShadow: "0 0  1em gray" }}
-                  className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
+                  className="text-black text-sm flex font-normal gap-2 dark:text-white border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
                 >
-                  <div className="flex gap-10 flex-row justify-start">
-                    <p className=" text-black ">Customer Firstname:</p>
+                  <div className="flex gap-10 flex-row justify-start ">
+                    <p className=" text-black dark:text-white">
+                      Customer Firstname:
+                    </p>
                     {customer.firstname} &nbsp;
                   </div>
                 </p>
                 <p
                   style={{ boxShadow: "0 0  1em gray" }}
-                  className="text-black text-sm flex font-normal gap-2  border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
+                  className="text-black text-sm flex font-normal gap-2 dark:text-white  border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
                 >
-                  <div className="flex gap-10 flex-row justify-start">
-                    <p className=" text-black ">Customer Lastname:</p>
+                  <div className="flex gap-10 flex-row justify-start ">
+                    <p className=" text-black dark:text-white">
+                      Customer Lastname:
+                    </p>
                     {customer.lastname} &nbsp;
                   </div>
                 </p>
               </div>
               <p
                 style={{ boxShadow: "0 0  1em gray" }}
-                className="text-black text-sm flex font-normal gap-2  border border-gray-400 rounded-lg p-2 drop-shadow-2xl  w-full"
+                className="text-black text-sm flex font-normal gap-2 dark:text-white  border border-gray-400 rounded-lg p-2 drop-shadow-2xl  w-full"
               >
-                <div className="flex gap-14 flex-row justify-start">
-                  <p className=" text-black ">Customer EmailID:</p>
+                <div className="flex gap-14 flex-row justify-start ">
+                  <p className=" text-black dark:text-white">
+                    Customer EmailID:
+                  </p>
                   {customer.emailid} &nbsp;
                 </div>
               </p>
               <p
                 style={{ boxShadow: "0 0  1em gray" }}
-                className="text-black text-sm flex font-normal gap-2  border border-gray-400 rounded-lg p-2 drop-shadow-2xl  w-full"
+                className="text-black text-sm flex font-normal gap- dark:text-white  border border-gray-400 rounded-lg p-2 drop-shadow-2xl  w-full"
               >
-                <div className="flex gap-6 flex-row justify-start">
-                  <p className=" text-black ">Customer Contact NO:</p>
+                <div className="flex gap-6 flex-row justify-start ">
+                  <p className=" text-black dark:text-white">
+                    Customer Contact NO:
+                  </p>
                   {customer.phoneno} &nbsp;
                 </div>
               </p>
               <p
                 style={{ boxShadow: "0 0  1em gray" }}
-                className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl 0 w-full"
+                className="text-black text-sm flex font-normal gap-2 dark:text-white border border-gray-400 rounded-lg p-2 drop-shadow-2xl 0 w-full"
               >
-                <div className="flex gap-12 flex-row justify-start">
-                  <p className=" text-black ">Customer Address:</p>
+                <div className="flex gap-12 flex-row justify-start ">
+                  <p className=" text-black dark:text-white">
+                    Customer Address:
+                  </p>
                   {customer.address} &nbsp;
                 </div>
               </p>
               <div className="flex flex-row gap-8 w-ful">
                 <p
                   style={{ boxShadow: "0 0  1em gray" }}
-                  className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
+                  className="text-black text-sm flex font-normal gap-2 dark:text-white border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
                 >
-                  <div className="flex gap-20 flex-row justify-start">
-                    <p className=" text-black ">State:</p>
+                  <div className="flex gap-20 flex-row justify-start ">
+                    <p className=" text-black dark:text-white">State:</p>
                     {customer.state} &nbsp;
                   </div>
                 </p>
                 <p
                   style={{ boxShadow: "0 0  1em gray" }}
-                  className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
+                  className="text-black text-sm flex font-normal gap-2 dark:text-white border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
                 >
-                  <div className="flex gap-20 flex-row justify-start">
-                    <p className=" text-black ">City:</p>
+                  <div className="flex gap-20 flex-row justify-start ">
+                    <p className=" text-black dark:text-white">City:</p>
                     {customer.city} &nbsp;
                   </div>
                 </p>
                 <p
                   style={{ boxShadow: "0 0  1em gray" }}
-                  className="text-black text-sm flex font-normal gap-2 border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
+                  className="text-black text-sm flex font-normal gap-2 dark:text-white border border-gray-400 rounded-lg p-2 drop-shadow-2xl w-full"
                 >
-                  <div className="flex gap-20 flex-row justify-start">
-                    <p className=" text-black ">Pincode:</p>
+                  <div className="flex gap-20 flex-row justify-start ">
+                    <p className=" text-black dark:text-white">Pincode:</p>
                     {customer.pincode} &nbsp;
                   </div>
                 </p>

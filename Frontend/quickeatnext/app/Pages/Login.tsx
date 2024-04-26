@@ -41,10 +41,9 @@ const Login = (): React.JSX.Element => {
   };
   const StateContext = useContext(LoginContext);
   const { dispatch } = StateContext;
-  const user = useSelector((state:user) => state.user.user);
+  const user = useSelector((state: user) => state.user.user);
   console.log(user);
   async function validateUser(): Promise<void> {
-    console.log(formData);
     const response = await dispatc(fetchUser(formData) as any);
     console.log(response);
     if (dispatch && response.payload !== undefined) {
@@ -82,6 +81,14 @@ const Login = (): React.JSX.Element => {
   const handleSubmit = (e: { preventDefault: () => void }): void => {
     try {
       e.preventDefault();
+      console.log(formData);
+      if (formData.emailid === "" || formData.password === "") {
+        Swal.fire({
+          text: "please fill above all field",
+          icon: "warning",
+          timer: 1000,
+        });
+      }
       validateUser();
     } catch (error) {
       console.log(error);

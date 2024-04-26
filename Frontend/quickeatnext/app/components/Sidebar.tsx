@@ -49,7 +49,7 @@ const Sidebar = ({
           src="https://cdn.vectorstock.com/i/1000x1000/26/10/food-fork-spoon-fruit-orange-logo-vector-24042610.webp"
           alt="QuickEat Logo"
           className={`cursor-pointer duration-500 h-6 w-6 rounded-md object-cover `}
-          data-aos="fade-right"
+       
         />
         <h1
           className={`text-orange-600 origin-left font-[Poppins] font-bold text-xl duration-300 ${!open &&

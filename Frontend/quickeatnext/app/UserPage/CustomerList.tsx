@@ -191,6 +191,7 @@ const CustomerList = () => {
     {
       field: "id",
       // headerClassName: "bg-black text-white font-bold",
+      cellClassName:"dark:text-white",
       headerName: "ID",
       width: 90,
     },
@@ -230,19 +231,19 @@ const CustomerList = () => {
     },
     {
       field: "firstname",
-      // headerClassName: "bg-black text-white font-bold",
+      cellClassName:"dark:text-white",
       headerName: "FirstName",
       width: 150,
     },
     {
       field: "lastname",
-      // headerClassName: "bg-black text-white font-bold",
+      cellClassName:"dark:text-white",
       headerName: "LastName",
       width: 120,
     },
     {
       field: "contact",
-      // headerClassName: "bg-black text-white font-bold",
+      cellClassName:"dark:text-white",
       headerName: "Contact No.",
       width: 120,
     },

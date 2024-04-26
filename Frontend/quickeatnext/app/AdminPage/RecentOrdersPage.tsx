@@ -24,21 +24,25 @@ const RecentOrdersPage = () => {
   const columns: GridColDef[] = [
     {
       field: "id",
+      cellClassName: "dark:text-white",
       headerName: "ID",
       width: 90,
     },
     {
       field: "orderid",
+      cellClassName: "dark:text-white",
       headerName: "ORDER ID",
       width: 120,
     },
     {
       field: "date",
+      cellClassName: "dark:text-white",
       headerName: "Date Of Order",
       width: 120,
     },
     {
       field: "profile",
+      cellClassName: "dark:text-white",
 
       headerName: "Profile",
       width: 70,
@@ -56,26 +60,31 @@ const RecentOrdersPage = () => {
     },
     {
       field: "resname",
+      cellClassName: "dark:text-white",
       headerName: "Restrurant ",
       width: 150,
     },
     {
       field: "ownername",
+      cellClassName: "dark:text-white",
       headerName: "Owner",
       width: 150,
     },
     {
       field: "email",
+      cellClassName: "dark:text-white",
       headerName: "Email",
       width: 240,
     },
     {
       field: "customername",
+      cellClassName: "dark:text-white",
       headerName: "Customer Name",
       width: 120,
     },
     {
       field: "phoneno",
+      cellClassName: "dark:text-white",
 
       headerName: "Contact",
       width: 100,
@@ -121,7 +130,7 @@ const RecentOrdersPage = () => {
   return (
     <>
       <div className="flex flex-col w-full h-full gap-2 justify-start items-start">
-        <h1 className="text-start capitalize text-black text-md font-bold">
+        <h1 className="text-start capitalize text-black dark:text-white ml-2 text-md font-bold">
           Recently Orders
         </h1>
         {loading ? (

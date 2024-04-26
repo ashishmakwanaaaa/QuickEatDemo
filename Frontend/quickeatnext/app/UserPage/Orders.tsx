@@ -412,11 +412,11 @@ const Orders = ({ id }: { id: string }) => {
             </>
           ) : (
             <>
-              <p className="text-lg text-black">
-                <span className="text-black font-bold flex items-center gap-3">
+              <p className="text-lg text-black ">
+                <span className="text-black font-bold dark:text-white flex items-center gap-3">
                   <div
                     onClick={() => router.push("/customerlist")}
-                    className=" bg-stone-800 rounded-full w-7 h-7 flex items-center p-2 cursor-pointer justify-center text-white"
+                    className=" bg-stone-800  rounded-full w-7 h-7 flex items-center p-2 cursor-pointer justify-center text-white"
                   >
                     <KeyboardBackspaceIcon />
                   </div>
@@ -492,7 +492,7 @@ const Orders = ({ id }: { id: string }) => {
                       <span className="text-sm  font-bold  text-orange-500">
                         Name:
                       </span>
-                      <span className="font-bold  text-black text-sm">
+                      <span className="font-bold dark:text-white text-black text-sm">
                         {item.itemname}
                       </span>
                     </div>
@@ -500,7 +500,7 @@ const Orders = ({ id }: { id: string }) => {
                       <span className="text-sm font-bold  text-orange-500">
                         Quantity:
                       </span>
-                      <span className="font-bold  text-black text-sm">
+                      <span className="font-bold dark:text-white text-black text-sm">
                         {item.quantity}
                       </span>
                     </div>
@@ -508,7 +508,7 @@ const Orders = ({ id }: { id: string }) => {
                       <span className="text-sm font-bold  text-orange-500">
                         Price:
                       </span>
-                      <span className="font-bold  text-black text-sm">
+                      <span className="font-bold dark:text-white text-black text-sm">
                         &#8377;{item.price}
                       </span>
                     </div>
