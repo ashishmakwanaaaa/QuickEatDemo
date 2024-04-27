@@ -3,8 +3,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AiFillHome, AiFillInfoCircle } from "react-icons/ai";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
+import Drawer from "@mui/material/Drawer";
+import SendIcon from "@mui/icons-material/Send";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ChatIcon from "@mui/icons-material/Chat";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import { MdMiscellaneousServices, MdContactPage } from "react-icons/md";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -22,28 +26,31 @@ import LoginContext from "../LoginState/logincontext";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "@/lib/reducers/userSlice/UserReducers";
 import { user } from "@/lib/reducers";
-
-// import { Link, resolvePath, useNavigate } from "react-router-dom";
+import { Badge } from "@mui/material";
 
 const Navbar = () => {
-  useEffect(() => {
-    AOS.init({
-      offset: 200,
-      duration: 1300,
-      easing: "ease-in-out",
-      once: true,
-    });
-  }, []);
+  const user = useSelector((state: user) => state.user.user);
+  console.log(user)
   const StateContext = useContext(LoginContext);
   const [openmenu, setOpenMenu] = useState<boolean>(false);
-  const user = useSelector((state: user) => state.user.user);
-  console.log(user, StateContext);
+  const [dropdown, setDropDown] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [drawer, setDrawer] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+  const [messages, setMessages] = useState<string[]>([]);
   const userId = user._id;
+
+  const sendmessage = () => {
+    if (message) {
+      setMessages((prev) => [...prev, message]);
+      setMessage("");
+    }
+  };
   const router = useRouter();
   const dispatch = useDispatch();
   // const user = useSelector((state) => state.user.user);
   const pathname = usePathname();
-  console.log(pathname[1]);
+  console.log(messages);
   // const { login, restaurantname, ownername } = useContext(LoginContext);
   const [PasswordData, setPasswordData] = useState<{
     oldpassword: string;
@@ -55,10 +62,7 @@ const Navbar = () => {
     newchangepassword: "",
   });
 
-  const [dropdown, setDropDown] = useState<boolean>(false);
-  const [open, setOpen] = useState<boolean>(false);
   const role = localStorage.getItem("role") || "";
-  const login = localStorage.getItem("login");
   console.log(role);
   const handleDropDown: () => void = () => {
     setDropDown(!dropdown);
@@ -79,7 +83,6 @@ const Navbar = () => {
       const response = await fetch(`http://localhost:5000/auth/logout/${id}`, {
         credentials: "include",
       });
-      const data = await response.json();
       if (response.ok) {
         console.log(response);
         Swal.fire({
@@ -266,7 +269,7 @@ const Navbar = () => {
         </div>
       ) : (
         <div className="flex flex-row items-center space-x-4 ml-[-70px]">
-          {!user.isAdmin && (
+          {!user.isAdmin ? (
             <>
               <Link href="/addcustomer">
                 <button className="bg-orange-500 border-2 border-orange-500 w-44  text-white py-2 px-4 rounded-xl hover:bg-transparent hover:text-orange-500 hover:border-orange-500 transition duration-500">
@@ -278,6 +281,23 @@ const Navbar = () => {
                   Add Food +
                 </button>
               </Link>
+              <div
+                className="text-orange-500 cursor-pointer"
+                onClick={() => setDrawer(!drawer)}
+              >
+                <ChatIcon />
+              </div>
+            </>
+          ) : (
+            <>
+              <div
+                className="text-orange-500 cursor-pointer"
+                onClick={() => setDrawer(!drawer)}
+              >
+                <Badge badgeContent={2}>
+                  <NotificationsIcon />
+                </Badge>
+              </div>
             </>
           )}
           {user.image ? (
@@ -493,6 +513,34 @@ const Navbar = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Drawer anchor="right" open={drawer} onClose={() => setDrawer(false)}>
+        <h1 className="text-orange-600 text-center origin-left font-[Poppins] font-bold text-xl duration-30">
+          QUICKEAT
+        </h1>
+        <div>
+          {" "}
+          <ul>
+            {messages.map((msg, index) => (
+              <li key={index}>{msg}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex flex-row p-4">
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Start The Chat Here"
+            className=" rounded-tl-md rounded-bl-md border border-orange-600 p-2"
+          />
+          <button
+            onClick={sendmessage}
+            className="bg-orange-600 text-white p-2 rounded-tr-md rounded-br-md"
+          >
+            <SendIcon />
+          </button>
+        </div>
+      </Drawer>
     </nav>
   );
 };
