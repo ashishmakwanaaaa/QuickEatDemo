@@ -17,13 +17,24 @@ import { JwtService } from '@nestjs/jwt';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Response } from 'express';
+import  * as Pusher from "pusher";
 
 @Injectable()
 export class AuthService {
+  pusher:Pusher
   constructor(
     @InjectModel('users') private readonly usermodel: Model<User>,
     private jwtService: JwtService,
-  ) {}
+  ) {
+
+    this.pusher= new Pusher({
+      appId: "1794656",
+      key: "6a591575265653bc0738",
+      secret: "f4a05c7ff3ba02d45de2",
+      cluster: "ap2",
+      useTLS: true
+    });
+  }
 
   transported = nodemailer.createTransport({
     service: process.env.service,
@@ -258,5 +269,11 @@ export class AuthService {
     } catch (error) {
       return false;
     }
+  }
+
+  async trigger(channel:string,event:string,data:any) {
+    console.log(channel,event,data)
+    await this.pusher.trigger(channel,event,data)
+    return []
   }
 }

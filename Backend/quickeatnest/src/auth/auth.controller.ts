@@ -29,7 +29,7 @@ const storage = diskStorage({
 
 @Controller('auth')
 export class AuthController {
-  constructor(private userservice: AuthService) {}
+  constructor(private userservice: AuthService) { }
 
   @Post('/signup')
   signup(@Body() usersignupdto: UserSignUpDto) {
@@ -104,7 +104,7 @@ export class AuthController {
   updateProfile(@Body() usersignupdto, @Param('id') id: string) {
     return this.userservice.updateProfile(usersignupdto, id);
   }
-  catch(error) {}
+  catch(error) { }
 
   @Get('/getalluser')
   getAllUser() {
@@ -117,4 +117,12 @@ export class AuthController {
     console.log(res);
     return this.userservice.logout(id);
   }
+
+  @Post("/message")
+  async messages(@Body() body: { username: string; message: string,userId:string,mode:boolean,timeStamp:string }) {
+    const { username, message,userId,mode,timeStamp } = body;
+    await this.userservice.trigger("chat", "message", { username, message,userId,mode,timeStamp });
+    return { success: true }; // Assuming you want to return a success response
+  }
+
 }
