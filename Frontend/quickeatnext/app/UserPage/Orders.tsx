@@ -14,6 +14,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import Swal from "sweetalert2";
 import RemoveIcon from "@mui/icons-material/Remove";
+import WarningIcon from "@mui/icons-material/Warning";
 import AddIcon from "@mui/icons-material/Add";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import TextField from "@mui/material/TextField";
@@ -166,6 +167,7 @@ const Orders = ({ id }: { id: string }) => {
               quantity: updatedItems.map((item) => item.quantity),
               itemname: updatedItems.map((item) => item.itemname),
             }),
+            credentials: "include",
           }
         );
 
@@ -498,13 +500,21 @@ const Orders = ({ id }: { id: string }) => {
                     </div>
                     <div className="flex flex-row justify-start items-start gap-2">
                       <span className="text-sm font-bold  text-orange-500">
-                        Quantity:
+                        In stock:
                       </span>
-                      <span className="font-bold dark:text-white text-black text-sm">
+                      <span
+                        className={`font-bold ${item.quantity <= 5 &&
+                          "text-red-500"} dark:text-white text-black text-sm`}
+                      >
                         {item.quantity}
+                        {item.quantity <= 5 && (
+                          <WarningIcon
+                            style={{ fontSize: "20px", color: "red" }}
+                          />
+                        )}
                       </span>
                     </div>
-                    <div className="flex flex-row justify-start items-start gap-8">
+                    <div className="flex flex-row justify-start items-start gap-4">
                       <span className="text-sm font-bold  text-orange-500">
                         Price:
                       </span>

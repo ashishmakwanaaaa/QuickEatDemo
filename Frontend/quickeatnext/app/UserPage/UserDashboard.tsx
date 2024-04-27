@@ -308,17 +308,17 @@ const AdminDashboard = () => {
           ) : (
             <>
               <div
-                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-red-500 drop-shadow-2xl h-44 mt-4"
+                className="flex flex-col gap-6 items-center bg-red-500 dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-xl border-b-4 border-red-500 drop-shadow-2xl h-44 mt-4"
                 style={{ boxShadow: "0 0 0.1em red" }}
               >
-                <h4 className="text-md text-red-500 dark:text-red-500">
+                <h4 className="text-md text-white dark:text-red-500">
                   Customers
                 </h4>
-                <div className="rounded-full p-2 bg-red-500">
-                  <IoPeople color="white" />
+                <div className="rounded-full p-2 bg-white">
+                  <IoPeople color="red" />
                 </div>
 
-                <p className="text-3xl text-red-500 dark:text-red-500">
+                <p className="text-3xl text-white dark:text-red-500">
                   <Counter
                     targetValue={
                       customers && customers.length > 0 && customers.length
@@ -328,15 +328,15 @@ const AdminDashboard = () => {
               </div>
               <div
                 style={{ boxShadow: "0 0 0.1em green" }}
-                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-green-600  drop-shadow-2xl h-44 mt-4"
+                className="flex flex-col gap-6 items-center bg-green-500 dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-xl border-b-4 border-green-500  drop-shadow-2xl h-44 mt-4"
               >
-                <h4 className="text-md text-green-600 dark:text-green-600">
+                <h4 className="text-md text-white dark:text-green-600">
                   FoodItems
                 </h4>
-                <div className="bg-green-600 p-2 rounded-full">
-                  <IoFastFood color="white" />
+                <div className="bg-white p-2 rounded-full">
+                  <IoFastFood color="green" />
                 </div>
-                <p className="text-3xl text-green-600 dark:text-green-600">
+                <p className="text-3xl text-white dark:text-green-600">
                   <Counter
                     targetValue={items && items.length > 0 && items.length}
                   />
@@ -344,44 +344,44 @@ const AdminDashboard = () => {
               </div>
               <div
                 style={{ boxShadow: "0 0 0.1em blue" }}
-                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-blue-400  drop-shadow-2xl h-44 mt-4"
+                className="flex flex-col gap-6 items-center bg-blue-400 dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-xl border-b-4 border-blue-400  drop-shadow-2xl h-44 mt-4"
               >
-                <h4 className="text-md text-blue-400 dark:text-blue-400">
+                <h4 className="text-md text-white dark:text-blue-400">
                   Total Sales
                 </h4>
-                <div className="bg-blue-400 rounded-full p-1 flex justify-center items-center w-10 h-10">
-                  <MonetizationOnIcon style={{ color: "white" }} />
+                <div className="bg-white rounded-full p-1 flex justify-center items-center w-10 h-10">
+                  <MonetizationOnIcon style={{ color: "blue" }} />
                 </div>
-                <p className="text-3xl text-blue-400 dark:text-blue-400">
+                <p className="text-3xl text-white dark:text-blue-400">
                   &#x20B9; <Counter targetValue={totalAmount} />
                 </p>
               </div>
               <div
                 style={{ boxShadow: "0 0 0.1em orange" }}
-                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-orange-500  drop-shadow-2xl h-44 mt-4"
+                className="flex flex-col gap-6 items-center bg-orange-400 dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-xl border-b-4 border-orange-400  drop-shadow-2xl h-44 mt-4"
               >
-                <h4 className="text-md text-orange-500 dark:text-orange-500">
+                <h4 className="text-md text-white dark:text-orange-500">
                   Card Sales
                 </h4>
-                <div className="rounded-full p-2 bg-orange-500 w-10 h-10 flex justify-center items-center">
-                  <CreditCardIcon style={{ color: "white" }} />
+                <div className="rounded-full p-2 bg-white w-10 h-10 flex justify-center items-center">
+                  <CreditCardIcon style={{ color: "orange" }} />
                 </div>
-                <p className="text-3xl text-orange-500 dark:text-orange-500">
+                <p className="text-3xl text-white dark:text-orange-500">
                   &#x20B9; <Counter targetValue={totalCardAmount} />
                 </p>
               </div>
               <div
                 style={{ boxShadow: "0 0 0.1em purple" }}
-                className="flex flex-col gap-6 items-center bg-white dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-3xl border-b-4 border-purple-500  drop-shadow-2xl h-44 mt-4"
+                className="flex flex-col gap-6 items-center bg-purple-400 dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-xl border-b-4 border-purple-400  drop-shadow-2xl h-44 mt-4"
               >
-                <h4 className="text-md text-purple-500 dark:text-purple-500">
+                <h4 className="text-md text-white dark:text-purple-500">
                   Cash Sales
                 </h4>
-                <div className="bg-purple-500 rounded-full p-2 w-10 h-10 flex justify-center items-center">
+                <div className="bg-white rounded-full p-2 w-10 h-10 flex justify-center items-center">
                   {" "}
-                  <MoneyIcon style={{ color: "white" }} />
+                  <MoneyIcon style={{ color: "purple" }} />
                 </div>
-                <p className="text-3xl text-purple-500 dark:text-purple-500">
+                <p className="text-3xl text-white dark:text-purple-500">
                   &#x20B9; <Counter targetValue={totalCashAmount} />
                 </p>
               </div>
