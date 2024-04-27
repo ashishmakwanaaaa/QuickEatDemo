@@ -57,8 +57,11 @@ const Navbar = () => {
     setOnline(user.isActive)
     Pusher.logToConsole = true;
 
-    const pusher = new Pusher('6a591575265653bc0738', {
-      cluster: 'ap2'
+    const pusherid : string | undefined | any = process.env.NEXT_PUBLIC_PusherID
+    const pushercluster : string | undefined | any = process.env.NEXT_PUBLIC_ClusterPusher
+
+    const pusher = new Pusher(pusherid, {
+      cluster:pushercluster
     });
 
     const channel = pusher.subscribe('chat');

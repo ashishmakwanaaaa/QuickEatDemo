@@ -28,10 +28,10 @@ export class AuthService {
   ) {
 
     this.pusher= new Pusher({
-      appId: "1794656",
-      key: "6a591575265653bc0738",
-      secret: "f4a05c7ff3ba02d45de2",
-      cluster: "ap2",
+      appId: process.env.pusherapiappid,
+      key: process.env.pusherapikey,
+      secret: process.env.pushersecretkey,
+      cluster: process.env.pushercluster,
       useTLS: true
     });
   }
