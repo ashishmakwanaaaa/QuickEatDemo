@@ -27,6 +27,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "@/lib/reducers/userSlice/UserReducers";
 import { user } from "@/lib/reducers";
 import { Badge } from "@mui/material";
+import Pusher from "pusher-js"
+
+interface MessageDataType {
+  username: string
+  message: string
+  userId: string
+  mode: boolean
+  timeStamp: string
+}
 
 const Navbar = () => {
   const user = useSelector((state: user) => state.user.user);
@@ -37,15 +46,69 @@ const Navbar = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [drawer, setDrawer] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<MessageDataType[]>([]);
+  const [online, setOnline] = useState<boolean>(false);
+  const [Time, setTime] = useState<string>('')
+  const [badgeCount, setBadgeCount] = useState<number>(0);
   const userId = user._id;
 
-  const sendmessage = () => {
-    if (message) {
-      setMessages((prev) => [...prev, message]);
-      setMessage("");
+  useEffect(() => {
+    updateTime();
+    setOnline(user.isActive)
+    Pusher.logToConsole = true;
+
+    const pusher = new Pusher('6a591575265653bc0738', {
+      cluster: 'ap2'
+    });
+
+    const channel = pusher.subscribe('chat');
+    channel.bind('message', function (data: MessageDataType) {
+      const { username, message, userId, mode, timeStamp } = data;
+
+      setMessages(prevMessages => [...prevMessages, { username, message, userId, mode, timeStamp }]);
+      if (!user.isAdmin && data.userId === user._id) {
+        setOnline(data.mode);
+      }
+      if (!drawer) {
+        setBadgeCount(prevCount => prevCount + 1);
+      }
+    });
+    console.log(online)
+    return () => {
+      pusher.unsubscribe("chat");
+    };
+  }, [drawer, user.isActive, user.isAdmin])
+
+  const sendmessage = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    updateTime();
+    const bodyData = {
+      username: user.image,
+      message: message,
+      userId: user._id,
+      mode: user.isActive,
+      timeStamp: Time,
     }
+    const response = await fetch("http://localhost:5000/auth/message", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(bodyData),
+      credentials: "include"
+    })
+    setMessage("")
+
+    // if (message) {
+    //   setMessages((prev) => [...prev, message]);
+    //   setMessage("");
+    // }
   };
+
+  const updateTime = () => {
+    const currentTime = new Date().toLocaleTimeString();
+    setTime(currentTime)
+  }
   const router = useRouter();
   const dispatch = useDispatch();
   // const user = useSelector((state) => state.user.user);
@@ -72,6 +135,10 @@ const Navbar = () => {
   };
   const handleClose: () => void = () => {
     setOpen(false);
+  };
+  const getCurrentTime = () => {
+    const currentTime = new Date();
+    return currentTime.toLocaleTimeString();
   };
   //   const navigate = useNavigate();
   console.log("Before Logout", user);
@@ -185,9 +252,8 @@ const Navbar = () => {
       {/* Center links */}
       {!user.isActive && (
         <div
-          className={`md:flex items-center space-x-4 ${
-            openmenu ? "flex" : "hidden"
-          } flex-col md:flex-row absolute md:relative top-full left-0 right-0 bg-white gap-5 md:bg-transparent p-4 md:p-0 rounded-lg shadow-lg md:shadow-none`}
+          className={`md:flex items-center space-x-4 ${openmenu ? "flex" : "hidden"
+            } flex-col md:flex-row absolute md:relative top-full left-0 right-0 bg-white gap-5 md:bg-transparent p-4 md:p-0 rounded-lg shadow-lg md:shadow-none`}
         >
           <Link
             href="/"
@@ -198,11 +264,10 @@ const Navbar = () => {
             </span>
             <AiFillHome color="#FF8C00" />
             <span
-              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${
-                pathname[1] === undefined
-                  ? "scale-x-100"
-                  : "group-hover:scale-x-100"
-              } group-hover:scale-x-100 transition-transform duration-300`}
+              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${pathname[1] === undefined
+                ? "scale-x-100"
+                : "group-hover:scale-x-100"
+                } group-hover:scale-x-100 transition-transform duration-300`}
             ></span>
           </Link>
 
@@ -215,9 +280,8 @@ const Navbar = () => {
             </span>
             <AiFillInfoCircle color="#FF8C00" />
             <span
-              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${
-                pathname[1] === "A" ? "scale-x-100" : "group-hover:scale-x-100"
-              } group-hover:scale-x-100 transition-transform duration-300`}
+              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${pathname[1] === "A" ? "scale-x-100" : "group-hover:scale-x-100"
+                } group-hover:scale-x-100 transition-transform duration-300`}
             ></span>
           </Link>
 
@@ -230,9 +294,8 @@ const Navbar = () => {
             </span>
             <MdMiscellaneousServices color="#FF8C00" />
             <span
-              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${
-                pathname[1] === "S" ? "scale-x-100" : "group-hover:scale-x-100"
-              } group-hover:scale-x-100 transition-transform duration-300`}
+              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${pathname[1] === "S" ? "scale-x-100" : "group-hover:scale-x-100"
+                } group-hover:scale-x-100 transition-transform duration-300`}
             ></span>
           </Link>
 
@@ -245,9 +308,8 @@ const Navbar = () => {
             </span>
             <MdContactPage color="#FF8C00" />
             <span
-              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${
-                pathname[1] === "C" ? "scale-x-100" : "group-hover:scale-x-100"
-              } group-hover:scale-x-100 transition-transform duration-300`}
+              className={`absolute inset-x-0 bottom-0 h-1 top-8 bg-orange-500 transform origin-left scale-x-0 ${pathname[1] === "C" ? "scale-x-100" : "group-hover:scale-x-100"
+                } group-hover:scale-x-100 transition-transform duration-300`}
             ></span>
           </Link>
         </div>
@@ -292,9 +354,12 @@ const Navbar = () => {
             <>
               <div
                 className="text-orange-500 cursor-pointer"
-                onClick={() => setDrawer(!drawer)}
+                onClick={() => {
+                  setDrawer(true);
+                  setBadgeCount(0);
+                }}
               >
-                <Badge badgeContent={2}>
+                <Badge badgeContent={badgeCount}>
                   <NotificationsIcon />
                 </Badge>
               </div>
@@ -514,31 +579,43 @@ const Navbar = () => {
         </DialogActions>
       </Dialog>
       <Drawer anchor="right" open={drawer} onClose={() => setDrawer(false)}>
-        <h1 className="text-orange-600 text-center origin-left font-[Poppins] font-bold text-xl duration-30">
-          QUICKEAT
-        </h1>
-        <div>
-          {" "}
-          <ul>
-            {messages.map((msg, index) => (
-              <li key={index}>{msg}</li>
-            ))}
-          </ul>
-        </div>
-        <div className="flex flex-row p-4">
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Start The Chat Here"
-            className=" rounded-tl-md rounded-bl-md border border-orange-600 p-2"
-          />
-          <button
-            onClick={sendmessage}
-            className="bg-orange-600 text-white p-2 rounded-tr-md rounded-br-md"
-          >
-            <SendIcon />
-          </button>
+        <div className="h-full flex flex-col justify-between">
+          <div className="">
+            <h1 style={{ boxShadow: "0 0 4em orange" }} className="text-white font-[Poppins] text-center font-bold text-xl mb-4 p-4 rounded-b-3xl bg-orange-600">QUICK-CHAT
+              {!user.isAdmin && <p className="text-sm text-green-400">{online ? "online" : "offline"}</p>}
+            </h1>
+            <div className="overflow-y-auto h-full mb-4">
+              <ul className="flex flex-col gap-4">
+                {messages.map((msg, index) => (
+                  <div key={index} className={`flex ${msg.userId === userId ? "flex-row-reverse" : "flex-row"} gap-3 text-sm items-center`}>
+                    <img className="rounded-full w-12 h-12 p-2" src={`http://localhost:5000/uploads/${msg.username}`} alt="" />
+                    <div className="flex flex-col">
+
+                      <p className={`${msg.userId === userId ? "bg-orange-500  text-white p-2 rounded-full font[Poppins]" : "bg-transparent border-2 border-orange-500 rounded-full p-2 font-[Poppins]"}`}>{msg.message}</p>
+                      <p className="text-xs text-gray-500 text-end">{msg.timeStamp}</p>
+                    </div>
+                  </div>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="p-4">
+            <div className="flex items-center">
+              <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Ask Anything......."
+                className="flex-grow rounded-full border border-orange-600 p-2 mr-2 focus:outline-none"
+              />
+              <button
+                onClick={sendmessage}
+                className="bg-orange-600 text-white p-2 rounded-full flex items-center hover:bg-orange-700 focus:outline-none"
+              >
+                <SendIcon />
+              </button>
+            </div>
+          </div>
         </div>
       </Drawer>
     </nav>
