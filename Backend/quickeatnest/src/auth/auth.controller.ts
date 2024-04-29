@@ -118,11 +118,6 @@ export class AuthController {
     return this.userservice.logout(id);
   }
 
-  @Post("/message")
-  async messages(@Body() body: { username: string; message: string,userId:string,mode:boolean,timeStamp:string }) {
-    const { username, message,userId,mode,timeStamp } = body;
-    await this.userservice.trigger("chat", "message", { username, message,userId,mode,timeStamp });
-    return { success: true }; // Assuming you want to return a success response
-  }
+  
 
 }

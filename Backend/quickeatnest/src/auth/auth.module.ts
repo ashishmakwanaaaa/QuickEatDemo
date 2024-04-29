@@ -23,3 +23,4 @@ import { AuthGuard } from './auth.gaurd';
   exports: [AuthService],
 })
 export class AuthModule {}
+console.log("In Auth MOdule",process.env)
