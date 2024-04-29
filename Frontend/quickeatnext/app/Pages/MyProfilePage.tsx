@@ -181,7 +181,7 @@ const MyProfilePage = () => {
                   Upload Photo
                 </label>
               </div>
-              {role === "User" && (
+              {!user.isAdmin && (
                 <div className="flex flex-col w-[250px] h-[220px]">
                   {/* Image 2 */}
                   <input

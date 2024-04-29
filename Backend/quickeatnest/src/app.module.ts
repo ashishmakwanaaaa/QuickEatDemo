@@ -14,14 +14,18 @@ import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { TablebookingModule } from './tablebooking/tablebooking.module';
+import { MessageModule } from './message/message.module';
 
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     AuthModule,
     MongooseModule.forRoot(
-      `mongodb+srv://${process.env.user}:${process.env.password}@${process.env.cluster}.69lknpi.mongodb.net/${process.env.database}?retryWrites=true&w=majority`,
+      `mongodb+srv://${process.env.username}:${process.env.password}@${process.env.cluster}.69lknpi.mongodb.net/${process.env.database}?retryWrites=true&w=majority`,
     ),
     MulterModule.register({
       dest: './imageupload',
@@ -36,9 +40,9 @@ import { TablebookingModule } from './tablebooking/tablebooking.module';
       serveRoot: '/uploads', // URL path at which to serve the static assets
     }),
     TablebookingModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
-console.log(process.env)
