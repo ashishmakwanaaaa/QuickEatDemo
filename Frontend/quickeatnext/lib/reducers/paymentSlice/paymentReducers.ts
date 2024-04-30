@@ -1,5 +1,5 @@
-import { fetchPayments } from "@/lib/actions/paymentAction";
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchPayments } from "../../../lib/actions/paymentAction";
 
 export interface PaymentType {
   id?: number;

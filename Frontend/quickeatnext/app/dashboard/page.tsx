@@ -2,12 +2,10 @@
 
 import AdminDashboard from "../UserPage/UserDashboard";
 import DashBoard from "../Pages/DashBoard";
-import LoginContext from "@/app/LoginState/logincontext";
-import { useContext } from "react";
+
 
 const DashBoardPage = () => {
-  const StateContext = useContext(LoginContext);
-  console.log(StateContext);
+
   return (
     <>
       <DashBoard>

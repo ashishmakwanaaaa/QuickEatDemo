@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { CategoryType } from "../UserPage/CategoryList";
 import { useSelector } from "react-redux";
-import { user } from "@/lib/reducers";
+import { user } from "../../lib/reducers";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 
 const AddItem = () => {

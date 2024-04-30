@@ -1,5 +1,5 @@
 "use client";
-
+import "setimmediate";
 import React, { useContext, useState } from "react";
 import Swal from "sweetalert2";
 import TextField from "@mui/material/TextField";
@@ -13,8 +13,8 @@ import LoginContext from "../LoginState/logincontext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUser } from "@/lib/actions/userAction";
-import { user } from "@/lib/reducers";
+import { fetchUser } from "../../lib/actions/userAction";
+import { user } from "../../lib/reducers";
 
 const Login = (): React.JSX.Element => {
   const router = useRouter();
@@ -164,13 +164,14 @@ const Login = (): React.JSX.Element => {
             </label>
             <input
               type="text"
+              data-testid="emailid"
               id="restaurantemail"
               name="restaurantemail"
               value={formData.emailid}
               onChange={(e) =>
                 setFormData({ ...formData, emailid: e.target.value })
               }
-              placeholder="Enter Email ID"
+              placeholder="Enter Email"
               className="p-2 rounded-md border-2 border-orange-500 w-full"
             />
           </div>
@@ -183,18 +184,21 @@ const Login = (): React.JSX.Element => {
             </label>
             <input
               type="password"
+              data-testid="password"
               id="restaurantPsw"
               name="restaurantPsw"
               value={formData.password}
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
-              placeholder="Enter Password"
+              placeholder="Enter The Password"
               className="p-2 rounded-md border-2 border-orange-500 w-full"
             />
           </div>
           <button
             onClick={handleSubmit}
+            data-testid="login"
+            type="submit"
             className="w-full bg-orange-500 hover:text-orange-500 hover:bg-transparent transition-all duration-500 hover:border-orange-500 hover:border font-bold text-lg text-white p-2 rounded-lg"
           >
             Login

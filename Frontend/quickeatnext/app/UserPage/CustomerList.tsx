@@ -19,9 +19,9 @@ import {
   GridRowSelectionApi,
 } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCustomer } from "@/lib/actions/customerAction";
-import { customer, user } from "@/lib/reducers";
-import { useAppDispatch } from "@/lib/store";
+import { fetchCustomer } from "../../lib/actions/customerAction";
+import { customer, user } from "../../lib/reducers";
+import { useAppDispatch } from "../../lib/store";
 
 export interface Customer {
   _id?: string;
@@ -191,7 +191,7 @@ const CustomerList = () => {
     {
       field: "id",
       // headerClassName: "bg-black text-white font-bold",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "ID",
       width: 90,
     },
@@ -231,19 +231,19 @@ const CustomerList = () => {
     },
     {
       field: "firstname",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "FirstName",
       width: 150,
     },
     {
       field: "lastname",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "LastName",
       width: 120,
     },
     {
       field: "contact",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "Contact No.",
       width: 120,
     },

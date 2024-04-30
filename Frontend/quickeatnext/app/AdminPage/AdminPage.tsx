@@ -8,13 +8,13 @@ import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid, GridRowSelectionApi } from "@mui/x-data-grid";
-import { PaymentType } from "@/lib/reducers/paymentSlice/paymentReducers";
-import { payment, user } from "@/lib/reducers";
-import { fetchUsers } from "@/lib/actions/userAction";
+import { PaymentType } from "../../lib/reducers/paymentSlice/paymentReducers";
+import { payment, user } from "../../lib/reducers";
+import { fetchUsers } from "../../lib/actions/userAction";
 import ApexCharts from "apexcharts";
-import { User } from "@/lib/reducers/userSlice/UserReducers";
+import { User } from "../../lib/reducers/userSlice/UserReducers";
 import { OrderDataType } from "../UserPage/Orders";
-import { useAppDispatch } from "@/lib/store";
+import { useAppDispatch } from "../../lib/store";
 import { Counter } from "../components/Counter";
 import {
   Chart,

@@ -28,14 +28,14 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchPayments,
   FetchPaymentsPayload,
-} from "@/lib/actions/paymentAction";
+} from "../../lib/actions/paymentAction";
 import {
   PaymentType,
   initialStateTypeForPayment,
-} from "@/lib/reducers/paymentSlice/paymentReducers";
-import { payment, user } from "@/lib/reducers";
+} from "../../lib/reducers/paymentSlice/paymentReducers";
+import { payment, user } from "../../lib/reducers";
 import { Dispatch } from "redux";
-import { useAppDispatch } from "@/lib/store";
+import { useAppDispatch } from "../../lib/store";
 
 const PaymentList = () => {
   const [rows, setRows] = useState<PaymentType[]>([]);

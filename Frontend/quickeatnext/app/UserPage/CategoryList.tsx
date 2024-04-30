@@ -19,9 +19,9 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import Swal from "sweetalert2";
 import StateLogin from "../LoginState/logincontext";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "@/lib/actions/categoryAction";
-import { category, user } from "@/lib/reducers";
-import { useAppDispatch } from "@/lib/store";
+import { fetchCategories } from "../../lib/actions/categoryAction";
+import { category, user } from "../../lib/reducers";
+import { useAppDispatch } from "../../lib/store";
 
 export interface CategoryType {
   _id?: string;

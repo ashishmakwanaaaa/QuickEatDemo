@@ -6,7 +6,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { user } from "@/lib/reducers";
+import { user } from "../../lib/reducers";
 
 const DashBoard = ({ children }: any) => {
   const router = useRouter();
