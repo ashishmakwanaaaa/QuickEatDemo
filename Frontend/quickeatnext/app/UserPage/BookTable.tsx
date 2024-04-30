@@ -17,7 +17,7 @@ import {
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useSelector } from "react-redux";
-import { user } from "@/lib/reducers";
+import { user } from "../../lib/reducers";
 import { Dayjs } from "dayjs";
 import { FaTableColumns } from "react-icons/fa6";
 

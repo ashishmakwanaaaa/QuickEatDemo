@@ -24,8 +24,8 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import LoginContext from "../LoginState/logincontext";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "@/lib/reducers/userSlice/UserReducers";
-import { user } from "@/lib/reducers";
+import { logoutUser } from "../../lib/reducers/userSlice/UserReducers";
+import {user} from "../../lib/reducers"
 import { Badge } from "@mui/material";
 import Pusher from "pusher-js";
 

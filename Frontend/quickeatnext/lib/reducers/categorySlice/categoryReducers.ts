@@ -1,6 +1,6 @@
-import { CategoryType } from "@/app/UserPage/CategoryList";
-import { ItemType } from "@/app/UserPage/ItemList";
-import { fetchCategories } from "@/lib/actions/categoryAction";
+import { fetchCategories } from "../../../lib/actions/categoryAction";
+import { CategoryType } from "../../../app/UserPage/CategoryList";
+
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface initialStateTypeForCategory {

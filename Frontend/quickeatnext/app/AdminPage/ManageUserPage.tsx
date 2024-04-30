@@ -1,15 +1,15 @@
 "use client";
 
-import { fetchUsers } from "@/lib/actions/userAction";
-import { PaymentType } from "@/lib/reducers/paymentSlice/paymentReducers";
-import { User } from "@/lib/reducers/userSlice/UserReducers";
+import { fetchUsers } from "../../lib/actions/userAction";
+import { PaymentType } from "../../lib/reducers/paymentSlice/paymentReducers";
+import { User } from "../../lib/reducers/userSlice/UserReducers";
 import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Counter } from "../UserPage/UserDashboard";
+import { Counter } from "../components/Counter";
 import Swal from "sweetalert2";
-import { user } from "@/lib/reducers";
-import { useAppDispatch } from "@/lib/store";
+import { user } from "../../lib/reducers";
+import { useAppDispatch } from "../../lib/store";
 
 const ManageUserPage = () => {
   const dispatch = useAppDispatch();

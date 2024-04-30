@@ -1,5 +1,6 @@
-import { Customer } from "@/app/UserPage/CustomerList";
-import { fetchCustomer, fetchCustomerById } from "@/lib/actions/customerAction";
+import { fetchCustomer, fetchCustomerById } from "../../../lib/actions/customerAction";
+import { Customer } from "../../../app/UserPage/CustomerList";
+
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface initialStateTypeForCustomer {

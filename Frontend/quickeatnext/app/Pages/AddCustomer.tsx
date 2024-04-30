@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import EmailIcon from "@mui/icons-material/Email";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 
-import { user } from "@/lib/reducers";
+import { user } from "../../lib/reducers";
 
 const AddCustomer = () => {
   const router = useRouter();
@@ -74,7 +74,7 @@ const AddCustomer = () => {
     <div className="font-[Poppins] relative bg-[url('https://www.shutterstock.com/image-vector/set-healthy-unhealthy-products-fast-600nw-2253591061.jpg')] bg-cover bg-center bg-no-repeat backdrop-blur-lg bg-opacity-100 p-8 rounded-lg min-h-screen flex items-center justify-center">
       <div className="absolute inset-0 bg-black opacity-40"></div>
       <div
-        className="absolute inset-0 flex flex-col h-[620px] gap-4 bg-gray-50 mx-auto p-5 mt-12 rounded-xl"
+        className="absolute inset-0 flex flex-col h-[620px] gap-4 bg-gray-50 mx-auto p-5 mt-12 rounded-xl min-[100]:h-[100px]"
         style={{
           boxShadow: "0 0 2em orange",
           width: "90%",
@@ -101,12 +101,13 @@ const AddCustomer = () => {
             </label>
             <input
               type="text"
-              id="customerName"
-              name="customerName"
+              id="customerFirstName"
+              name="customerFirstName"
               value={CustomerData.firstname}
               onChange={(e) =>
                 setCustomerData({ ...CustomerData, firstname: e.target.value })
               }
+              data-testid="customername12"
               placeholder="Enter Customer Firstname"
               className="p-2 rounded-md border-2 border-orange-500 w-full"
             />
@@ -117,8 +118,8 @@ const AddCustomer = () => {
             </label>
             <input
               type="text"
-              id="customername"
-              name="customername"
+              id="customerLastName"
+              name="customerLastName"
               value={CustomerData.lastname}
               onChange={(e) =>
                 setCustomerData({ ...CustomerData, lastname: e.target.value })
@@ -248,6 +249,7 @@ const AddCustomer = () => {
           </div>
         </div>
         <button
+          data-testid="addcustomerbutton"
           onClick={handleClick}
           className="w-full bg-orange-500 text-white p-2 mt-4 rounded-lg hover:bg-transparent hover:text-orange-500 hover:border-orange-500 hover:border transition-all duration-500 font-bold text-lg"
         >

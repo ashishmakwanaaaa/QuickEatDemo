@@ -19,10 +19,10 @@ import "aos/dist/aos.css";
 import AOS from "aos";
 import Carousel from "@itseasy21/react-elastic-carousel";
 import { CategoryType } from "./CategoryList";
-import { fetchItems } from "@/lib/actions/itemAction";
-import { fetchCategories } from "@/lib/actions/categoryAction";
-import { category, item, user } from "@/lib/reducers";
-import { useAppDispatch } from "@/lib/store";
+import { fetchItems } from "../../lib/actions/itemAction";
+import { fetchCategories } from "../../lib/actions/categoryAction";
+import { category, item, user } from "../../lib/reducers";
+import { useAppDispatch } from "../../lib/store";
 
 export interface ItemType {
   _id: string;

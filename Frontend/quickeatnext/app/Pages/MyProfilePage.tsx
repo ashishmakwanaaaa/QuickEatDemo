@@ -8,8 +8,8 @@ import Swal from "sweetalert2";
 import LoginContext from "../LoginState/logincontext";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { updateUser } from "@/lib/reducers/userSlice/UserReducers";
-import { user } from "@/lib/reducers";
+import { updateUser } from "../../lib/reducers/userSlice/UserReducers";
+import { user } from "../../lib/reducers";
 
 const MyProfilePage = () => {
   const [image, setImage] = useState<File | null>(null);

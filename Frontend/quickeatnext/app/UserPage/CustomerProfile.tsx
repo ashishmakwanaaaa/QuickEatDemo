@@ -11,10 +11,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCustomerById } from "@/lib/actions/customerAction";
-import { initialStateTypeForCustomer } from "@/lib/reducers/customerSlice/customerReducers";
-import { fetchSpecificOrder } from "@/lib/actions/orderAction";
-import { customer, order } from "@/lib/reducers";
+import { fetchCustomerById } from "../../lib/actions/customerAction";
+import { fetchSpecificOrder } from "../../lib/actions/orderAction";
+import { customer, order } from "../../lib/reducers";
 import { useRouter } from "next/navigation";
 import { Counter } from "../components/Counter";
 

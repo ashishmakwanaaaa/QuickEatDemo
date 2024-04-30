@@ -7,7 +7,6 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import MoneyIcon from "@mui/icons-material/Money";
 import { useContext, useEffect, useState } from "react";
 import { Customer } from "./CustomerList";
-import { ItemType } from "./ItemList";
 import StateLogin from "../LoginState/logincontext";
 
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
@@ -24,14 +23,13 @@ import {
 } from "chart.js";
 import { Bar, Doughnut } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchItems } from "@/lib/actions/itemAction";
-import { fetchCustomer } from "@/lib/actions/customerAction";
-import { initialStateTypeForCustomer } from "@/lib/reducers/customerSlice/customerReducers";
-import { initialStateTypeForItems } from "@/lib/reducers/ItemSlice/itemReducers";
-import { PaymentData, fetchPayments } from "@/lib/actions/paymentAction";
-import { customer, item, payment, user } from "@/lib/reducers";
-import { PaymentType } from "@/lib/reducers/paymentSlice/paymentReducers";
-import { useAppDispatch } from "@/lib/store";
+import { fetchItems } from "../../lib/actions/itemAction";
+import { fetchCustomer } from "../../lib/actions/customerAction";
+
+import { PaymentData, fetchPayments } from "../../lib/actions/paymentAction";
+import { customer, item, payment, user } from "../../lib/reducers";
+import { PaymentType } from "../../lib/reducers/paymentSlice/paymentReducers";
+import { useAppDispatch } from "../../lib/store";
 import { Counter } from "../components/Counter";
 
 ChartJS.register(
@@ -80,7 +78,6 @@ const AdminDashboard = () => {
   >([]);
 
   let data: ItemDataTypeForChart[] = [];
-  const StateContext = useContext(StateLogin);
   const user = useSelector((state: user) => state.user.user);
   const userId = user._id;
   const dispatch = useAppDispatch();
@@ -292,13 +289,13 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <div className="dark:bg-gray-900 dark:text-gray-500 w-[68rem] font-[Poppins] bg-[#f4f4f4]  h-screen p-2 rounded-lg text-white">
-        <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 w-full p-2 rounded-lg text-white">
+      <div className="dark:bg-gray-900 dark:text-gray-500 w-full font-poppins bg-gray-100 h-screen p-4 md:p-8 text-white">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {loading ? (
             Array.from({ length: 5 }).map((_, index) => (
               <div
                 key={index}
-                className="animate-pulse flex flex-col gap-6 items-center bg-white dark:bg-gray-800 text-black p-2 rounded-3xl border-b-4 border-gray-300 drop-shadow-2xl h-44 mt-4"
+                className="animate-pulse flex flex-col gap-6 items-center bg-white dark:bg-gray-800 text-black p-4 rounded-3xl border-b-4 border-gray-300 shadow-2xl h-44 mt-4"
               >
                 <div className="h-4 bg-gray-300 rounded w-3/4"></div>
                 <div className="h-10 w-10 rounded-full bg-gray-300"></div>
@@ -307,78 +304,61 @@ const AdminDashboard = () => {
             ))
           ) : (
             <>
-              <div
-                className="flex flex-col gap-6 items-center bg-red-500 dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-xl border-b-4 border-red-500 drop-shadow-2xl h-44 mt-4"
-                style={{ boxShadow: "0 0 0.1em red" }}
-              >
-                <h4 className="text-md text-white dark:text-red-500">
+              <div className="flex flex-col gap-6 items-center bg-red-500 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-red-500 shadow-2xl h-44">
+                <h4 className="text-md md:text-md text-white dark:text-red-500">
                   Customers
                 </h4>
-                <div className="rounded-full p-2 bg-white">
+                <div className="rounded-full p-2 bg-white dark:bg-red-900">
                   <IoPeople color="red" />
                 </div>
-
                 <p className="text-3xl text-white dark:text-red-500">
                   <Counter
                     targetValue={
-                      customers && customers.length > 0 && customers.length
+                      customers && customers.length > 0 ? customers.length : 0
                     }
                   />
                 </p>
               </div>
-              <div
-                style={{ boxShadow: "0 0 0.1em green" }}
-                className="flex flex-col gap-6 items-center bg-green-500 dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-xl border-b-4 border-green-500  drop-shadow-2xl h-44 mt-4"
-              >
-                <h4 className="text-md text-white dark:text-green-600">
+              <div className="flex flex-col gap-6 items-center bg-green-500 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-green-500 shadow-2xl h-44">
+                <h4 className="text-md md:text-md text-white dark:text-green-600">
                   FoodItems
                 </h4>
-                <div className="bg-white p-2 rounded-full">
+                <div className="bg-white dark:bg-green-900  p-2 rounded-full">
                   <IoFastFood color="green" />
                 </div>
                 <p className="text-3xl text-white dark:text-green-600">
                   <Counter
-                    targetValue={items && items.length > 0 && items.length}
+                    targetValue={items && items.length > 0 ? items.length : 0}
                   />
                 </p>
               </div>
-              <div
-                style={{ boxShadow: "0 0 0.1em blue" }}
-                className="flex flex-col gap-6 items-center bg-blue-400 dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-xl border-b-4 border-blue-400  drop-shadow-2xl h-44 mt-4"
-              >
-                <h4 className="text-md text-white dark:text-blue-400">
+              <div className="flex flex-col gap-7 items-center bg-blue-400 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-blue-400 shadow-2xl h-44">
+                <h4 className="text-md md:text-md text-white dark:text-blue-400">
                   Total Sales
                 </h4>
-                <div className="bg-white rounded-full p-1 flex justify-center items-center w-10 h-10">
+                <div className="bg-white dark:bg-blue-400 rounded-full p-1 flex justify-center items-center w-9 h-10">
                   <MonetizationOnIcon style={{ color: "blue" }} />
                 </div>
                 <p className="text-3xl text-white dark:text-blue-400">
                   &#x20B9; <Counter targetValue={totalAmount} />
                 </p>
               </div>
-              <div
-                style={{ boxShadow: "0 0 0.1em orange" }}
-                className="flex flex-col gap-6 items-center bg-orange-400 dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-xl border-b-4 border-orange-400  drop-shadow-2xl h-44 mt-4"
-              >
-                <h4 className="text-md text-white dark:text-orange-500">
+              <div className="flex flex-col gap-6 items-center bg-orange-400 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-orange-400 shadow-2xl h-44">
+                <h4 className="text-md md:text-md text-white dark:text-orange-500">
                   Card Sales
                 </h4>
-                <div className="rounded-full p-2 bg-white w-10 h-10 flex justify-center items-center">
+                <div className="rounded-full p-2 bg-white dark:bg-orange-900 w-10 h-10 flex justify-center items-center">
                   <CreditCardIcon style={{ color: "orange" }} />
                 </div>
                 <p className="text-3xl text-white dark:text-orange-500">
                   &#x20B9; <Counter targetValue={totalCardAmount} />
                 </p>
               </div>
-              <div
-                style={{ boxShadow: "0 0 0.1em purple" }}
-                className="flex flex-col gap-6 items-center bg-purple-400 dark:bg-gray-800 dark:border-none dark:border-stone-700 text-black p-2 rounded-xl border-b-4 border-purple-400  drop-shadow-2xl h-44 mt-4"
-              >
-                <h4 className="text-md text-white dark:text-purple-500">
+              <div className="flex flex-col gap-6 items-center bg-purple-400 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-purple-400 shadow-2xl h-44">
+                <h4 className="text-md md:text-md text-white dark:text-purple-500">
                   Cash Sales
                 </h4>
-                <div className="bg-white rounded-full p-2 w-10 h-10 flex justify-center items-center">
-                  {" "}
+                <div className="bg-white dark:bg-purple-500 rounded-full p-2 w-10 h-10 flex justify-center items-center">
                   <MoneyIcon style={{ color: "purple" }} />
                 </div>
                 <p className="text-3xl text-white dark:text-purple-500">
@@ -388,39 +368,31 @@ const AdminDashboard = () => {
             </>
           )}
         </div>
-        <div className="flex justify-between w-full h-full mt-5 z-20">
-          <div className="flex ml-[-25px] flex-col items-center drop-shadow-2xl rounded-xl  justify-center h-[260px] mt-10 w-[400px] gap-8">
+        <div className="flex gap-10 justify-between w-full h-full mt-5 z-20 ml-4">
+          <div className="flex ml-[-25px] flex-col items-center shadow-2xl rounded-xl justify-center h-[400px] w-[400px] gap-8">
             {loading ? (
               <div className="animate-pulse bg-gray-300 rounded-xl w-[400px] h-[450px] ml-[60px]"></div>
             ) : (
-              <div
-                style={{ boxShadow: "0 0 0.4em gray" }}
-                className="rounded-lg p-2 mt-6 h-[350px]"
-              >
+              <div className="rounded-lg p-4 h-[350px]">
                 <Doughnut data={finalData} options={options} />
-                <h1 className="text-center dark:text-gray-300  mt-2 capitalize text-orange-500 font-bold">
+                <h1 className="text-center mt-2 capitalize text-orange-500 font-bold">
                   Categories Wise Data
                 </h1>
               </div>
             )}
           </div>
-          <div
-            className="flex flex-col items-end rounded-lg h-[360px] p-2 justify-center drop-shadow-2xl mr-4 "
-            style={{ boxShadow: "0 0 0.4em gray" }}
-          >
+          <div className="flex flex-col items-end rounded-lg h-[400px] p-4 justify-center shadow-2xl mr-4">
             {loading ? (
-              <div className="animate-pulse bg-gray-300 rounded-xl w-[500px] h-[300px]"></div>
+              <div className="animate-pulse bg-gray-300 rounded-xl w-[500px] h-[400px]"></div>
             ) : (
               <>
                 <div className="flex flex-row gap-2 justify-start items-start mr-16">
                   <div className="flex items-end">
                     <FormControl variant="standard" style={{ width: "80px" }}>
-                      {/* <InputLabel id="demo-simple-select-label" style={{ color: "black" }}>Select A Month</InputLabel> */}
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={selectedMonth.toString()}
-                        label="select"
                         className="dark:text-gray-300"
                         onChange={(e) =>
                           setSelectedMonth(parseInt(e.target.value))
@@ -436,12 +408,10 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex items-end">
                     <FormControl variant="standard" style={{ width: "80px" }}>
-                      {/* <InputLabel id="demo-simple-select-label" style={{ color: "black" }}>Select A Month</InputLabel> */}
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={selectedYear.toString()}
-                        label="select"
                         className="dark:text-gray-300"
                         onChange={(e) =>
                           setSelectedYear(parseInt(e.target.value))
@@ -456,9 +426,9 @@ const AdminDashboard = () => {
                     </FormControl>
                   </div>
                 </div>
-                <div className=" flex flex-col gap-2 w-[500px] h-[700px] mr-16">
+                <div className="flex flex-col gap-2 w-[500px] h-[700px] mr-16">
                   <Bar data={dataforbarchart} options={optionsforbarchart} />
-                  <h1 className="text-end dark:text-gray-300 capitalize text-orange-500 font-bold">
+                  <h1 className="text-center mt-10 capitalize text-orange-500 font-bold">
                     Monthly Sales Record
                   </h1>
                 </div>

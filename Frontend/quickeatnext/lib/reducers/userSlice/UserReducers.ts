@@ -1,5 +1,5 @@
-import { fetchUser, fetchUsers } from "@/lib/actions/userAction";
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchUser, fetchUsers } from "../../../lib/actions/userAction";
 
 export interface User {
   _id?: string | undefined | any;
@@ -36,7 +36,7 @@ const initialState: initialStateTypeForUsers = {
     isAdmin: false,
     isActive: false,
     lat: undefined,
-    long: undefined
+    long: undefined,
   },
   activeusers: [],
   loading: false,
@@ -52,9 +52,9 @@ const UserSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
-    updateUser(state,action){
-      state.user = action.payload
-    }
+    updateUser(state, action) {
+      state.user = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -86,5 +86,5 @@ const UserSlice = createSlice({
   },
 });
 
-export const { logoutUser,updateUser } = UserSlice.actions;
+export const { logoutUser, updateUser } = UserSlice.actions;
 export default UserSlice.reducer;

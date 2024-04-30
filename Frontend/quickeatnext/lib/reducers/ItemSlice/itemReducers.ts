@@ -1,5 +1,5 @@
-import { ItemType } from "@/app/UserPage/ItemList";
-import { fetchItems } from "@/lib/actions/itemAction";
+import { fetchItems } from "../../../lib/actions/itemAction";
+import { ItemType } from "../../../app/UserPage/ItemList";
 
 import { createSlice } from "@reduxjs/toolkit";
 

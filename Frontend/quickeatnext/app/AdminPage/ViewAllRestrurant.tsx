@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers } from "@/lib/actions/userAction";
-import { User } from "@/lib/reducers/userSlice/UserReducers";
-import { user } from "@/lib/reducers";
-import { useAppDispatch } from "@/lib/store";
+import { fetchUsers } from "../../lib/actions/userAction";
+import { User } from "../../lib/reducers/userSlice/UserReducers";
+import { user } from "../../lib/reducers";
+import { useAppDispatch } from "../../lib/store";
 
 const ViewAllRestrurant = () => {
   const [mapInitialized, setMapInitialized] = useState(false);

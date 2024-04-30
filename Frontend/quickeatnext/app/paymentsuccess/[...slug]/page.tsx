@@ -1,10 +1,10 @@
 "use client";
 
-import { Customer } from "@/app/UserPage/CustomerList";
+import { Customer } from "../../../app/UserPage/CustomerList";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import LoginContext from "@/app/LoginState/logincontext";
+import LoginContext from "../../../app/LoginState/logincontext";
 
 const PaymentSuccess = ({ params }: { params: { slug: string } }) => {
   // console.log(params);

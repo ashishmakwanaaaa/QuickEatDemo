@@ -1,0 +1,1367 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[` 1`] = `<div />`;
+
+exports[` 2`] = `
+<div>
+  <div
+    class="w-full h-full p-8 flex flex-col items-center font-[Poppins]"
+  >
+    <p
+      class="font-bold text-6xl text-center text-orange-500 mb-4 drop-shadow-lg aos-init aos-animate"
+      data-aos="zoom-in"
+    >
+      Contact Us
+    </p>
+    <div
+      class="p-2 flex justify-between w-full max-w-[1300px] mt-5"
+    >
+      <div
+        class="flex flex-col p-2 w-[45%] space-y-4 my-auto aos-init aos-animate"
+        data-aos="fade-right"
+      >
+        <div
+          class="flex flex-row gap-4"
+        >
+          <span
+            class="text-xl"
+          >
+            Name:
+          </span>
+          <input
+            class="ml-4 border-2 drop-shadow-lg border-orange-500 w-[80%] h-full p-2 text-orange-500 active:border-orange-500  rounded-md"
+            id=""
+            name="from_name"
+            placeholder="Enter your name"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="flex flex-row gap-4"
+        >
+          <span
+            class="text-xl"
+          >
+            Email:
+          </span>
+          <input
+            class="ml-5 border-2 drop-shadow-lg border-orange-500 w-[80%] h-full p-2 text-orange-500 active:border-orange-500  rounded-md"
+            id=""
+            name="to_name"
+            placeholder="Enter your Email"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="flex flex-row gap-4"
+        >
+          <span
+            class="text-xl"
+          >
+            Subject:
+          </span>
+          <textarea
+            class="border-2 drop-shadow-lg border-orange-500 w-[80%] h-36 p-2 text-orange-500 active:border-orange-500 rounded-md"
+            name="message"
+            placeholder="Write a message Here"
+          />
+        </div>
+        <div
+          class=""
+        >
+          <button
+            class=" drop-shadow-lg bg-orange-600 mt-5 w-full hover:text-white hover:bg-orange-500 text-white py-2 rounded-md transition duration-300"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+      <div
+        class="flex flex-col w-[50%] text-lg space-y-4 aos-init aos-animate"
+        data-aos="fade-left"
+      >
+        <h1
+          class="flex items-center gap-2 font-bold text-3xl text-orange-500 tracking-wide mb-2 drop-shadow-lg"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M256 48C141.1 48 48 141.1 48 256v40c0 13.3-10.7 24-24 24s-24-10.7-24-24V256C0 114.6 114.6 0 256 0S512 114.6 512 256V400.1c0 48.6-39.4 88-88.1 88L313.6 488c-8.3 14.3-23.8 24-41.6 24H240c-26.5 0-48-21.5-48-48s21.5-48 48-48h32c17.8 0 33.3 9.7 41.6 24l110.4 .1c22.1 0 40-17.9 40-40V256c0-114.9-93.1-208-208-208zM144 208h16c17.7 0 32 14.3 32 32V352c0 17.7-14.3 32-32 32H144c-35.3 0-64-28.7-64-64V272c0-35.3 28.7-64 64-64zm224 0c35.3 0 64 28.7 64 64v48c0 35.3-28.7 64-64 64H352c-17.7 0-32-14.3-32-32V240c0-17.7 14.3-32 32-32h16z"
+            />
+          </svg>
+          Get In Touch
+        </h1>
+        <p
+          class="text-orange-500 text-md md:pr-16 font-bold drop-shadow-lg aos-init aos-animate"
+          data-aos="fade-left"
+        >
+          "Your Feedback Matters, Drop Us a Line and Let's Stay Connected!"
+        </p>
+        <div
+          class="flex flex-col space-y-3 aos-init aos-animate"
+          data-aos="fade-left"
+        >
+          <div
+            class="flex flex-row space-x-3 text-orange-500 drop-shadow-lg"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 512 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M391 480c-19.52 0-46.94-7.06-88-30-49.93-28-88.55-53.85-138.21-103.38C116.91 298.77 93.61 267.79 61 208.45c-36.84-67-30.56-102.12-23.54-117.13C45.82 73.38 58.16 62.65 74.11 52a176.3 176.3 0 0 1 28.64-15.2c1-.43 1.93-.84 2.76-1.21 4.95-2.23 12.45-5.6 21.95-2 6.34 2.38 12 7.25 20.86 16 18.17 17.92 43 57.83 52.16 77.43 6.15 13.21 10.22 21.93 10.23 31.71 0 11.45-5.76 20.28-12.75 29.81-1.31 1.79-2.61 3.5-3.87 5.16-7.61 10-9.28 12.89-8.18 18.05 2.23 10.37 18.86 41.24 46.19 68.51s57.31 42.85 67.72 45.07c5.38 1.15 8.33-.59 18.65-8.47 1.48-1.13 3-2.3 4.59-3.47 10.66-7.93 19.08-13.54 30.26-13.54h.06c9.73 0 18.06 4.22 31.86 11.18 18 9.08 59.11 33.59 77.14 51.78 8.77 8.84 13.66 14.48 16.05 20.81 3.6 9.53.21 17-2 22-.37.83-.78 1.74-1.21 2.75a176.49 176.49 0 0 1-15.29 28.58c-10.63 15.9-21.4 28.21-39.38 36.58A67.42 67.42 0 0 1 391 480z"
+              />
+            </svg>
+                +(91)953 751 9367
+          </div>
+          <div
+            class="flex flex-row spac  e-x-3 drop-shadow-lg text-orange-500"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              role="img"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"
+              />
+            </svg>
+                quickeatwithus@gmail.com
+          </div>
+          <div
+            class="flex flex-row space-x-3 drop-shadow-lg text-orange-500"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 384 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"
+              />
+            </svg>
+                Surat, Gujarat - India
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[` 3`] = `
+<div>
+  <div
+    class="h-full font-[Poppins] w-full mx-auto p-8 flex flex-col gap-4 items-center  drop-shadow-lg rounded-3xl bg-stone-800 "
+  >
+    <p
+      class="font-bold text-6xl text-center text-orange-600 aos-init aos-animate"
+      data-aos="zoom-in"
+    >
+      Our Services
+    </p>
+    <div
+      class="bg-orange-900 h-2 w-56 rounded"
+    />
+    <div
+      class="flex md:flex-row sm:flex-col  gap-10 w-full justify-center h-full items-center "
+    >
+      <div
+        class="w-[500px] h-[430px] p-1 flex flex-col items-center gap-[4rem] border-b-8 pr-8 rounded-2xl border-orange-400 mt-5 hover:bg-gradient-to-t from-transparent to-orange-500 transition duration-300 hover:scale-105 aos-init aos-animate"
+        data-aos="fade-right"
+      >
+        <img
+          class="w-40 h-50 rounded-full drop-shadow-2xl"
+          src="https://icones.pro/wp-content/uploads/2022/07/icones-d-administration-orange.png"
+        />
+        <div
+          class="ml-3"
+        >
+          <p
+            class="font-bold text-xl text-orange-500  "
+          >
+            Customer Management
+          </p>
+          <p
+            class=" mt-5 text-white font-normal mb-2"
+          >
+            Efficiently manage customer records, preferences, and order history for a personalized dining experience.
+          </p>
+        </div>
+      </div>
+      <div
+        class="flex w-[500px] p-1 items-center gap-[4rem] flex-col border-b-8 pr-8 rounded-2xl border-blue-500 mt-8 hover:bg-gradient-to-t from-transparent to-blue-500 transform duration-300 aos-init aos-animate"
+        data-aos="fade-up"
+      >
+        <img
+          class="w-30 h-40 rounded-full drop-shadow-2xl"
+          src="http://www.newdesignfile.com/postpic/2011/07/local-food-icon_63633.png"
+        />
+        <div
+          class="ml-3"
+        >
+          <p
+            class="font-bold text-xl text-blue-500  "
+          >
+            Food Management
+          </p>
+          <p
+            class="font-normal  mt-5 text-white mb-10"
+          >
+            Organize your menu items and categories, update availability, and showcase enticing dishes to enhance customer satisfaction.
+          </p>
+        </div>
+      </div>
+      <div
+        class="w-[500px] flex flex-col items-center gap-12 border-b-8 pr-8 rounded-2xl border-green-500 mt-12 hover:bg-gradient-to-t from-transparent to-green-500 transition duration-700 aos-init aos-animate"
+        data-aos="fade-down"
+      >
+        <img
+          class="w-40 h-50 rounded-full drop-shadow-2xl"
+          src="https://png.pngtree.com/png-vector/20220628/ourmid/pngtree-pay-tax-icon-green-logo-png-image_5550560.png"
+        />
+        <div
+          class="ml-3"
+        >
+          <p
+            class="font-bold text-xl text-green-500  "
+          >
+            Secure Payments
+          </p>
+          <p
+            class="font-normal  mt-5 text-white mb-6"
+          >
+            Offer customers peace of mind with secure online payment options, ensuring a seamless and trustworthy transaction process.
+          </p>
+        </div>
+      </div>
+      <div
+        class="flex w-[500px] items-center gap-8 flex-col border-b-8 pr-8 rounded-2xl border-red-500 mt-12 hover:bg-gradient-to-t from-transparent to-red-500 transition duration-300 aos-init aos-animate"
+        data-aos="fade-left"
+      >
+        <img
+          class="w-30 h-40 rounded-full drop-shadow-2xl"
+          src="https://www.ezurs.com/wp-content/themes/ezurs/images/new/icon-big-data-analytics.svg"
+        />
+        <div
+          class="ml-3"
+        >
+          <p
+            class="font-bold text-xl text-red-500  "
+          >
+            Data Analytics
+          </p>
+          <p
+            class="font-normal  mt-5 text-white mb-8"
+          >
+            Harness the power of data analytics to gain valuable insights into customer behavior, optimize operations, and drive business growth.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-row gap-10 w-full justify-center h-full items-center "
+    />
+  </div>
+</div>
+`;
+
+exports[` 4`] = `
+<div>
+  <div
+    class="font-[Poppins] relative bg-[url('https://www.shutterstock.com/image-vector/set-healthy-unhealthy-products-fast-600nw-2253591061.jpg')] bg-cover bg-center bg-no-repeat backdrop-blur-lg bg-opacity-100 p-8 rounded-lg min-h-screen flex items-center justify-center"
+  >
+    <div
+      class="absolute inset-0 bg-black opacity-40"
+    />
+    <div
+      class="absolute inset-0 flex flex-col h-[620px] gap-4 bg-gray-50 mx-auto p-5 mt-12 rounded-xl min-[100]:h-[100px]"
+      style="box-shadow: 0 0 2em orange; width: 90%; max-width: 900px;"
+    >
+      <div
+        class="flex justify-between"
+      >
+        <div
+          class="bg-orange-600 rounded-full w-8 h-8 flex items-center justify-center text-white cursor-pointer"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardBackspaceIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z"
+            />
+          </svg>
+        </div>
+        <h3
+          class="text-xl font-bold text-center text-orange-500 flex-1"
+        >
+          ADD CUSTOMER
+        </h3>
+      </div>
+      <div
+        class="flex flex-col md:flex-row justify-between gap-5"
+      >
+        <div
+          class="flex flex-col gap-2 w-full"
+        >
+          <label
+            class="font-bold "
+            for="customerName"
+          >
+            Customer's Firstname
+          </label>
+          <input
+            class="p-2 rounded-md border-2 border-orange-500 w-full"
+            id="customerName"
+            name="customerName"
+            placeholder="Enter Customer Firstname"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="flex flex-col gap-2 w-full"
+        >
+          <label
+            class="font-bold"
+            for="customername"
+          >
+            Customer's Lastname
+          </label>
+          <input
+            class="p-2 rounded-md border-2 border-orange-500 w-full"
+            id="customername"
+            name="customername"
+            placeholder="Enter Customer Lastname"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="flex flex-col gap-2 w-full"
+      >
+        <label
+          class="font-bold"
+          for="address"
+        >
+          Email ID:
+        </label>
+        <div
+          class="flex w-full"
+        >
+          <div
+            class="bg-orange-600 p-2 rounded-bl-md rounded-tl-md text-white flex items-center justify-center"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="EmailIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 4-8 5-8-5V6l8 5 8-5z"
+              />
+            </svg>
+          </div>
+          <input
+            class="p-2 rounded-tr-md rounded-br-md border-2 border-orange-500 w-full"
+            id="address"
+            name="address"
+            placeholder="Enter Email Address"
+            type="email"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="flex flex-col md:flex-row justify-between gap-5"
+      >
+        <div
+          class="flex flex-col gap-2 w-full"
+        >
+          <label
+            class="font-bold"
+            for="address"
+          >
+            Address:
+          </label>
+          <textarea
+            class="p-2 rounded-md border-2 border-orange-500 w-full h-32"
+            id="address"
+            name="address"
+            placeholder="Enter Restaurant Address"
+          />
+        </div>
+        <div
+          class="flex flex-col gap-2 w-full"
+        >
+          <label
+            class="font-bold"
+            for="customerName"
+          >
+            Contact No:
+          </label>
+          <input
+            class="p-2 rounded-md border-2 border-orange-500 w-full"
+            id="customerName"
+            name="customerName"
+            placeholder="Enter Customer Contact No"
+            type="text"
+            value="0"
+          />
+          <label
+            class="font-bold "
+            for="restaurantName"
+          >
+            State:
+          </label>
+          <input
+            class="p-2 rounded-md border-2 border-orange-500 w-[420px]"
+            id="customername"
+            name="customername"
+            placeholder="Enter Customer State"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="flex flex-col md:flex-row justify-between gap-5"
+      >
+        <div
+          class="flex flex-col gap-2 w-full"
+        >
+          <label
+            class="font-bold"
+            for="customerName"
+          >
+            City:
+          </label>
+          <input
+            class="p-2 rounded-md border-2 border-orange-500 w-full"
+            id="customerName"
+            name="customerName"
+            placeholder="Enter Customer City"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="flex flex-col gap-2 w-full"
+        >
+          <label
+            class="font-bold"
+            for="customername"
+          >
+            Pincode:
+          </label>
+          <input
+            class="p-2 rounded-md border-2 border-orange-500 w-full"
+            id="customername"
+            name="customername"
+            placeholder="Enter Customer Pincode"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <button
+        class="w-full bg-orange-500 text-white p-2 mt-4 rounded-lg hover:bg-transparent hover:text-orange-500 hover:border-orange-500 hover:border transition-all duration-500 font-bold text-lg"
+      >
+        Add Customer →
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AboutUs renders AboutUs page unchanged 1`] = `
+<div>
+  <div
+    class="mb-10 flex flex-col md:flex-row font-[Poppins]"
+  >
+    <div
+      class="px-5 py-3 mt-10 md:mt-10 ml-10 rounded-xl relative w-full md:w-1/2 shadow-2xl"
+    >
+      <p
+        class="font-bold text-4xl md:text-5xl text-orange-500 mb-4 ml-12 aos-init aos-animate"
+        data-aos="fade-right"
+      >
+        Who We Are
+      </p>
+      <div
+        class="relative flex flex-col ml-10"
+      >
+        <p
+          class="text-lg md:text-xl mb-6 text-orange-500 pl-4 font-bold aos-init aos-animate"
+          data-aos="fade-right"
+        >
+          → QuickEat is on a mission to redefine your dining experience. We're passionate about delivering delightful culinary experiences right to your doorstep.
+        </p>
+        <p
+          class="text-lg md:text-xl mb-6 text-black pl-4 font-bold aos-init aos-animate"
+          data-aos="fade-right"
+        >
+          → Our dedication to customer satisfaction drives everything we do. From our user-friendly ordering system to our reliable delivery services, we strive to exceed your expectations.
+        </p>
+        <p
+          class="text-lg md:text-xl text-orange-500 pl-4 font-bold aos-init aos-animate"
+          data-aos="fade-right"
+        >
+          → Join us on this gastronomic journey where every bite tells a story, and every order is an opportunity to share the joy of good food.
+        </p>
+      </div>
+    </div>
+    <div
+      class="ml-0 md:ml-16 mt-10 md:mt-10 aos-init aos-animate"
+      data-aos="fade-left"
+    >
+      <img
+        alt=""
+        class="w-full md:w-96 h-auto md:h-96 mt-10 md:mt-0 transform transition-transform duration-300 hover:scale-105 rounded-xl"
+        src="https://www.shutterstock.com/image-illustration/group-stylized-orange-people-stand-260nw-163098557.jpg"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AddCustomer renders correctly 1`] = `
+<div>
+  <div
+    class="font-[Poppins] relative bg-[url('https://www.shutterstock.com/image-vector/set-healthy-unhealthy-products-fast-600nw-2253591061.jpg')] bg-cover bg-center bg-no-repeat backdrop-blur-lg bg-opacity-100 p-8 rounded-lg min-h-screen flex items-center justify-center"
+  >
+    <div
+      class="absolute inset-0 bg-black opacity-40"
+    />
+    <div
+      class="absolute inset-0 flex flex-col h-[620px] gap-4 bg-gray-50 mx-auto p-5 mt-12 rounded-xl"
+      style="box-shadow: 0 0 2em orange; width: 90%; max-width: 900px;"
+    >
+      <div
+        class="flex justify-between"
+      >
+        <div
+          class="bg-orange-600 rounded-full w-8 h-8 flex items-center justify-center text-white cursor-pointer"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardBackspaceIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z"
+            />
+          </svg>
+        </div>
+        <h3
+          class="text-xl font-bold text-center text-orange-500 flex-1"
+        >
+          ADD CUSTOMER
+        </h3>
+      </div>
+      <div
+        class="flex flex-col md:flex-row justify-between gap-5"
+      >
+        <div
+          class="flex flex-col gap-2 w-full"
+        >
+          <label
+            class="font-bold "
+            for="customerName"
+          >
+            Customer's Firstname
+          </label>
+          <input
+            class="p-2 rounded-md border-2 border-orange-500 w-full"
+            id="customerName"
+            name="customerName"
+            placeholder="Enter Customer Firstname"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="flex flex-col gap-2 w-full"
+        >
+          <label
+            class="font-bold"
+            for="customername"
+          >
+            Customer's Lastname
+          </label>
+          <input
+            class="p-2 rounded-md border-2 border-orange-500 w-full"
+            id="customername"
+            name="customername"
+            placeholder="Enter Customer Lastname"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="flex flex-col gap-2 w-full"
+      >
+        <label
+          class="font-bold"
+          for="address"
+        >
+          Email ID:
+        </label>
+        <div
+          class="flex w-full"
+        >
+          <div
+            class="bg-orange-600 p-2 rounded-bl-md rounded-tl-md text-white flex items-center justify-center"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+              data-testid="EmailIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 4-8 5-8-5V6l8 5 8-5z"
+              />
+            </svg>
+          </div>
+          <input
+            class="p-2 rounded-tr-md rounded-br-md border-2 border-orange-500 w-full"
+            id="address"
+            name="address"
+            placeholder="Enter Email Address"
+            type="email"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="flex flex-col md:flex-row justify-between gap-5"
+      >
+        <div
+          class="flex flex-col gap-2 w-full"
+        >
+          <label
+            class="font-bold"
+            for="address"
+          >
+            Address:
+          </label>
+          <textarea
+            class="p-2 rounded-md border-2 border-orange-500 w-full h-32"
+            id="address"
+            name="address"
+            placeholder="Enter Restaurant Address"
+          />
+        </div>
+        <div
+          class="flex flex-col gap-2 w-full"
+        >
+          <label
+            class="font-bold"
+            for="customerName"
+          >
+            Contact No:
+          </label>
+          <input
+            class="p-2 rounded-md border-2 border-orange-500 w-full"
+            id="customerName"
+            name="customerName"
+            placeholder="Enter Customer Contact No"
+            type="text"
+            value="0"
+          />
+          <label
+            class="font-bold "
+            for="restaurantName"
+          >
+            State:
+          </label>
+          <input
+            class="p-2 rounded-md border-2 border-orange-500 w-[420px]"
+            id="customername"
+            name="customername"
+            placeholder="Enter Customer State"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="flex flex-col md:flex-row justify-between gap-5"
+      >
+        <div
+          class="flex flex-col gap-2 w-full"
+        >
+          <label
+            class="font-bold"
+            for="customerName"
+          >
+            City:
+          </label>
+          <input
+            class="p-2 rounded-md border-2 border-orange-500 w-full"
+            id="customerName"
+            name="customerName"
+            placeholder="Enter Customer City"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="flex flex-col gap-2 w-full"
+        >
+          <label
+            class="font-bold"
+            for="customername"
+          >
+            Pincode:
+          </label>
+          <input
+            class="p-2 rounded-md border-2 border-orange-500 w-full"
+            id="customername"
+            name="customername"
+            placeholder="Enter Customer Pincode"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <button
+        class="w-full bg-orange-500 text-white p-2 mt-4 rounded-lg hover:bg-transparent hover:text-orange-500 hover:border-orange-500 hover:border transition-all duration-500 font-bold text-lg"
+      >
+        Add Customer →
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Contact renders contact Page unchanged 1`] = `
+<div>
+  <div
+    class="w-full h-full p-8 flex flex-col items-center font-[Poppins]"
+  >
+    <p
+      class="font-bold text-6xl text-center text-orange-500 mb-4 drop-shadow-lg aos-init aos-animate"
+      data-aos="zoom-in"
+    >
+      Contact Us
+    </p>
+    <div
+      class="p-2 flex justify-between w-full max-w-[1300px] mt-5"
+    >
+      <div
+        class="flex flex-col p-2 w-[45%] space-y-4 my-auto aos-init aos-animate"
+        data-aos="fade-right"
+      >
+        <div
+          class="flex flex-row gap-4"
+        >
+          <span
+            class="text-xl"
+          >
+            Name:
+          </span>
+          <input
+            class="ml-4 border-2 drop-shadow-lg border-orange-500 w-[80%] h-full p-2 text-orange-500 active:border-orange-500  rounded-md"
+            id=""
+            name="from_name"
+            placeholder="Enter your name"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="flex flex-row gap-4"
+        >
+          <span
+            class="text-xl"
+          >
+            Email:
+          </span>
+          <input
+            class="ml-5 border-2 drop-shadow-lg border-orange-500 w-[80%] h-full p-2 text-orange-500 active:border-orange-500  rounded-md"
+            id=""
+            name="to_name"
+            placeholder="Enter your Email"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="flex flex-row gap-4"
+        >
+          <span
+            class="text-xl"
+          >
+            Subject:
+          </span>
+          <textarea
+            class="border-2 drop-shadow-lg border-orange-500 w-[80%] h-36 p-2 text-orange-500 active:border-orange-500 rounded-md"
+            name="message"
+            placeholder="Write a message Here"
+          />
+        </div>
+        <div
+          class=""
+        >
+          <button
+            class=" drop-shadow-lg bg-orange-600 mt-5 w-full hover:text-white hover:bg-orange-500 text-white py-2 rounded-md transition duration-300"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+      <div
+        class="flex flex-col w-[50%] text-lg space-y-4 aos-init aos-animate"
+        data-aos="fade-left"
+      >
+        <h1
+          class="flex items-center gap-2 font-bold text-3xl text-orange-500 tracking-wide mb-2 drop-shadow-lg"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M256 48C141.1 48 48 141.1 48 256v40c0 13.3-10.7 24-24 24s-24-10.7-24-24V256C0 114.6 114.6 0 256 0S512 114.6 512 256V400.1c0 48.6-39.4 88-88.1 88L313.6 488c-8.3 14.3-23.8 24-41.6 24H240c-26.5 0-48-21.5-48-48s21.5-48 48-48h32c17.8 0 33.3 9.7 41.6 24l110.4 .1c22.1 0 40-17.9 40-40V256c0-114.9-93.1-208-208-208zM144 208h16c17.7 0 32 14.3 32 32V352c0 17.7-14.3 32-32 32H144c-35.3 0-64-28.7-64-64V272c0-35.3 28.7-64 64-64zm224 0c35.3 0 64 28.7 64 64v48c0 35.3-28.7 64-64 64H352c-17.7 0-32-14.3-32-32V240c0-17.7 14.3-32 32-32h16z"
+            />
+          </svg>
+          Get In Touch
+        </h1>
+        <p
+          class="text-orange-500 text-md md:pr-16 font-bold drop-shadow-lg aos-init aos-animate"
+          data-aos="fade-left"
+        >
+          "Your Feedback Matters, Drop Us a Line and Let's Stay Connected!"
+        </p>
+        <div
+          class="flex flex-col space-y-3 aos-init aos-animate"
+          data-aos="fade-left"
+        >
+          <div
+            class="flex flex-row space-x-3 text-orange-500 drop-shadow-lg"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 512 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M391 480c-19.52 0-46.94-7.06-88-30-49.93-28-88.55-53.85-138.21-103.38C116.91 298.77 93.61 267.79 61 208.45c-36.84-67-30.56-102.12-23.54-117.13C45.82 73.38 58.16 62.65 74.11 52a176.3 176.3 0 0 1 28.64-15.2c1-.43 1.93-.84 2.76-1.21 4.95-2.23 12.45-5.6 21.95-2 6.34 2.38 12 7.25 20.86 16 18.17 17.92 43 57.83 52.16 77.43 6.15 13.21 10.22 21.93 10.23 31.71 0 11.45-5.76 20.28-12.75 29.81-1.31 1.79-2.61 3.5-3.87 5.16-7.61 10-9.28 12.89-8.18 18.05 2.23 10.37 18.86 41.24 46.19 68.51s57.31 42.85 67.72 45.07c5.38 1.15 8.33-.59 18.65-8.47 1.48-1.13 3-2.3 4.59-3.47 10.66-7.93 19.08-13.54 30.26-13.54h.06c9.73 0 18.06 4.22 31.86 11.18 18 9.08 59.11 33.59 77.14 51.78 8.77 8.84 13.66 14.48 16.05 20.81 3.6 9.53.21 17-2 22-.37.83-.78 1.74-1.21 2.75a176.49 176.49 0 0 1-15.29 28.58c-10.63 15.9-21.4 28.21-39.38 36.58A67.42 67.42 0 0 1 391 480z"
+              />
+            </svg>
+                +(91)953 751 9367
+          </div>
+          <div
+            class="flex flex-row spac  e-x-3 drop-shadow-lg text-orange-500"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              role="img"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"
+              />
+            </svg>
+                quickeatwithus@gmail.com
+          </div>
+          <div
+            class="flex flex-row space-x-3 drop-shadow-lg text-orange-500"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 384 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"
+              />
+            </svg>
+                Surat, Gujarat - India
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Customerlist renders the customer list with data react redux 1`] = `
+<div>
+  <div
+    class="font-[Poppins] flex flex-col mt-4 gap-3 justify-center items-center"
+  >
+    <div
+      class="flex justify-between items-center gap-[400px]"
+    >
+      <div
+        class="animate-pulse rounded-xl bg-gray-300 w-[250px] h-[50px]"
+      />
+      <div
+        class="animate-pulse rounded-lg bg-gray-300 w-[250px] h-[50px]"
+      />
+    </div>
+    <div
+      class="animate-pulse rounded-xl w-[900px] h-[600px] bg-gray-300"
+    />
+  </div>
+</div>
+`;
+
+exports[`Login renders Login Page unchanged 1`] = `
+<div>
+  <div
+    class="w-full h-full p-8 flex flex-col items-center font-[Poppins]"
+  >
+    <p
+      class="font-bold text-6xl text-center text-orange-500 mb-4 drop-shadow-lg aos-init aos-animate"
+      data-aos="zoom-in"
+    >
+      Contact Us
+    </p>
+    <div
+      class="p-2 flex justify-between w-full max-w-[1300px] mt-5"
+    >
+      <div
+        class="flex flex-col p-2 w-[45%] space-y-4 my-auto aos-init aos-animate"
+        data-aos="fade-right"
+      >
+        <div
+          class="flex flex-row gap-4"
+        >
+          <span
+            class="text-xl"
+          >
+            Name:
+          </span>
+          <input
+            class="ml-4 border-2 drop-shadow-lg border-orange-500 w-[80%] h-full p-2 text-orange-500 active:border-orange-500  rounded-md"
+            id=""
+            name="from_name"
+            placeholder="Enter your name"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="flex flex-row gap-4"
+        >
+          <span
+            class="text-xl"
+          >
+            Email:
+          </span>
+          <input
+            class="ml-5 border-2 drop-shadow-lg border-orange-500 w-[80%] h-full p-2 text-orange-500 active:border-orange-500  rounded-md"
+            id=""
+            name="to_name"
+            placeholder="Enter your Email"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="flex flex-row gap-4"
+        >
+          <span
+            class="text-xl"
+          >
+            Subject:
+          </span>
+          <textarea
+            class="border-2 drop-shadow-lg border-orange-500 w-[80%] h-36 p-2 text-orange-500 active:border-orange-500 rounded-md"
+            name="message"
+            placeholder="Write a message Here"
+          />
+        </div>
+        <div
+          class=""
+        >
+          <button
+            class=" drop-shadow-lg bg-orange-600 mt-5 w-full hover:text-white hover:bg-orange-500 text-white py-2 rounded-md transition duration-300"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+      <div
+        class="flex flex-col w-[50%] text-lg space-y-4 aos-init aos-animate"
+        data-aos="fade-left"
+      >
+        <h1
+          class="flex items-center gap-2 font-bold text-3xl text-orange-500 tracking-wide mb-2 drop-shadow-lg"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M256 48C141.1 48 48 141.1 48 256v40c0 13.3-10.7 24-24 24s-24-10.7-24-24V256C0 114.6 114.6 0 256 0S512 114.6 512 256V400.1c0 48.6-39.4 88-88.1 88L313.6 488c-8.3 14.3-23.8 24-41.6 24H240c-26.5 0-48-21.5-48-48s21.5-48 48-48h32c17.8 0 33.3 9.7 41.6 24l110.4 .1c22.1 0 40-17.9 40-40V256c0-114.9-93.1-208-208-208zM144 208h16c17.7 0 32 14.3 32 32V352c0 17.7-14.3 32-32 32H144c-35.3 0-64-28.7-64-64V272c0-35.3 28.7-64 64-64zm224 0c35.3 0 64 28.7 64 64v48c0 35.3-28.7 64-64 64H352c-17.7 0-32-14.3-32-32V240c0-17.7 14.3-32 32-32h16z"
+            />
+          </svg>
+          Get In Touch
+        </h1>
+        <p
+          class="text-orange-500 text-md md:pr-16 font-bold drop-shadow-lg aos-init aos-animate"
+          data-aos="fade-left"
+        >
+          "Your Feedback Matters, Drop Us a Line and Let's Stay Connected!"
+        </p>
+        <div
+          class="flex flex-col space-y-3 aos-init aos-animate"
+          data-aos="fade-left"
+        >
+          <div
+            class="flex flex-row space-x-3 text-orange-500 drop-shadow-lg"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 512 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M391 480c-19.52 0-46.94-7.06-88-30-49.93-28-88.55-53.85-138.21-103.38C116.91 298.77 93.61 267.79 61 208.45c-36.84-67-30.56-102.12-23.54-117.13C45.82 73.38 58.16 62.65 74.11 52a176.3 176.3 0 0 1 28.64-15.2c1-.43 1.93-.84 2.76-1.21 4.95-2.23 12.45-5.6 21.95-2 6.34 2.38 12 7.25 20.86 16 18.17 17.92 43 57.83 52.16 77.43 6.15 13.21 10.22 21.93 10.23 31.71 0 11.45-5.76 20.28-12.75 29.81-1.31 1.79-2.61 3.5-3.87 5.16-7.61 10-9.28 12.89-8.18 18.05 2.23 10.37 18.86 41.24 46.19 68.51s57.31 42.85 67.72 45.07c5.38 1.15 8.33-.59 18.65-8.47 1.48-1.13 3-2.3 4.59-3.47 10.66-7.93 19.08-13.54 30.26-13.54h.06c9.73 0 18.06 4.22 31.86 11.18 18 9.08 59.11 33.59 77.14 51.78 8.77 8.84 13.66 14.48 16.05 20.81 3.6 9.53.21 17-2 22-.37.83-.78 1.74-1.21 2.75a176.49 176.49 0 0 1-15.29 28.58c-10.63 15.9-21.4 28.21-39.38 36.58A67.42 67.42 0 0 1 391 480z"
+              />
+            </svg>
+                +(91)953 751 9367
+          </div>
+          <div
+            class="flex flex-row spac  e-x-3 drop-shadow-lg text-orange-500"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              role="img"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"
+              />
+            </svg>
+                quickeatwithus@gmail.com
+          </div>
+          <div
+            class="flex flex-row space-x-3 drop-shadow-lg text-orange-500"
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 384 512"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"
+              />
+            </svg>
+                Surat, Gujarat - India
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Login renders Login Page unchanged 2`] = `
+<div>
+  <div
+    class="h-full font-[Poppins] w-full mx-auto p-8 flex flex-col gap-4 items-center  drop-shadow-lg rounded-3xl bg-stone-800 "
+  >
+    <p
+      class="font-bold text-6xl text-center text-orange-600 aos-init aos-animate"
+      data-aos="zoom-in"
+    >
+      Our Services
+    </p>
+    <div
+      class="bg-orange-900 h-2 w-56 rounded"
+    />
+    <div
+      class="flex md:flex-row sm:flex-col  gap-10 w-full justify-center h-full items-center "
+    >
+      <div
+        class="w-[500px] h-[430px] p-1 flex flex-col items-center gap-[4rem] border-b-8 pr-8 rounded-2xl border-orange-400 mt-5 hover:bg-gradient-to-t from-transparent to-orange-500 transition duration-300 hover:scale-105 aos-init aos-animate"
+        data-aos="fade-right"
+      >
+        <img
+          class="w-40 h-50 rounded-full drop-shadow-2xl"
+          src="https://icones.pro/wp-content/uploads/2022/07/icones-d-administration-orange.png"
+        />
+        <div
+          class="ml-3"
+        >
+          <p
+            class="font-bold text-xl text-orange-500  "
+          >
+            Customer Management
+          </p>
+          <p
+            class=" mt-5 text-white font-normal mb-2"
+          >
+            Efficiently manage customer records, preferences, and order history for a personalized dining experience.
+          </p>
+        </div>
+      </div>
+      <div
+        class="flex w-[500px] p-1 items-center gap-[4rem] flex-col border-b-8 pr-8 rounded-2xl border-blue-500 mt-8 hover:bg-gradient-to-t from-transparent to-blue-500 transform duration-300 aos-init aos-animate"
+        data-aos="fade-up"
+      >
+        <img
+          class="w-30 h-40 rounded-full drop-shadow-2xl"
+          src="http://www.newdesignfile.com/postpic/2011/07/local-food-icon_63633.png"
+        />
+        <div
+          class="ml-3"
+        >
+          <p
+            class="font-bold text-xl text-blue-500  "
+          >
+            Food Management
+          </p>
+          <p
+            class="font-normal  mt-5 text-white mb-10"
+          >
+            Organize your menu items and categories, update availability, and showcase enticing dishes to enhance customer satisfaction.
+          </p>
+        </div>
+      </div>
+      <div
+        class="w-[500px] flex flex-col items-center gap-12 border-b-8 pr-8 rounded-2xl border-green-500 mt-12 hover:bg-gradient-to-t from-transparent to-green-500 transition duration-700 aos-init aos-animate"
+        data-aos="fade-down"
+      >
+        <img
+          class="w-40 h-50 rounded-full drop-shadow-2xl"
+          src="https://png.pngtree.com/png-vector/20220628/ourmid/pngtree-pay-tax-icon-green-logo-png-image_5550560.png"
+        />
+        <div
+          class="ml-3"
+        >
+          <p
+            class="font-bold text-xl text-green-500  "
+          >
+            Secure Payments
+          </p>
+          <p
+            class="font-normal  mt-5 text-white mb-6"
+          >
+            Offer customers peace of mind with secure online payment options, ensuring a seamless and trustworthy transaction process.
+          </p>
+        </div>
+      </div>
+      <div
+        class="flex w-[500px] items-center gap-8 flex-col border-b-8 pr-8 rounded-2xl border-red-500 mt-12 hover:bg-gradient-to-t from-transparent to-red-500 transition duration-300 aos-init aos-animate"
+        data-aos="fade-left"
+      >
+        <img
+          class="w-30 h-40 rounded-full drop-shadow-2xl"
+          src="https://www.ezurs.com/wp-content/themes/ezurs/images/new/icon-big-data-analytics.svg"
+        />
+        <div
+          class="ml-3"
+        >
+          <p
+            class="font-bold text-xl text-red-500  "
+          >
+            Data Analytics
+          </p>
+          <p
+            class="font-normal  mt-5 text-white mb-8"
+          >
+            Harness the power of data analytics to gain valuable insights into customer behavior, optimize operations, and drive business growth.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-row gap-10 w-full justify-center h-full items-center "
+    />
+  </div>
+</div>
+`;
+
+exports[`Service renders service Page unchanged 1`] = `
+<div>
+  <div
+    class="h-full font-[Poppins] w-full mx-auto p-8 flex flex-col gap-4 items-center  drop-shadow-lg rounded-3xl bg-stone-800 "
+  >
+    <p
+      class="font-bold text-6xl text-center text-orange-600 aos-init aos-animate"
+      data-aos="zoom-in"
+    >
+      Our Services
+    </p>
+    <div
+      class="bg-orange-900 h-2 w-56 rounded"
+    />
+    <div
+      class="flex md:flex-row sm:flex-col  gap-10 w-full justify-center h-full items-center "
+    >
+      <div
+        class="w-[500px] h-[430px] p-1 flex flex-col items-center gap-[4rem] border-b-8 pr-8 rounded-2xl border-orange-400 mt-5 hover:bg-gradient-to-t from-transparent to-orange-500 transition duration-300 hover:scale-105 aos-init aos-animate"
+        data-aos="fade-right"
+      >
+        <img
+          class="w-40 h-50 rounded-full drop-shadow-2xl"
+          src="https://icones.pro/wp-content/uploads/2022/07/icones-d-administration-orange.png"
+        />
+        <div
+          class="ml-3"
+        >
+          <p
+            class="font-bold text-xl text-orange-500  "
+          >
+            Customer Management
+          </p>
+          <p
+            class=" mt-5 text-white font-normal mb-2"
+          >
+            Efficiently manage customer records, preferences, and order history for a personalized dining experience.
+          </p>
+        </div>
+      </div>
+      <div
+        class="flex w-[500px] p-1 items-center gap-[4rem] flex-col border-b-8 pr-8 rounded-2xl border-blue-500 mt-8 hover:bg-gradient-to-t from-transparent to-blue-500 transform duration-300 aos-init aos-animate"
+        data-aos="fade-up"
+      >
+        <img
+          class="w-30 h-40 rounded-full drop-shadow-2xl"
+          src="http://www.newdesignfile.com/postpic/2011/07/local-food-icon_63633.png"
+        />
+        <div
+          class="ml-3"
+        >
+          <p
+            class="font-bold text-xl text-blue-500  "
+          >
+            Food Management
+          </p>
+          <p
+            class="font-normal  mt-5 text-white mb-10"
+          >
+            Organize your menu items and categories, update availability, and showcase enticing dishes to enhance customer satisfaction.
+          </p>
+        </div>
+      </div>
+      <div
+        class="w-[500px] flex flex-col items-center gap-12 border-b-8 pr-8 rounded-2xl border-green-500 mt-12 hover:bg-gradient-to-t from-transparent to-green-500 transition duration-700 aos-init aos-animate"
+        data-aos="fade-down"
+      >
+        <img
+          class="w-40 h-50 rounded-full drop-shadow-2xl"
+          src="https://png.pngtree.com/png-vector/20220628/ourmid/pngtree-pay-tax-icon-green-logo-png-image_5550560.png"
+        />
+        <div
+          class="ml-3"
+        >
+          <p
+            class="font-bold text-xl text-green-500  "
+          >
+            Secure Payments
+          </p>
+          <p
+            class="font-normal  mt-5 text-white mb-6"
+          >
+            Offer customers peace of mind with secure online payment options, ensuring a seamless and trustworthy transaction process.
+          </p>
+        </div>
+      </div>
+      <div
+        class="flex w-[500px] items-center gap-8 flex-col border-b-8 pr-8 rounded-2xl border-red-500 mt-12 hover:bg-gradient-to-t from-transparent to-red-500 transition duration-300 aos-init aos-animate"
+        data-aos="fade-left"
+      >
+        <img
+          class="w-30 h-40 rounded-full drop-shadow-2xl"
+          src="https://www.ezurs.com/wp-content/themes/ezurs/images/new/icon-big-data-analytics.svg"
+        />
+        <div
+          class="ml-3"
+        >
+          <p
+            class="font-bold text-xl text-red-500  "
+          >
+            Data Analytics
+          </p>
+          <p
+            class="font-normal  mt-5 text-white mb-8"
+          >
+            Harness the power of data analytics to gain valuable insights into customer behavior, optimize operations, and drive business growth.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-row gap-10 w-full justify-center h-full items-center "
+    />
+  </div>
+</div>
+`;

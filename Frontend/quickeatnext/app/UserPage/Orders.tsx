@@ -20,13 +20,13 @@ import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import TextField from "@mui/material/TextField";
 import { useRouter } from "next/navigation";
 import { TransitionProps } from "@mui/material/transitions";
-import { Customer } from "@/app/UserPage/CustomerList";
-import { ItemType } from "@/app/UserPage/ItemList";
+import { Customer } from "../../app/UserPage/CustomerList";
+import { ItemType } from "../../app/UserPage/ItemList";
 import StateLogin from "../LoginState/logincontext";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchItems } from "@/lib/actions/itemAction";
-import { fetchCustomerById } from "@/lib/actions/customerAction";
-import { customer, item, user } from "@/lib/reducers";
+import { fetchItems } from "../../lib/actions/itemAction";
+import { fetchCustomerById } from "../../lib/actions/customerAction";
+import { customer, item, user } from "../../lib/reducers";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {

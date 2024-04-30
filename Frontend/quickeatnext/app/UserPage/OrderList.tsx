@@ -15,9 +15,9 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSpecificOrder } from "@/lib/actions/orderAction";
-import { order, user } from "@/lib/reducers";
-import { useAppDispatch } from "@/lib/store";
+import { fetchSpecificOrder } from "../../lib/actions/orderAction";
+import { order, user } from "../../lib/reducers";
+import { useAppDispatch } from "../../lib/store";
 
 export interface OrderListRows {
   id: number;
