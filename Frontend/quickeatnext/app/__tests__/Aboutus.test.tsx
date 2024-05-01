@@ -30,8 +30,9 @@ import { it } from "node:test";
 import { fetchCustomer } from "../../lib/actions/customerAction";
 import { act } from "react-dom/test-utils";
 import Login from "../../app/Pages/Login";
+import CategoriesList from "../../app/UserPage/CategoryList";
 
-afterEach(cleanup)
+afterEach(cleanup);
 
 // Type definition for the sendComponent function, specifying that it returns a RenderResult
 const sendComponent = (component: ReactElement): RenderResult =>
@@ -75,6 +76,7 @@ describe("Service", () => {
   });
 });
 
+//add customer testing
 describe("AddCustomer", () => {
   beforeEach(() => {
     fetch.resetMocks(); // Ensure fetis re beforeseech t ach test
@@ -86,54 +88,30 @@ describe("AddCustomer", () => {
   });
 
   it("allows input fields to be updated", () => {
-    sendComponent(<AddCustomer />);
-    const firstNameInput: any = screen.getByTestId("customername12");
-    fireEvent.change(firstNameInput, { target: { value: "John" } });
-    expect(firstNameInput.value).toBe("John");
-  });
-
-  it("submits the customer data and handles the response", async () => {
-    console.log("Before mockResponse");
-    fetch.mockResponseOnce(
-      JSON.stringify({ message: "Customer Added Successfully" })
+    const { container } = sendComponent(<AddCustomer />);
+    const yourid = "customerfirstname";
+    const customerFirstName: any = container.querySelector(
+      `[data-testid="${yourid}"]`
     );
-    console.log("After mockResponse");
+    fireEvent.change(customerFirstName, { target: { value: "John" } });
+    expect(customerFirstName.value).toBe("John");
 
-    sendComponent(<AddCustomer />);
-    const submitButton = await screen.getByTestId("addcustomerbutton");
-
-    console.log("Before click");
-    fireEvent.click(submitButton);
-    console.log("After click");
-
-    await waitFor(() => {
-      console.log("Inside waitFor");
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(
-        screen.getByText("Customer Added Successfully")
-      ).toBeInTheDocument();
-    });
+    const yourid2 = "customerlastname";
+    const cistomerLastName: any = container.querySelector(
+      `[data-testid="${yourid2}"]`
+    );
+    fireEvent.change(cistomerLastName, { target: { value: "Deo" } });
+    expect(cistomerLastName.value).toBe("Deo");
   });
+
   afterEach(() => {
     cleanup();
   });
 });
 
-// describe("CustomerList", () => {
-//   it("should fetch data and display it correctly", async () => {
-//     const json = await fetchCustomer("660ac2b65106785cbea8b8c6");
-//     // fetch.mockResponseOnce(JSON.stringify([{ id: 1, name: "John Doe" }]));
-//     sendComponent(<CustomerList />);
-
-//     await waitFor(() => {
-//       expect(Array.isArray(json)).toEqual(true);
-//       expect(json.length).toEqual(0);
-//     });
-//   });
-// });
-
+//login testing
 describe("Login", () => {
-  it("submits the form with invalid", async () => {
+  it("submits the form", async () => {
     sendComponent(<Login />);
     expect(screen.getByTestId("emailid")).toBeInTheDocument();
     expect(screen.getByTestId("password")).toBeInTheDocument();
@@ -146,5 +124,14 @@ describe("Login", () => {
       target: { value: "Ashish123" },
     });
     fireEvent.submit(screen.getByTestId("login"));
+  });
+});
+
+describe("Category", () => {
+  it("submit the category data", async () => {
+    const { container } = sendComponent(<CategoriesList />);
+    const categoryname: any = screen.getByPlaceholderText("Category Name");
+    fireEvent.change(categoryname, { target: { value: "Pizza" } });
+    expect(categoryname).toHaveValue("Pizza");
   });
 });

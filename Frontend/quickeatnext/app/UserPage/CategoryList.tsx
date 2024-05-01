@@ -328,9 +328,10 @@ const CategoriesList = () => {
             autoFocus
             required
             margin="dense"
-            id="name"
             name="email"
+            id="email"
             label="Category Name"
+            placeholder="Enter Category Name"
             value={input.categoryname}
             onChange={(e) =>
               setInput({ ...input, categoryname: e.target.value })
