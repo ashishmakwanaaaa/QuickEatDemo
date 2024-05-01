@@ -107,7 +107,7 @@ const AddCustomer = () => {
               onChange={(e) =>
                 setCustomerData({ ...CustomerData, firstname: e.target.value })
               }
-              data-testid="customername12"
+              data-testid="customerfirstname"
               placeholder="Enter Customer Firstname"
               className="p-2 rounded-md border-2 border-orange-500 w-full"
             />
@@ -118,6 +118,7 @@ const AddCustomer = () => {
             </label>
             <input
               type="text"
+              data-testid="customerlastname"
               id="customerLastName"
               name="customerLastName"
               value={CustomerData.lastname}
@@ -249,9 +250,10 @@ const AddCustomer = () => {
           </div>
         </div>
         <button
+          type="submit"
           data-testid="addcustomerbutton"
           onClick={handleClick}
-          className="w-full bg-orange-500 text-white p-2 mt-4 rounded-lg hover:bg-transparent hover:text-orange-500 hover:border-orange-500 hover:border transition-all duration-500 font-bold text-lg"
+          className="button w-full bg-orange-500 text-white p-2 mt-4 rounded-lg hover:bg-transparent hover:text-orange-500 hover:border-orange-500 hover:border transition-all duration-500 font-bold text-lg"
         >
           Add Customer &rarr;
         </button>
