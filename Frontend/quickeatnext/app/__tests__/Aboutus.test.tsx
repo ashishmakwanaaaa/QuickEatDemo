@@ -129,8 +129,10 @@ describe("Login", () => {
 
 describe("Category", () => {
   it("submit the category data", async () => {
-    const { container } = sendComponent(<CategoriesList />);
-    const categoryname: any = screen.getByPlaceholderText("Category Name");
+    sendComponent(<CategoriesList />);
+    const categoryname: any = screen.getByTestId("categoryname");
+    console.log(categoryname)
+    expect(categoryname).toBeInTheDocument()
     fireEvent.change(categoryname, { target: { value: "Pizza" } });
     expect(categoryname).toHaveValue("Pizza");
   });

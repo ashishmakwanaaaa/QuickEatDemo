@@ -8,14 +8,17 @@ import Services from "../components/Services";
 import Contact from "../components/Contact";
 import Footer from "../components/Footer";
 import LoginContext from "../LoginState/logincontext";
+import { useSelector } from "react-redux";
+import { user } from "lib/reducers";
+import DashBoard from "./DashBoard";
 
 const HomePage = () => {
-  const StateLogin = useContext(LoginContext);
+  const user = useSelector((state: user) => state.user.user);
 
   return (
     <div>
       <Navbar />
-      {!StateLogin.login && (
+      {!user.isActive ? (
         <>
           <Carousel />
           <AboutUs />
@@ -23,6 +26,8 @@ const HomePage = () => {
           <Contact />
           <Footer />
         </>
+      ) : (
+        <DashBoard />
       )}
     </div>
   );

@@ -242,6 +242,12 @@ const CustomerList = () => {
       width: 120,
     },
     {
+      field: "email",
+      cellClassName: "dark:text-white",
+      headerName: "Email ID",
+      width: 200,
+    },
+    {
       field: "contact",
       cellClassName: "dark:text-white",
       headerName: "Contact No.",
@@ -313,6 +319,7 @@ const CustomerList = () => {
               customer.lastname[0].toUpperCase(),
             firstname: customer.firstname,
             lastname: customer.lastname,
+            email: customer.emailid,
             contact: customer.phoneno,
             takeorder: "Order",
             edit: "Edit",
@@ -322,30 +329,27 @@ const CustomerList = () => {
   console.log(customerData);
 
   return (
-    <div className="font-[Poppins] flex flex-col mt-4 gap-3 justify-center items-center">
-      <div className="flex justify-between items-center gap-[400px]">
+    <div className="font-[Poppins] flex flex-col mt-4 gap-3  w-full">
+      <div className="flex justify-between">
         {loading ? (
-          <div className="animate-pulse rounded-xl bg-gray-300 w-[250px] h-[50px]"></div>
+          <div className="animate-pulse bg-gray-300 w-[1000px] h-12 rounded-md"></div>
         ) : (
-          <h1 className="font-bold text-start">Customer Details</h1>
-        )}
-
-        {loading ? (
-          <div className="animate-pulse rounded-lg bg-gray-300 w-[250px] h-[50px]"></div>
-        ) : (
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="border text-sm border-orange-500 rounded-lg p-2"
-            placeholder="Search Customer Here"
-          />
+          <>
+            <h1 className="font-bold">Customer Details</h1>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="border text-sm border-orange-500 rounded-lg p-2"
+              placeholder="Search Customer Here"
+            />
+          </>
         )}
       </div>
       {loading ? (
-        <div className="animate-pulse rounded-xl w-[900px] h-[600px] bg-gray-300"></div>
+        <div className="animate-pulse rounded-xl w-[1000px] h-[600px] bg-gray-300"></div>
       ) : (
-        <div className="w-[900px] h-[600px]">
+        <div className="w-full">
           {customerData && customerData.length > 0 ? (
             <DataGrid
               style={{ fontFamily: "Poppins" }}

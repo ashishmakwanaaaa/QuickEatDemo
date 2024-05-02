@@ -13,15 +13,17 @@ export class MessageController {
       userId: string;
       mode: boolean;
       timeStamp: string;
+      date: Date | any;
     },
   ) {
-    const { username, message, userId, mode, timeStamp } = body;
+    const { username, message, userId, mode, timeStamp, date } = body;
     await this.messageservice.trigger('chat', 'message', {
       username,
       message,
       userId,
       mode,
       timeStamp,
+      date,
     });
     return { success: true }; // Assuming you want to return a success response
   }

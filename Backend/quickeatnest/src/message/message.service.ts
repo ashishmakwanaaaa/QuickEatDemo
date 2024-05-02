@@ -33,6 +33,7 @@ export class MessageService {
       userId: string;
       mode: boolean;
       timeStamp: string;
+      date: Date;
     },
   ) {
     console.log(channel, event, data);
@@ -41,6 +42,7 @@ export class MessageService {
       username: data.username,
       sender: data.userId,
       timeStamp: data.timeStamp,
+      date: data.date,
     });
     console.log(message);
     await message.save();

@@ -146,25 +146,25 @@ const OrderListPage = () => {
   }[] = [
     {
       field: "id",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "ID",
       width: 90,
     },
     {
       field: "Date",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "Date Of Order",
       width: 170,
     },
     {
       field: "customername",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "Customer Name",
       width: 150,
     },
     {
       field: "customeremail",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "Email",
       width: 220,
     },
@@ -194,11 +194,11 @@ const OrderListPage = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center w-[68rem]">
+      <div className="flex justify-between items-center ">
         {loading ? (
-          <div className="animate-pulse bg-gray-300 rounded-md h-10 w-48 ml-8"></div>
+          <div className="animate-pulse bg-gray-300 rounded-md h-10 w-48"></div>
         ) : (
-          <h1 className="font-[Poppins] font-bold text-start ml-16">
+          <h1 className="font-[Poppins] font-bold text-start ">
             Order Details
           </h1>
         )}
@@ -237,7 +237,7 @@ const OrderListPage = () => {
           )}
         </div>
       </div>
-      <div className="w-[950px] h-4/5 mt-4 mx-auto">
+      <div className="w-[1000px] h-4/5 mt-4 mx-auto">
         {loading ? (
           <div className="animate-pulse bg-gray-300 rounded-lg w-[980px] h-[580px] mt-4 mx-auto"></div>
         ) : (

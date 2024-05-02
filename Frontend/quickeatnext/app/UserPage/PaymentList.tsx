@@ -177,37 +177,37 @@ const PaymentList = () => {
   const columns: GridColDef[] = [
     {
       field: "id",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "ID",
       width: 90,
     },
     {
       field: "Date",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "Date Of Payment",
       width: 170,
     },
     {
       field: "cardHoldername",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "Customer Name",
       width: 150,
     },
     {
       field: "email",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "Email",
       width: 240,
     },
     {
       field: "amount",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "Total Amount",
       width: 120,
     },
     {
       field: "billingaddress",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "City",
       width: 100,
     },
@@ -236,71 +236,73 @@ const PaymentList = () => {
   // setRows(rowsArray);
   return (
     <>
-      <div className="flex justify-between w-[68rem] mt-2">
-        {loading ? (
-          <div className="animate-pulse bg-gray-300 rounded-md h-10 w-48 ml-8"></div>
-        ) : (
-          <h1 className="font-[Poppins] font-bold text-start ml-10">
-            Payment Details
-          </h1>
-        )}
-        <div className="flex flex-row gap-2 w-1/2">
+      <div className="flex flex-col">
+        <div className="flex justify-between mt-2">
           {loading ? (
-            <>
-              <div className="animate-pulse bg-gray-300 rounded-md h-10 w-1/2 ml-36"></div>
-              <div className="animate-pulse bg-orange-400 rounded-md h-10 w-10"></div>
-              <div className="animate-pulse bg-red-500 rounded-md h-10 w-10"></div>
-            </>
+            <div className="animate-pulse bg-gray-300 rounded-md h-10 w-48"></div>
           ) : (
-            <>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateRangePicker
-                  slotProps={{ textField: { size: "small" } }}
-                  value={selectedDates}
-                  onChange={handleDateRangeChange}
-                />
-              </LocalizationProvider>
-              <button
-                className="bg-orange-400 text-white w-10 h-10 rounded-md"
-                onClick={filterRowsByDate}
-              >
-                <VisibilityIcon />
-              </button>
-              <button
-                className="bg-red-500 text-white w-10 h-10 rounded-md"
-                onClick={() => {
-                  setRows(data);
-                  setSelectedDates([null, null]);
-                }}
-              >
-                <CancelIcon />
-              </button>
-            </>
+            <h1 className="font-[Poppins] font-bold text-start ">
+              Payment Details
+            </h1>
+          )}
+          <div className="flex flex-row gap-2 w-1/2">
+            {loading ? (
+              <>
+                <div className="animate-pulse bg-gray-300 rounded-md h-10 w-1/2 ml-36"></div>
+                <div className="animate-pulse bg-orange-400 rounded-md h-10 w-10"></div>
+                <div className="animate-pulse bg-red-500 rounded-md h-10 w-10"></div>
+              </>
+            ) : (
+              <>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateRangePicker
+                    slotProps={{ textField: { size: "small" } }}
+                    value={selectedDates}
+                    onChange={handleDateRangeChange}
+                  />
+                </LocalizationProvider>
+                <button
+                  className="bg-orange-400 text-white w-10 h-10 rounded-md"
+                  onClick={filterRowsByDate}
+                >
+                  <VisibilityIcon />
+                </button>
+                <button
+                  className="bg-red-500 text-white w-10 h-10 rounded-md"
+                  onClick={() => {
+                    setRows(data);
+                    setSelectedDates([null, null]);
+                  }}
+                >
+                  <CancelIcon />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
+        <div className="w-[1000px] h-4/5 mx-auto">
+          {loading ? (
+            <div className="animate-pulse bg-gray-300 rounded-lg w-[980px] h-[580px] mt-4 mx-auto"></div>
+          ) : (
+            <div className="w-[1000px] h-[600px] mt-4 mx-auto">
+              <DataGrid
+                style={{ fontFamily: "Poppins" }}
+                rows={rows}
+                columns={columns}
+                pagination
+                pageSizeOptions={[
+                  10,
+                  20,
+                  30,
+                  40,
+                  100,
+                  { value: 1000, label: "1,000" },
+                ]}
+              />
+            </div>
           )}
         </div>
-      </div>
-
-      <div className="w-[1000px] h-4/5 mt-4 mx-auto">
-        {loading ? (
-          <div className="animate-pulse bg-gray-300 rounded-lg w-[980px] h-[580px] mt-4 mx-auto"></div>
-        ) : (
-          <div className="w-full h-[600px] mt-4 mx-auto">
-            <DataGrid
-              style={{ fontFamily: "Poppins" }}
-              rows={rows}
-              columns={columns}
-              pagination
-              pageSizeOptions={[
-                10,
-                20,
-                30,
-                40,
-                100,
-                { value: 1000, label: "1,000" },
-              ]}
-            />
-          </div>
-        )}
       </div>
 
       <Dialog
