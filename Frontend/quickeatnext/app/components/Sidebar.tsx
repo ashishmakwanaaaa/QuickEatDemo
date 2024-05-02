@@ -35,7 +35,7 @@ const Sidebar = ({
     <div
       className={`${
         open ? "w-72" : "w-20"
-      } duration-300 p-5 pt-8 mt-2  h-screen bg-stone-900 dark:bg-gray-800 dark:text-white relative rounded-tr-3xl rounded-br-3xl`}
+      } duration-300 p-5  h-screen bg-stone-900 dark:bg-gray-800 dark:text-white relative rounded-tr-3xl rounded-br-3xl`}
     >
       <Image
         src={Logo}
@@ -49,7 +49,6 @@ const Sidebar = ({
           src="https://cdn.vectorstock.com/i/1000x1000/26/10/food-fork-spoon-fruit-orange-logo-vector-24042610.webp"
           alt="QuickEat Logo"
           className={`cursor-pointer duration-500 h-6 w-6 rounded-md object-cover `}
-       
         />
         <h1
           className={`text-orange-600 origin-left font-[Poppins] font-bold text-xl duration-300 ${!open &&

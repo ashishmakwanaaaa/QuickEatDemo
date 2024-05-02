@@ -327,6 +327,7 @@ const CategoriesList = () => {
             style={{ marginBottom: "1rem" }}
             autoFocus
             required
+            data-testid="categoryname"
             margin="dense"
             name="email"
             id="email"

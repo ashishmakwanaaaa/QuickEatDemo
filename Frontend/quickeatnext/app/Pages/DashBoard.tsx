@@ -87,7 +87,9 @@ const DashBoard = ({ children }: any) => {
   ];
   return (
     <>
-      <Navbar />
+      <div className="p-1">
+        <Navbar />
+      </div>
       <div className="flex flex-row gap-3 w-full h-full font-[Poppins]">
         <Sidebar
           open={open}
@@ -95,7 +97,7 @@ const DashBoard = ({ children }: any) => {
           menus={!user.isAdmin ? MenusForUser : MenusForAdmin}
           onModuleClick={handleClick}
         />
-        <div className="flex flex-col gap-1 justify-center items-center w-[68rem]">
+        <div className="flex flex-col gap-1 mx-auto justify-center items-center">
           <div className="p-2 text-2xl font-semibold flex-1 h-screen">
             {children}
           </div>

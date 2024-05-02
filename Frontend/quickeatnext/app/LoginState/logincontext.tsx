@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, Context, useReducer, ReactNode } from "react";
+import { createContext, Context, useReducer, ReactNode, useState } from "react";
 
 interface LoginContextType {
   login: boolean;
@@ -9,7 +9,7 @@ interface LoginContextType {
   userid: string;
   image?: string;
   resimage?: string;
-  dispatch?:React.Dispatch<Action>
+  dispatch?: React.Dispatch<Action>;
 }
 
 interface LoginProviderProps {
@@ -52,14 +52,19 @@ const loginReducer = (
   }
 };
 
-const LoginContext: Context<LoginContextType> =
-  createContext<LoginContextType>(initialState);
+const LoginContext: Context<LoginContextType> = createContext<LoginContextType>(
+  initialState
+);
 
 export const LoginProvider: React.FC<LoginProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(loginReducer, initialState);
-
   return (
-    <LoginContext.Provider value={{ ...state, dispatch }}>
+    <LoginContext.Provider
+      value={{
+        ...state,
+        dispatch,
+      }}
+    >
       {children}
     </LoginContext.Provider>
   );

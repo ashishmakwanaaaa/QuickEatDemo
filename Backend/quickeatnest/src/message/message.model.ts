@@ -14,8 +14,8 @@ export class Message {
   @Prop()
   timeStamp: string;
 
-  @Prop({ default: Date.now })
-  Date: Date;
+  @Prop()
+  date: Date;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);

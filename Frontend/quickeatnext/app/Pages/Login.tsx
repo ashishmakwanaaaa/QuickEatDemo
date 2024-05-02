@@ -68,7 +68,7 @@ const Login = (): React.JSX.Element => {
 
       console.log(StateContext);
       localStorage.setItem("role", user.isAdmin ? "Admin" : "User");
-      router.push("/");
+      user.isAdmin ? router.push("/adminside") : router.push("/dashboard");
     } else {
       Swal.fire({
         icon: "error",

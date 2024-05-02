@@ -299,7 +299,7 @@ const AdminPage = () => {
   return (
     <>
       <div className="flex flex-col gap-2 font-[Poppins] cursor-pointer">
-        <div className="flex flex-row gap-2 p-2">
+        <div className="flex flex-row gap-4 p-2">
           {loading ? (
             Array.from({ length: 5 }).map((_, index) => (
               <div
@@ -344,7 +344,7 @@ const AdminPage = () => {
                     <MdOutlineSell />
                   </p>
                 </div>
-                <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
+                <div className="flex flex-col gap-1 p-2 h-1/2 items-start">
                   <p className="text-black text-md font-bold dark:text-gray-300">
                     <Counter
                       targetValue={order.length.toString().padStart(2, "0")}
@@ -364,7 +364,7 @@ const AdminPage = () => {
                     <MdNotificationsActive />
                   </p>
                 </div>
-                <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
+                <div className="flex flex-col gap-1 p-2 h-1/2 items-start">
                   <p className="text-black text-md font-bold dark:text-gray-300">
                     <Counter
                       targetValue={activeuser.length

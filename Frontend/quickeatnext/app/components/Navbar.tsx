@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { AiFillHome, AiFillInfoCircle } from "react-icons/ai";
-import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-import Drawer from "@mui/material/Drawer";
 import SendIcon from "@mui/icons-material/Send";
+import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChatIcon from "@mui/icons-material/Chat";
@@ -25,9 +24,8 @@ import LoginContext from "../LoginState/logincontext";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../lib/reducers/userSlice/UserReducers";
 import { user } from "../../lib/reducers";
-import { Badge } from "@mui/material";
+import { Badge, Drawer } from "@mui/material";
 import Pusher from "pusher-js";
-import DrawerComponent from "./Drawer";
 
 interface MessageDataType {
   username: string;
@@ -36,25 +34,26 @@ interface MessageDataType {
   mode: boolean;
   timeStamp: string;
   sender?: string;
-  Date?: Date | any;
+  date?: Date | any;
 }
 
 const Navbar = () => {
   const user = useSelector((state: user) => state.user.user);
-  console.log(user);
   const StateContext = useContext(LoginContext);
   const [openmenu, setOpenMenu] = useState<boolean>(false);
+  const [badgeCount, setBadgeCount] = useState<number>(0);
   const [dropdown, setDropDown] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  const [drawer, setDrawer] = useState<boolean>(false);
+  const [online, setOnline] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<MessageDataType[]>([]);
-  const [online, setOnline] = useState<boolean>(false);
+  const [drawer, setDrawer] = useState<boolean>(false);
   const [Time, setTime] = useState<string>("");
-  const [badgeCount, setBadgeCount] = useState<number>(0);
-  const userId = user._id;
 
   useEffect(() => {
+    let channel: any;
+    let pusher: Pusher;
+
     async function fetchMessage() {
       const response = await fetch("http://localhost:5000/message/allmessage");
       const data = await response.json();
@@ -71,52 +70,55 @@ const Navbar = () => {
       const pushercluster: string | undefined | any =
         process.env.NEXT_PUBLIC_ClusterPusher;
 
-      const pusher = new Pusher(pusherid, {
+      pusher = new Pusher(pusherid, {
         cluster: pushercluster,
       });
 
-      const channel = pusher.subscribe("chat");
+      channel = pusher.subscribe("chat");
       channel.bind("message", function(data: MessageDataType) {
-        const { username, message, userId, mode, timeStamp } = data;
-        console.log(messages, typeof messages);
+        console.log({ data });
+        const { username, message, userId, mode, timeStamp, date } = data;
         setMessages((prevMessages) => [
           ...prevMessages,
-          { username, message, userId, mode, timeStamp },
+          {
+            username,
+            message,
+            userId,
+            mode,
+            timeStamp,
+            sender: userId,
+            date,
+          },
         ]);
         if (!user.isAdmin && data.userId === user._id) {
           setOnline(data.mode);
         }
         if (!drawer) {
-          setBadgeCount((prevCount) => prevCount + 1);
+          setBadgeCount((prev) => prev + 1);
         }
       });
-      console.log(messages);
-      return () => {
-        channel.unbind();
-        pusher.unsubscribe("chat");
-      };
     }
     subscribePusher();
-  }, [drawer]);
 
-  const groupMessageByDate = () => {
+    return () => {
+      channel.unbind();
+      pusher.unsubscribe("chat");
+    };
+  }, [drawer]);
+  const groupMessageByDate = useMemo(() => {
     const groupmessage: any = {};
 
-    messages.forEach((msg) => {
-      const date = new Date(msg.Date).toLocaleDateString();
-      if (!groupmessage[date]) {
-        groupmessage[date] = [];
-      }
-      groupmessage[date].push(msg);
-    });
+    messages &&
+      messages.length > 0 &&
+      messages.forEach((msg) => {
+        const date = new Date(msg.date).toLocaleDateString();
+        if (!groupmessage[date]) {
+          groupmessage[date] = [];
+        }
+        groupmessage[date].push(msg);
+      });
     return groupmessage;
-  };
-
-  const GroupMessageByDate = groupMessageByDate();
-
-  const handleDrawerOpen = () => {
-    setDrawer(true);
-  };
+  }, [open, JSON.stringify(messages)]);
 
   const sendmessage = async () => {
     updateTime();
@@ -126,6 +128,7 @@ const Navbar = () => {
       userId: user._id,
       mode: user.isActive,
       timeStamp: Time,
+      date: new Date(),
     };
     const response = await fetch("http://localhost:5000/message/message", {
       method: "POST",
@@ -143,12 +146,17 @@ const Navbar = () => {
     const currentTime = new Date().toLocaleTimeString();
     setTime(currentTime);
   };
+  // const [badgeCount, setBadgeCount] = useState<number>(0);
+  const userId = user._id;
+
+  const handleDrawerOpen = () => {
+    setDrawer(true);
+  };
+
   const router = useRouter();
   const dispatch = useDispatch();
-  // const user = useSelector((state) => state.user.user);
   const pathname = usePathname();
-  console.log(messages);
-  // const { login, restaurantname, ownername } = useContext(LoginContext);
+
   const [PasswordData, setPasswordData] = useState<{
     oldpassword: string;
     newpassword: string;
@@ -169,7 +177,6 @@ const Navbar = () => {
     setOpen(false);
   };
 
-  console.log("Before Logout", user);
   const handleLogout = async (id: string) => {
     StateContext.login = false;
     dispatch(logoutUser());
@@ -179,7 +186,6 @@ const Navbar = () => {
         credentials: "include",
       });
       if (response.ok) {
-        console.log(response);
         Swal.fire({
           title: "Logout Successfully",
           icon: "success",
@@ -191,7 +197,6 @@ const Navbar = () => {
       console.log("error");
     }
   };
-  console.log("After Logout", user);
   const handleChangePassword = async (e: {
     preventDefault: () => void;
   }): Promise<void> => {
@@ -236,7 +241,10 @@ const Navbar = () => {
 
   //   const LoginContext = useContext(LoginContext);
   return (
-    <nav className="dark:bg-gray-900 bg-transparent sticky font-[Poppins] z-20 p-4  flex items-center justify-between  shadow-2xl rounded-lg">
+    <nav
+      style={{ boxShadow: "0 0 0.15em orange" }}
+      className="dark:bg-gray-900 bg-transparent sticky font-[Poppins] z-20 p-2 mt-2 mb-3 border-orange-500 border-1 flex items-center justify-between rounded-2xl"
+    >
       {/* Left side */}
       {!user.isActive ? (
         <>
@@ -259,7 +267,6 @@ const Navbar = () => {
           <button
             className="text-3xl text-orange-500 md:hidden"
             onClick={() => {
-              console.log("Ashish");
               setOpenMenu(!openmenu);
             }}
           >
@@ -389,7 +396,6 @@ const Navbar = () => {
                 className="text-orange-500 cursor-pointer"
                 onClick={() => {
                   setDrawer(true);
-
                   setBadgeCount(0);
                 }}
               >
@@ -497,7 +503,6 @@ const Navbar = () => {
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
             const email = formJson.email;
-            console.log(email);
             handleClose();
           },
         }}
@@ -617,7 +622,87 @@ const Navbar = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <DrawerComponent open={drawer} onClose={() => setDrawer(false)} />
+      <Drawer anchor="right" open={drawer} onClose={() => setDrawer(false)}>
+        <div className="h-full flex flex-col justify-between bg-[url('https://www.shutterstock.com/image-vector/mobile-apps-pattern-musicchatgalleryspeaking-bubbleemailmagnifying-600nw-249638665.jpg')] bg-cover bg-no-repeat">
+          <h1
+            style={{ boxShadow: "0 0 4em orange" }}
+            className="text-white font-[Poppins] text-center font-bold text-xl mb-4 p-4 rounded-b-3xl bg-orange-600"
+          >
+            QUICK-CHAT
+            {!user.isAdmin && (
+              <p className="text-sm text-green-400">
+                {online ? "online" : "offline"}
+              </p>
+            )}
+          </h1>
+          <div className="overflow-y-auto h-full mb-4 ">
+            {Object.keys(groupMessageByDate).map((date, index) => (
+              <div key={index}>
+                <div className="text-sm text-white text-center bg-black rounded-md border-black w-1/3 mx-auto">
+                  {date}
+                </div>
+                <ul className="flex flex-col mt-2">
+                  {messages &&
+                    messages.length > 0 &&
+                    messages
+                      .filter((msg, index) => {
+                        const newDate = new Date(msg.date).toLocaleDateString();
+                        return newDate === date;
+                      })
+                      .map((msg, index) => (
+                        <div
+                          key={index}
+                          className={`flex ${
+                            msg.sender === userId
+                              ? "flex-row-reverse"
+                              : "flex-row"
+                          } gap-3 text-sm items-center`}
+                        >
+                          <img
+                            className="rounded-full w-12 h-12 p-2 mb-[15px]"
+                            src={`http://localhost:5000/uploads/${msg.username}`}
+                            alt=""
+                          />
+                          <div className="flex flex-col">
+                            <p
+                              className={`${
+                                msg.sender === userId
+                                  ? "bg-orange-500 max-w-[255px] text-white p-2 rounded-xl font[Poppins]"
+                                  : "bg-white max-w-[255px] border-2 border-orange-500 rounded-xl p-2 font-[Poppins]"
+                              }`}
+                            >
+                              {msg.message}
+                            </p>
+                            <p className="text-xs text-gray-500 text-end">
+                              {msg.timeStamp}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-4">
+            <div className="flex items-center">
+              <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Ask Anything......."
+                className="flex-grow rounded-full border border-orange-600 p-2 mr-2 focus:outline-none"
+              />
+              <button
+                onClick={sendmessage}
+                className="bg-orange-600 text-white p-2 rounded-full flex items-center hover:bg-orange-700 focus:outline-none"
+              >
+                <SendIcon />
+              </button>
+            </div>
+          </div>
+        </div>
+      </Drawer>
     </nav>
   );
 };
