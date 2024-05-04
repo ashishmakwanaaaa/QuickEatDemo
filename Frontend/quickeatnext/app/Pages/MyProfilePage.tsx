@@ -8,15 +8,23 @@ import Swal from "sweetalert2";
 import LoginContext from "../LoginState/logincontext";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+import Rating from "@mui/material/Rating";
 import { updateUser } from "../../lib/reducers/userSlice/UserReducers";
 import { user } from "../../lib/reducers";
+import { useAppDispatch } from "lib/store";
 
 const MyProfilePage = () => {
   const [image, setImage] = useState<File | null>(null);
-  const role = localStorage.getItem("role") || "";
   const user = useSelector((state: user) => state.user.user);
-  console.log(user);
-
+  const [reviewData, setReviewData] = useState<{
+    userid: string;
+    message: string;
+    star: number;
+  }>({
+    userid: user._id,
+    message: "",
+    star: 0,
+  });
   const [resimage, setresImage] = useState<File | null>(null);
   const [owner, setOwner] = useState({
     _id: "",
@@ -32,9 +40,41 @@ const MyProfilePage = () => {
 
   console.log(typeof image);
   const StateContext = useContext(LoginContext);
-  const { dispatch } = StateContext;
-  console.log("stateContext", StateContext);
+  // const { dispatch } = StateContext;
+  const dispatch = useAppDispatch();
   const router = useRouter();
+
+  const GiveReview = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/reviews/createReview",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(reviewData),
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        Swal.fire({
+          title: "Review Submit Successfully",
+          icon: "success",
+          timer: 1000,
+        });
+        setReviewData({ userid: "", message: "", star: 0 });
+      } else {
+        Swal.fire({
+          title: "Error:" + data.message,
+          icon: "warning",
+          timer: 1000,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleImageChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     try {
       const file = e.target.files?.[0];
@@ -100,19 +140,18 @@ const MyProfilePage = () => {
           icon: "success",
           timer: 1000,
         });
-        {
-          StateContext.login && role === "User"
-            ? router.push("/dashboard")
-            : router.push("/adminside");
-        }
+        console.log(updatedUser);
         // dispatch({
         //   type: "UPDATE_IMAGE",
         //   payload: { ownerimage: user.image, restrurantimage: user.resimage },
         // });
-        dispatch(updateUser(updateUser) as any);
+        dispatch(updateUser(updatedUser) as any);
       } else {
         alert("error");
         console.log(data.message);
+      }
+      {
+        !user.isAdmin ? router.push("/dashboard") : router.push("/adminside");
       }
     } catch (error) {
       console.log(error);
@@ -137,16 +176,14 @@ const MyProfilePage = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col justify-center p-2">
-        <h1 className="text-2xl font-bold font-[Poppins] text-center">
-          My Profile
-        </h1>
+      <div className="flex flex-col h-full font-[Poppins] p-2 justify-center ">
+        <h1 className="text-2xl font-bold  text-center">My Profile</h1>
         <hr className="border mt-3" />
-        <div className="flex flex-row m-auto mt-10 rounded-md gap-6 justify-center items-center">
+        <div className="flex flex-row rounded-md gap-6 justify-center items-center bg-[url('https://t3.ftcdn.net/jpg/03/55/60/70/360_F_355607062_zYMS8jaz4SfoykpWz5oViRVKL32IabTP.jpg')] bg-no-repeat bg-cover">
           <div className="flex flex-row  w-[250px] justify-center items-center">
             {/* Upload Photo Section */}
-            <div className="flex flex-col justify-center items-center gap-16">
-              <div className="flex flex-col w-[150px] h-[150px]">
+            <div className="flex flex-col justify-center items-center gap-5">
+              <div className="flex flex-col gap-2 items-center">
                 {/* Image 1 */}
                 <input
                   onChange={handleImageChange}
@@ -155,10 +192,10 @@ const MyProfilePage = () => {
                   type="file"
                   name=""
                 />
-                <div className="w-full h-full p-2 items-center">
-                  {StateContext.image && !image ? (
+                <div className="relative w-32 h-32 overflow-hidden rounded-full">
+                  {user.image && !image ? (
                     <img
-                      className="rounded-full"
+                      className="absolute inset-0 w-full h-full object-cover"
                       src={`http://localhost:5000/uploads/${user.image}`}
                       alt=""
                     />
@@ -166,7 +203,7 @@ const MyProfilePage = () => {
                     <>
                       {image && (
                         <img
-                          className="rounded-full"
+                          className="absolute inset-0 w-full h-full object-cover"
                           src={URL.createObjectURL(image)}
                           alt="Profile"
                         />
@@ -192,7 +229,7 @@ const MyProfilePage = () => {
                     name=""
                   />
                   <div className="w-full h-full p-2 items-center">
-                    {StateContext.resimage && !resimage ? (
+                    {user.resimage && !resimage ? (
                       <img
                         className="rounded-md"
                         src={`http://localhost:5000/uploads/${user.resimage}`}
@@ -221,15 +258,15 @@ const MyProfilePage = () => {
             </div>
           </div>
           {/* Profile Details Section */}
-          <div className="flex flex-col gap-4 mt-10">
+          <div className="flex flex-col gap-10 border-r-4 rounded-md mt-5 border-white p-6">
             <div
-              style={{ boxShadow: "0 0  0.5em gray" }}
+              style={{ boxShadow: "0 0  1em gray" }}
               className="text-black font-[Poppins] text-sm flex font-normal gap-2  border border-gray-400 rounded-lg p-2 drop-shadow-2xl  w-full"
             >
               Personal Information
             </div>
             <div
-              style={{ boxShadow: "0 0 0.4em gray " }}
+              style={{ boxShadow: "0 0 1em gray " }}
               className="rounded-md p-2"
             >
               <div className="flex flex-row gap-2">
@@ -323,6 +360,36 @@ const MyProfilePage = () => {
             >
               Save Profile
             </button>
+          </div>
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={GiveReview}
+              className="bg-blue-500 w-1/2 drop-shadow-2xl text-white rounded-md hover:bg-blue-800 transform duration-300 p-2 "
+            >
+              Add Review
+            </button>
+            <textarea
+              placeholder="Give Feedback Here............."
+              className="rounded-xl p-2 text-gray-500 drop-shadow-2xl"
+              name=""
+              value={reviewData.message}
+              onChange={(e) =>
+                setReviewData({ ...reviewData, message: e.target.value })
+              }
+              id=""
+              cols={20}
+              rows={7}
+            ></textarea>
+            <Rating
+              name="simple-controlled"
+              value={reviewData.star}
+              onChange={(e: any) => {
+                setReviewData({ ...reviewData, star: e.target.value });
+              }}
+              // onChange={(event, newValue) => {
+              //   setValue(newValue);
+              // }}
+            />
           </div>
         </div>
       </div>

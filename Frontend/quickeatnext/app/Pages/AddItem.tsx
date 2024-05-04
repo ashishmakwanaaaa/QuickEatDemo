@@ -7,13 +7,16 @@ import { useRouter } from "next/navigation";
 import { CategoryType } from "../UserPage/CategoryList";
 import { useSelector } from "react-redux";
 import { user } from "../../lib/reducers";
+import { Select } from "antd";
+
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 
-const AddItem = () => {
+const AddItem: React.FC = () => {
   const router = useRouter();
   const StateContext = useContext(StateLogin);
   const user = useSelector((state: user) => state.user.user);
   const userId = user._id;
+  const { Option } = Select;
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [Fooddata, setFooddata] = useState<{
     userId: string;
@@ -27,7 +30,7 @@ const AddItem = () => {
   }>({
     userId,
     itemname: "",
-    itemcategory: "",
+    itemcategory: "select category",
     itemdescription: "",
     price: 0,
     quantity: 0,
@@ -68,7 +71,7 @@ const AddItem = () => {
         timer: 1000,
       });
       {
-        StateContext.login && router.push("/");
+        StateContext.login && router.push("/dashboard");
       }
     } else {
       Swal.fire({
@@ -89,19 +92,30 @@ const AddItem = () => {
       window.alert(error);
     }
   };
-  const accessKey = "a4mMmS84fey6hObwQS_BnYxSWcQRXnNGM-rGCq_1A6w";
 
-  const GenerateImage = async () => {
+  const GenerateImage: any = async (e: { target: { files: any[] } }) => {
+    console.log("Ashish");
+    const file: File | null = e.target.files?.[0];
+    const formData = new FormData();
+    console.log(file);
+    if (file) {
+      formData.append("image", file);
+    }
+
     try {
-      const response = await fetch(
-        `https://api.unsplash.com/photos/random?query=${Fooddata.itemname}&client_id=${accessKey}`
-      );
-
+      const response = await fetch(`http://localhost:5000/items/upload`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+      console.log(response);
       const data = await response.json();
+      console.log(data);
+      // const data = await response.json();
       if (response.ok) {
         setFooddata((prev) => ({
           ...prev,
-          image: data.urls.regular,
+          image: data.secure_url,
         }));
       } else {
         console.error("Failed To Fetch Image", data.errors);
@@ -144,37 +158,35 @@ const AddItem = () => {
                   setFooddata({ ...Fooddata, itemname: e.target.value })
                 }
                 placeholder="Enter Item Name"
-                className="p-2 rounded-md border-2 border-orange-500 w-full"
+                className="p-2 rounded-md border-2 active:border-blue-500 border-gray-300 w-full"
               />
             </div>
             <div className="flex flex-col gap-2 items-start  w-full md:w-[55%]">
               <label htmlFor="restaurantName" className="font-bold ">
                 Item's Category
               </label>
-              <select
-                id="itemcat"
-                name="itemCategory"
+              <Select
                 value={Fooddata.itemcategory}
-                onChange={(e) =>
-                  setFooddata({ ...Fooddata, itemcategory: e.target.value })
-                }
-                className="p-2 rounded-md border-2 border-orange-500 w-full"
+                onChange={(value: string) =>
+                  setFooddata({ ...Fooddata, itemcategory: value })
+                } // directly accessing `value` property
+                style={{
+                  width: "100%",
+                  height: 40,
+                }}
               >
-                <option value="" disabled selected>
-                  Select Item Category
-                </option>
                 {categories &&
                   categories.length > 0 &&
-                  categories.map((category, index) => {
+                  categories.map((category) => {
                     return (
                       <>
-                        <option value={category.categoryname}>
+                        <Option value={category.categoryname}>
                           {category.categoryname}
-                        </option>
+                        </Option>
                       </>
                     );
                   })}
-              </select>
+              </Select>
             </div>
           </div>
           <div className="flex flex-col gap-2 justify-start w-full md:w-[55%]">
@@ -189,7 +201,7 @@ const AddItem = () => {
                 setFooddata({ ...Fooddata, itemdescription: e.target.value })
               }
               placeholder="Enter Item Description"
-              className="p-2 rounded-md border-2 border-orange-500 w-[760px] h-28"
+              className="p-2 rounded-md border-2 border-gray-300 w-[760px] h-28"
             />
           </div>
           <div className="flex flex-row gap-2">
@@ -209,7 +221,7 @@ const AddItem = () => {
                   });
                 }}
                 placeholder="Enter Item Quantity"
-                className="p-2 rounded-md border-2 border-orange-500 w-full"
+                className="p-2 rounded-md border-2 border-gray-300 w-full"
               />
             </div>
             <div className="flex flex-col gap-2 items-start w-full">
@@ -225,7 +237,7 @@ const AddItem = () => {
                   setFooddata({ ...Fooddata, price: parseInt(e.target.value) })
                 }
                 placeholder="Enter Item Price"
-                className="p-2 rounded-md border-2 border-orange-500 w-full"
+                className="p-2 rounded-md border-2 border-gray-300 w-full"
               />
             </div>
             <div className="flex flex-col gap-2 items-start w-full">
@@ -244,7 +256,7 @@ const AddItem = () => {
                   })
                 }
                 placeholder="Enter Item Price"
-                className="p-2 rounded-md border-2 border-orange-500 w-full"
+                className="p-2 rounded-md border-2 border-gray-300 w-full"
               />
             </div>
           </div>
@@ -253,25 +265,31 @@ const AddItem = () => {
               <label htmlFor="" className="font-bold ">
                 Item Image:
               </label>
-              <div className="p-2 w-[200px] h-[150px] rounded-md">
+              <div className="p-2 w-[200px] h-[150px] rounded-lg">
                 <img
                   src={Fooddata.image}
                   alt=""
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-lg"
                   style={{ objectFit: "cover" }}
                 />
               </div>
             </div>
             <div className="flex flex-col row gap-2 w-full my-auto">
-              <button
-                onClick={GenerateImage}
-                className="w-full bg-orange-500 hover:text-orange-500 hover:bg-transparent transition-all duration-500 hover:border-orange-500 hover:border font-bold text-lg text-white p-2 mt-4 rounded-lg"
+              <input
+                type="file"
+                id="file-upload"
+                onChange={GenerateImage}
+                className="w-full hidden "
+              />
+              <label
+                htmlFor="file-upload"
+                className="bg-orange-500 cursor-pointer text-center hover:text-orange-500 hover:bg-transparent transition-all duration-500 hover:border-gray-300 hover:border font-bold text-lg text-white p-2 mt-4 rounded-lg"
               >
-                &larr; Generate Item Image
-              </button>
+                Upload Food Image
+              </label>
               <button
                 onClick={handleSubmit}
-                className="w-full bg-orange-500 hover:text-orange-500 hover:bg-transparent transition-all duration-500 hover:border-orange-500 hover:border font-bold text-lg text-white p-2 mt-4 rounded-lg"
+                className="w-full bg-orange-500 hover:text-orange-500 hover:bg-transparent transition-all duration-500 hover:border-gray-300 hover:border font-bold text-lg text-white p-2 mt-4 rounded-lg"
               >
                 Add Item &rarr;
               </button>

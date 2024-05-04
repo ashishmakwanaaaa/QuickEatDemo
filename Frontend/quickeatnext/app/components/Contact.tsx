@@ -164,7 +164,7 @@ const Contact: React.FC = () => {
           <div className="flex flex-col space-y-3" data-aos="fade-left">
             <div className="flex flex-row space-x-3 text-orange-500 drop-shadow-lg">
               <IoCall />
-              &nbsp; &nbsp; +(91)953 751 9367
+              &nbsp; &nbsp; +(91)95375 19367
             </div>
             <div className="flex flex-row spac  e-x-3 drop-shadow-lg text-orange-500">
               <SiGmail />

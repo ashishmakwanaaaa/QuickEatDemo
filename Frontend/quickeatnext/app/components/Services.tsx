@@ -27,7 +27,7 @@ const Services = () => {
         {/* Service 1 */}
         <div
           data-aos="fade-right"
-          className="w-[500px] h-[430px]  p-1 flex flex-col items-center gap-[4rem] border-b-8 pr-8 rounded-2xl border-orange-400 mt-5 hover:bg-gradient-to-t from-transparent to-orange-500 transition duration-300 hover:scale-105"
+          className="w-[500px] h-[430px]  p-1 flex flex-col items-center gap-[4rem] border-b-8 pr-8 rounded-2xl border-orange-400 mt-5 hover:bg-gradient-to-t from-transparent to-orange-300 transition duration-300 hover:scale-105"
         >
           <img
             className="w-40 h-50 rounded-full drop-shadow-2xl"
@@ -47,7 +47,7 @@ const Services = () => {
         {/* Service 2 */}
         <div
           data-aos="fade-up"
-          className="flex w-[500px] p-1 items-center gap-[4rem] flex-col border-b-8 pr-8 rounded-2xl border-blue-500 mt-8 hover:bg-gradient-to-t from-transparent to-blue-500 transform duration-300"
+          className="flex w-[500px] p-1 items-center gap-[4rem] flex-col border-b-8 pr-8 rounded-2xl border-blue-500 mt-8 hover:bg-gradient-to-t from-transparent to-blue-300 transform duration-300"
         >
           <img
             className="w-30 h-40 rounded-full drop-shadow-2xl"
@@ -64,7 +64,7 @@ const Services = () => {
 
         <div
           data-aos="fade-down"
-          className="w-[500px]  flex flex-col  items-center gap-12  border-b-8 pr-8 rounded-2xl border-green-500 mt-12 hover:bg-gradient-to-t from-transparent to-green-500 transition duration-700"
+          className="w-[500px]  flex flex-col  items-center gap-12  border-b-8 pr-8 rounded-2xl border-green-500 mt-12 hover:bg-gradient-to-t from-transparent to-green-300 transition duration-700"
         >
           <img
             className="w-40 h-50 rounded-full drop-shadow-2xl"
@@ -84,7 +84,7 @@ const Services = () => {
         {/* Service 2 */}
         <div
           data-aos="fade-left"
-          className="flex w-[500px] items-center gap-8 flex-col border-b-8 pr-8 rounded-2xl border-red-500 mt-12 hover:bg-gradient-to-t from-transparent to-red-500 transition duration-300"
+          className="flex w-[500px] items-center gap-12 flex-col border-b-8 pr-8 rounded-2xl border-red-500 mt-12 hover:bg-gradient-to-t from-transparent to-red-300 transition duration-300"
         >
           <img
             className="w-30 h-40 rounded-full drop-shadow-2xl"

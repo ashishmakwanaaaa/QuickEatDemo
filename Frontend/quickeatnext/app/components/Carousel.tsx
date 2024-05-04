@@ -79,7 +79,7 @@ const Carousel: React.FC = () => {
 
         <div className="z-10 w-full md:w-[700px] h-[400px] mt-8 md:mt-0 flex gap-4 md:gap-20">
           {/* Replace this with your actual image */}
-          <div className="relative w-full md:ml-32 md:w-[400px] h-[300px] md:h-[400px] overflow-hidden rounded-2xl">
+          <div className="relative w-full md:ml-48 md:w-[350px] h-[300px] md:h-[350px] overflow-hidden rounded-2xl">
             <img
               src="https://static.vecteezy.com/system/resources/thumbnails/022/559/426/small/american-cheese-bbq-beef-with-tomato-lettuce-juicy-beef-burger-fast-food-presentation-studio-product-isolated-on-white-background-photo.jpg"
               alt="Restaurant Image"

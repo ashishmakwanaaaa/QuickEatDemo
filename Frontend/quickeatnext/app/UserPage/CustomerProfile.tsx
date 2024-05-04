@@ -10,18 +10,19 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { DataGrid } from "@mui/x-data-grid";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { fetchCustomerById } from "../../lib/actions/customerAction";
 import { fetchSpecificOrder } from "../../lib/actions/orderAction";
 import { customer, order } from "../../lib/reducers";
 import { useRouter } from "next/navigation";
 import { Counter } from "../components/Counter";
+import { useAppDispatch } from "lib/store";
 
 const CustomerProfile = ({ id }: { id: string }) => {
   const [customerorder, setCustomerOrder] = useState<OrderDataType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const specificorder = useSelector((state: order) => state.order.orders);
   const customer: Customer = useSelector(
@@ -29,7 +30,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
   );
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchCustomerById(id) as any);
+    dispatch(fetchCustomerById(id));
     setTimeout(() => setLoading(false), 2000);
   }, [dispatch, id]);
 
@@ -58,7 +59,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
   console.log(sumoftotalAmount);
   const handleClickOpen = async (row: any) => {
     setOpen(true);
-    dispatch(fetchSpecificOrder(row._id) as any);
+    dispatch(fetchSpecificOrder(row._id));
 
     console.log(row);
   };

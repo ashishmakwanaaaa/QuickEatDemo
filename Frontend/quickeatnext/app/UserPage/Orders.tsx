@@ -27,6 +27,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchItems } from "../../lib/actions/itemAction";
 import { fetchCustomerById } from "../../lib/actions/customerAction";
 import { customer, item, user } from "../../lib/reducers";
+import { useAppDispatch } from "lib/store";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -77,7 +78,7 @@ const Orders = ({ id }: { id: string }) => {
   const [open2, setOpen2] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const StateContext = useContext(StateLogin);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const items: ItemType[] = useSelector((state: item) => state.item.items);
   const user = useSelector((state: user) => state.user.user);
   const userId = user._id;
@@ -129,7 +130,14 @@ const Orders = ({ id }: { id: string }) => {
 
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchItems(userId) as any);
+    dispatch(
+      fetchItems({
+        userId,
+        search: "",
+        sort: "",
+        category: "",
+      })
+    );
     setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
 
@@ -198,7 +206,14 @@ const Orders = ({ id }: { id: string }) => {
 
         const data = await response.json();
         console.log(data);
-        dispatch(fetchItems(userId) as any);
+        dispatch(
+          fetchItems({
+            userId,
+            search: "",
+            sort: "",
+            category: "",
+          })
+        );
       }
     } catch (error) {
       console.log(error);
@@ -258,13 +273,20 @@ const Orders = ({ id }: { id: string }) => {
 
       const data = await response.json();
       console.log(data);
-      dispatch(fetchItems(userId) as any);
+      dispatch(
+        fetchItems({
+          userId,
+          search: "",
+          sort: "",
+          category: "",
+        })
+      );
       console.log(data);
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(selectedItem);
+
   const CreateOrder = async () => {
     try {
       console.log(OrderData);
@@ -403,7 +425,7 @@ const Orders = ({ id }: { id: string }) => {
   return (
     <>
       <div className="font-[Poppins]  p-2 flex flex-col gap-4 w-full h-full">
-        <div className="flex flex-row gap-3 items-center justify-between rounded-xl p-4 border-b-2 border-gray-500">
+        <div className="flex flex-row gap-3 items-center justify-between rounded-xl  border-b-2 border-gray-500">
           {loading ? (
             <>
               <div className="animate-pulse bg-gray-300 rounded-md h-6 w-[900px]"></div>
@@ -440,7 +462,7 @@ const Orders = ({ id }: { id: string }) => {
 
         <div className="grid grid-cols-5 gap-4">
           {loading
-            ? Array.from({ length: 5 }).map((_, index) => (
+            ? Array.from({ length: items.length }).map((_, index) => (
                 <div
                   key={index}
                   className="animate-pulse flex flex-col items-center rounded-2xl p-2 h-full"

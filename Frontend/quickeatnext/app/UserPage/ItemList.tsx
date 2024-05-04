@@ -100,7 +100,14 @@ const ItemList = () => {
             icon: "success",
             timer: 2000,
           });
-          dispatch(fetchItems(userId));
+          dispatch(
+            fetchItems({
+              userId,
+              search: query,
+              sort: option,
+              category: selectedCategory,
+            })
+          );
         }
       } catch (error) {
         console.log(error);
@@ -135,7 +142,14 @@ const ItemList = () => {
             icon: "success",
             timer: 1000,
           });
-          dispatch(fetchItems(userId));
+          dispatch(
+            fetchItems({
+              userId,
+              search: query,
+              sort: option,
+              category: selectedCategory,
+            })
+          );
         } else {
           Swal.fire({
             title: "Delete Failed",
@@ -155,7 +169,7 @@ const ItemList = () => {
     }
   };
 
-  const accessKey = process.env.NEXT_PUBLIC_accesskeyunsplash
+  const accessKey = process.env.NEXT_PUBLIC_accesskeyunsplash;
   const generateImage = async (name: string) => {
     try {
       const response = await fetch(
@@ -180,9 +194,16 @@ const ItemList = () => {
 
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchItems(userId));
+    dispatch(
+      fetchItems({
+        userId,
+        search: query,
+        sort: option,
+        category: selectedCategory,
+      })
+    );
     setTimeout(() => setLoading(false), 2000);
-  }, [dispatch, userId]);
+  }, [dispatch, userId, query, option, selectedCategory]);
   useEffect(() => {
     setLoading(true);
     dispatch(fetchCategories(userId));
@@ -215,43 +236,32 @@ const ItemList = () => {
   return (
     <div className="font-[Poppins] flex flex-col gap-6 w-[68rem]">
       <div className="flex flex-row justify-between items-center">
-        {loading ? (
-          <div className="animate-pulse bg-gray-300 rounded-md w-48 h-6"></div>
-        ) : (
-          <h1 className="text-start dark:text-white text-black font-bold text-md">
-            Item Details
-          </h1>
-        )}
+        <h1 className="text-start dark:text-white text-black font-bold text-md">
+          Item Details
+        </h1>
 
         <div className="flex items-center gap-4">
-          {loading ? (
-            <>
-              <div className="animate-pulse bg-gray-300 rounded-lg w-400 h-12"></div>
-              <div className="animate-pulse bg-gray-300 rounded-lg w-40 h-12"></div>
-            </>
-          ) : (
-            <>
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="shadow-lg border text-sm border-orange-500 rounded-md w-400 p-2"
-                placeholder="Search Item Here"
-              />
-              <FormControl variant="standard" style={{ width: "160px" }}>
-                <Select
-                  value={option} // wrapping in an object because of labelInValue
-                  onChange={handleChange} // directly accessing `value` property
-                  style={{ width: 150, height: 40 }}
-                >
-                  <Option value="Price Highest">Price (High To Low)</Option>
-                  <Option value="Price Lowest">Price (Low To High)</Option>
-                  <Option value="Qty Highest">Qty (High To Low)</Option>
-                  <Option value="Qty Lowest">Qty (Low To High)</Option>
-                </Select>
-              </FormControl>
-            </>
-          )}
+          <>
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="shadow-lg border text-sm border-orange-500 rounded-md w-400 p-2"
+              placeholder="Search Item Here"
+            />
+            <FormControl variant="standard" style={{ width: "160px" }}>
+              <Select
+                value={option} // wrapping in an object because of labelInValue
+                onChange={handleChange} // directly accessing `value` property
+                style={{ width: 150, height: 40 }}
+              >
+                <Option value="price:desc">Price (High To Low)</Option>
+                <Option value="price:asc">Price (Low To High)</Option>
+                <Option value="qty:desc">Qty (High To Low)</Option>
+                <Option value="qty:asc">Qty (Low To High)</Option>
+              </Select>
+            </FormControl>
+          </>
         </div>
       </div>
       <div className="w-full h-10 bottom-5 font-normal text-sm drop-shadow-2xl">
@@ -262,43 +272,60 @@ const ItemList = () => {
           itemsToShow={5}
           itemsToScroll={5}
         >
-          {categories.map((category, index) => (
+          {categories?.map((category, index) => (
             <div className="flex flex-col gap-2 justify-center items-center">
-              {loading ? (
-                <div className="animate-pulse bg-gray-300 rounded-full w-16 h-16"></div>
-              ) : (
-                <>
-                  <img
-                    className="w-16 h-16 rounded-full drop-shadow-2xl"
-                    src={category.image}
-                    alt=""
-                  />
-                  <button
-                    onClick={() => {
-                      setSelectedCategory(category.categoryname);
-                    }}
-                    className={`text-sm text-center ${
-                      selectedCategory === category.categoryname
-                        ? "bg-red-500 p-1 text-white rounded-md "
-                        : ""
-                    }`}
-                  >
-                    {category.categoryname}
-                  </button>
-                </>
-              )}
+              <>
+                <img
+                  className="w-16 h-16 rounded-full drop-shadow-2xl"
+                  src={category.image}
+                  alt=""
+                />
+                <button
+                  onClick={() => {
+                    setSelectedCategory(category.categoryname);
+                  }}
+                  className={`text-sm text-center ${
+                    selectedCategory === category.categoryname
+                      ? "bg-red-500 p-1 text-white rounded-md "
+                      : ""
+                  }`}
+                >
+                  {category.categoryname}
+                </button>
+              </>
             </div>
           ))}
         </Carousel>
       </div>
 
       {loading ? (
-        <div className="animate-pulse bg-gray-300 rounded-xl w-full mt-5 h-[550px]"></div>
+        <>
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-12 gap-4 p-2 ml-16  mt-12 rounded-2xl dark:bg-gray-800 animate-pulse "
+            >
+              <div className="col-span-2 bg-gray-300 h-[150px] rounded-lg"></div>
+              <div className="col-span-8 flex flex-col gap-2">
+                {Array.from({ length: 4 }).map((_, subIndex) => (
+                  <div
+                    key={subIndex}
+                    className="bg-gray-300 h-6 w-full rounded-md"
+                  ></div>
+                ))}
+              </div>
+              <div className="col-span-2 flex flex-col gap-4 mt-6">
+                <div className="bg-gray-300 h-10 w-10 rounded-md"></div>
+                <div className="bg-gray-300 h-10 w-10 rounded-md"></div>
+              </div>
+            </div>
+          ))}
+        </>
       ) : (
         <>
-          {filteredItems && filteredItems.length > 0 ? (
+          {items && items.length > 0 ? (
             <div className="overflow-y-auto h-[550px] p-3 mt-5">
-              {filteredItems.map((item, index) => {
+              {items.map((item, index) => {
                 return (
                   <div
                     className="grid grid-cols-12 mt-5 gap-4 p-2 rounded-2xl dark:bg-gray-800"
@@ -556,7 +583,7 @@ const ItemList = () => {
           ) : (
             <div className="m-auto ">
               <h1 className="text-center mt-48 text-2xl text-bold text-orange-600">
-                Oops......There is no data of this category
+                Oops......There is no food item of this category
               </h1>
             </div>
           )}

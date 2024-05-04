@@ -15,6 +15,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { TablebookingModule } from './tablebooking/tablebooking.module';
 import { MessageModule } from './message/message.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 
 @Module({
@@ -41,6 +42,7 @@ import { MessageModule } from './message/message.module';
     }),
     TablebookingModule,
     MessageModule,
+    ReviewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

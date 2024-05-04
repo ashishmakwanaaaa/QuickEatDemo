@@ -74,26 +74,26 @@ const Footer = () => {
       <div className="flex flex-row items-center gap-6 text-center">
         <div
           className="p-2 w-12 h-12 text-white text-2xl rounded-full bg-[#0C2D57] flex items-center justify-center cursor-pointer transition duration-300 hover:bg-blue-700 hover:duration-300"
-          style={{ boxShadow: "0 0 1em orange" }}
+          style={{ boxShadow: "0 0 0.5em orange" }}
         >
           <TfiFacebook />
         </div>
 
         <div
           className="p-2 w-12 h-12 text-white text-2xl rounded-full bg-[#0C2D57] flex items-center justify-center cursor-pointer transition duration-300 hover:bg-pink-600 hover:shadow-lg hover:shadow-orange"
-          style={{ boxShadow: "0 0 1em orange" }}
+          style={{ boxShadow: "0 0 0.5em orange" }}
         >
           <FaInstagram />
         </div>
         <div
           className="p-2 w-12 h-12 text-white text-2xl rounded-full bg-[#0C2D57] flex items-center justify-center cursor-pointer transition duration-300 hover:bg-blue-400 hover:shadow-lg hover:shadow-orange"
-          style={{ boxShadow: "0 0  1em orange" }}
+          style={{ boxShadow: "0 0  0.5em orange" }}
         >
           <FaTwitter />
         </div>
         <div
           className="p-2 w-12 h-12 text-white text-2xl rounded-full bg-[#0C2D57] flex items-center justify-center cursor-pointer transition duration-300 hover:bg-blue-900 hover:shadow-lg hover:shadow-orange"
-          style={{ boxShadow: "0 0  1em orange" }}
+          style={{ boxShadow: "0 0  0.5em orange" }}
         >
           <FaLinkedin />
         </div>

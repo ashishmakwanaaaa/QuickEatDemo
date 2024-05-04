@@ -412,11 +412,11 @@ const Navbar = () => {
           )}
           {user.image ? (
             <div
-              className="w-12 h-12 rounded-full ml-[36] cursor-pointer "
+              className="w-14 h-14 rounded-full ml-[36] cursor-pointer relative "
               onClick={handleDropDown}
             >
               <img
-                className="rounded-full"
+                className="rounded-full w-full h-full"
                 src={`http://localhost:5000/uploads/` + user.image}
                 alt=""
               />
@@ -449,7 +449,7 @@ const Navbar = () => {
                     className=" text-center text-2xl mt-1 cursor-pointer"
                   >
                     <img
-                      className="rounded-full"
+                      className="rounded-full w-24 h-16"
                       src={`http://localhost:5000/uploads/` + user.image}
                       alt=""
                     />
