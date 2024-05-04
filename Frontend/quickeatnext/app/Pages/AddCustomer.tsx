@@ -49,7 +49,7 @@ const AddCustomer = () => {
       });
       console.log(StateContext);
       {
-        StateContext.login && router.push("/");
+        StateContext.login && router.push("/dashboard");
       }
     } else {
       Swal.fire({

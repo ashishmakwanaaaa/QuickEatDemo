@@ -11,6 +11,7 @@ import LoginContext from "../LoginState/logincontext";
 import { useSelector } from "react-redux";
 import { user } from "lib/reducers";
 import DashBoard from "./DashBoard";
+import ReviewPage from "app/components/Reviews";
 
 const HomePage = () => {
   const user = useSelector((state: user) => state.user.user);
@@ -24,6 +25,7 @@ const HomePage = () => {
           <AboutUs />
           <Services />
           <Contact />
+          <ReviewPage />
           <Footer />
         </>
       ) : (

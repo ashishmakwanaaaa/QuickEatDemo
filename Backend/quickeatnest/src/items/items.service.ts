@@ -8,10 +8,17 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Item } from './items.model';
 import { ItemDto } from './dto/items.dto';
+import { UploadApiErrorResponse, UploadApiResponse, v2 } from 'cloudinary';
 
 @Injectable()
 export class ItemsService {
-  constructor(@InjectModel('items') private readonly itemsmodel: Model<Item>) {}
+  constructor(@InjectModel('items') private readonly itemsmodel: Model<Item>) {
+    v2.config({
+      cloud_name: 'dldwipqbn',
+      api_key: '766732588576553',
+      api_secret: 'zmqNc-v0VBN4Ms5UyMBZNi13s6w',
+    });
+  }
 
   async AddItem(itemdto: ItemDto) {
     const {
@@ -25,7 +32,7 @@ export class ItemsService {
       itemcategory,
     } = itemdto;
     try {
-      let item = await this.itemsmodel.findOne({ itemname,userId });
+      let item = await this.itemsmodel.findOne({ itemname, userId });
       if (item) {
         throw new ConflictException({ message: 'Item Has Already Exists' });
       }
@@ -46,9 +53,40 @@ export class ItemsService {
     }
   }
 
-  async getAllItems(userId: string) {
+  async getAllItems(
+    userId: string,
+    search?: string,
+    sort?: string,
+    category?: string,
+  ) {
+    console.log(search);
     try {
-      let items = await this.itemsmodel.find({ userId });
+      let query = this.itemsmodel.find({ userId });
+
+      if (category) {
+        query.find({ itemcategory: category });
+      }
+
+      if (search) {
+        query.where({
+          $or: [
+            { itemname: { $regex: search, $options: 'i' } },
+            { itemcategory: { $regex: search, $options: 'i' } },
+          ],
+        });
+      }
+
+      if (sort) {
+        const sortparams = sort.split(':');
+        const sortname = sortparams[0];
+        const sortvalue = sortparams[1] === 'desc' ? -1 : 1;
+        const sortObject: any = {};
+        sortObject[sortname] = sortvalue;
+        query.sort(sortObject);
+      }
+
+      const items = await query.exec();
+
       if (items.length === 0) {
         throw new NotFoundException();
       }
@@ -112,14 +150,32 @@ export class ItemsService {
       throw new InternalServerErrorException();
     }
   }
-  async getallitems(){
+  async getallitems() {
     try {
       const items = await this.itemsmodel.find();
-      if(items.length === 0){throw new NotFoundException()}
-      return {message:"All Items",items}
+      if (items.length === 0) {
+        throw new NotFoundException();
+      }
+      return { message: 'All Items', items };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException();
     }
+  }
+
+  async UploadImage(filepath: Buffer) {
+    return new Promise((resolve, reject) => {
+      v2.uploader
+        .upload_stream(
+          { folder: 'QUICKEATFOODIMAGE', resource_type: 'auto' },
+          (error, result) => {
+            if (error) {
+              return reject(error);
+            }
+            resolve(result);
+          },
+        )
+        .end(filepath);
+    });
   }
 }

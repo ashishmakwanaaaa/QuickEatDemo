@@ -406,7 +406,7 @@ const AdminPage = () => {
                     <PiBowlFoodBold />
                   </p>
                 </div>
-                <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
+                <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-full">
                   <p className="text-black text-md font-bold dark:text-gray-300">
                     <Counter
                       targetValue={items.length.toString().padStart(2, "0")}

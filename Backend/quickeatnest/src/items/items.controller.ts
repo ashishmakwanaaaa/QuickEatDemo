@@ -6,11 +6,19 @@ import {
   Param,
   Patch,
   Post,
+  Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { ItemDto } from './dto/items.dto';
 import { AuthGuard } from 'src/auth/auth.gaurd';
+import { Multer } from 'multer';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @UseGuards(AuthGuard)
 @Controller('items')
@@ -23,10 +31,13 @@ export class ItemsController {
   }
 
   @Get('/getAllItems/:userId')
-  getAllItems(@Param('userId') userId: string) {
-    console.log(userId);
-
-    return this.itemsservice.getAllItems(userId);
+  getAllItems(
+    @Param('userId') userId: string,
+    @Query('search') search?: string,
+    @Query('sort') sort?: string,
+    @Query('category') category?: string,
+  ) {
+    return this.itemsservice.getAllItems(userId, search, sort, category);
   }
 
   @Patch('/updateItem/:id')
@@ -50,5 +61,14 @@ export class ItemsController {
   @Get('/getitems')
   getallitems() {
     return this.itemsservice.getallitems();
+  }
+
+  @Post('/upload')
+  @UseInterceptors(FileInterceptor('image'))
+  async UploadFile(@UploadedFile() file: Multer.File) {
+    console.log(file);
+    const a = await this.itemsservice.UploadImage(file.buffer);
+    console.log(a);
+    return this.itemsservice.UploadImage(file.buffer);
   }
 }

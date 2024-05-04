@@ -5,9 +5,9 @@ import { IoFastFood } from "react-icons/io5";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import MoneyIcon from "@mui/icons-material/Money";
+import ApexCharts from "apexcharts";
 import { useContext, useEffect, useState } from "react";
 import { Customer } from "./CustomerList";
-import StateLogin from "../LoginState/logincontext";
 
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import {
@@ -64,7 +64,10 @@ interface monthlyDatatype {
 }
 
 const AdminDashboard = () => {
-  const [monthlyData, setMonthlyData] = useState<monthlyDatatype[]>([]);
+  const [MonthBasedDailyData, setMonthBasedDailyData] = useState<
+    monthlyDatatype[]
+  >([]);
+  const [monthlydata, setMonthlydata] = useState<any[]>([]);
   const [filterdata, setfilterdata] = useState<PaymentType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedMonth, setSelectedMonth] = useState<number | string>(
@@ -117,7 +120,14 @@ const AdminDashboard = () => {
   }, [dispatch, userId]);
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchItems(userId));
+    dispatch(
+      fetchItems({
+        userId,
+        search: "",
+        sort: "",
+        category: "",
+      })
+    );
     setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   useEffect(() => {
@@ -146,6 +156,116 @@ const AdminDashboard = () => {
     return "#" + Math.floor(Math.random() * 16777215).toString(16);
   };
 
+  useEffect(() => {
+    const getMonthlyData = () => {
+      // Initialize months data
+      const months = Array.from({ length: 12 }, () => 0);
+
+      // Filter payments by the specified userId
+      const userPayments = payments.filter(
+        (payment) => payment.userId === userId
+      );
+
+      // Aggregate payments by month for the specific user
+      userPayments.forEach((payment) => {
+        const paymentDate = new Date(payment.Date);
+        const month = paymentDate.getMonth(); // Get month index (0-based)
+        months[month] += parseFloat(payment.amount); // Sum up payments per month
+      });
+
+      return months;
+    };
+    setMonthlydata(getMonthlyData()); // Assume this function is defined or imported
+    var optionsformonthlydata = {
+      series: [
+        {
+          name: "Total Sales",
+          data: monthlydata,
+        },
+      ],
+      chart: {
+        height: 250,
+        type: "bar",
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 10,
+          dataLabels: {
+            position: "top", // top, center, bottom
+          },
+        },
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function(val: string) {
+          return Number(val).toFixed(2);
+        },
+        offsetY: -20,
+        style: {
+          fontSize: "12px",
+          colors: ["#304758"],
+        },
+      },
+      fill: {
+        colors: ["#EE7600"], // Sets the bar color to orange
+      },
+      xaxis: {
+        categories: lables,
+        position: "top",
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: false,
+        },
+        crosshairs: {
+          fill: {
+            type: "gradient",
+            gradient: {
+              colorFrom: "#D8E3F0",
+              colorTo: "#BED1E6",
+              stops: [0, 100],
+              opacityFrom: 0.4,
+              opacityTo: 0.5,
+            },
+          },
+        },
+        tooltip: {
+          enabled: true,
+        },
+      },
+      yaxis: {
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: false,
+        },
+        labels: {
+          show: false,
+          formatter: function(val: string) {
+            return Number(val).toFixed(2);
+          },
+        },
+      },
+      title: {
+        text: "Monthly Sales Of Your Restaurant",
+        floating: true,
+        offsetY: 330,
+        align: "center",
+        style: {
+          color: "#444",
+        },
+      },
+    };
+
+    var chart = new ApexCharts(
+      document.querySelector("#chart"),
+      optionsformonthlydata
+    );
+    chart.render();
+  }, [payments]);
+
   top5sellingItems &&
     top5sellingItems.forEach((item) => {
       const itemData = {
@@ -156,6 +276,21 @@ const AdminDashboard = () => {
       };
       data.push(itemData);
     });
+  const lables = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   const options: any = {
     plugins: {
       responsive: true,
@@ -205,20 +340,7 @@ const AdminDashboard = () => {
       intersect: true,
     },
   };
-  const lables = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+
   const daysInMonth = new Date(
     Number(selectedYear),
     Number(selectedMonth),
@@ -281,16 +403,16 @@ const AdminDashboard = () => {
         totalAmount: (dailyData && dailyData[i + 1]) || 0,
       }));
 
-      setMonthlyData(monthlyData);
+      setMonthBasedDailyData(monthlyData);
     };
     calculatedMonthlydata();
   }, [payments, selectedMonth, selectedYear]);
-  console.log(monthlyData);
+  console.log(MonthBasedDailyData, monthlydata);
 
   return (
     <>
-      <div className="dark:bg-gray-900 dark:text-gray-500 w-full font-poppins bg-gray-100 h-screen p-4 md:p-8 text-white">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <div className="dark:bg-gray-900 dark:text-gray-500 w-full font-poppins bg-gray-100 mt-[-10px] p-4 md:p-8 text-white">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-[-25px]">
           {loading ? (
             Array.from({ length: 5 }).map((_, index) => (
               <div
@@ -368,22 +490,22 @@ const AdminDashboard = () => {
             </>
           )}
         </div>
-        <div className="flex gap-10 justify-between w-full h-full mt-5 z-20 ml-4">
-          <div className="flex ml-[-25px] flex-col items-center shadow-2xl rounded-xl justify-center h-[400px] w-[400px] gap-8">
+        <div className="flex flex-row gap-10 justify-between w-full h-full mt-5 z-20 ml-4">
+          <div className="flex ml-[-25px] flex-col items-center shadow-2xl rounded-xl justify-center h-[270px] w-[400px] gap-8">
             {loading ? (
-              <div className="animate-pulse bg-gray-300 rounded-xl w-[400px] h-[450px] ml-[60px]"></div>
+              <div className="animate-pulse bg-gray-300 rounded-xl w-[400px] h-[270px] ml-[60px]"></div>
             ) : (
-              <div className="rounded-lg p-4 h-[350px]">
+              <div className="rounded-lg h-[200px]">
                 <Doughnut data={finalData} options={options} />
-                <h1 className="text-center mt-2 capitalize text-orange-500 font-bold">
+                <h1 className="text-center mt-2 text-sm capitalize text-orange-500 font-bold">
                   Categories Wise Data
                 </h1>
               </div>
             )}
           </div>
-          <div className="flex flex-col items-end rounded-lg h-[400px] p-4 justify-center shadow-2xl mr-4">
+          <div className="flex flex-col items-end rounded-lg h-[270px] p-4 justify-center shadow-2xl mr-4">
             {loading ? (
-              <div className="animate-pulse bg-gray-300 rounded-xl w-[500px] h-[400px]"></div>
+              <div className="animate-pulse bg-gray-300 rounded-xl w-[500px] h-[270px]"></div>
             ) : (
               <>
                 <div className="flex flex-row gap-2 justify-start items-start mr-16">
@@ -426,15 +548,15 @@ const AdminDashboard = () => {
                     </FormControl>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 w-[500px] h-[700px] mr-16">
+                <div className="flex flex-col gap-2 w-[500px] h-[270px] mr-16">
                   <Bar data={dataforbarchart} options={optionsforbarchart} />
-                  <h1 className="text-center mt-10 capitalize text-orange-500 font-bold">
-                    Monthly Sales Record
-                  </h1>
                 </div>
               </>
             )}
           </div>
+        </div>
+        <div className="text-black shadow-2xl rounded-lg">
+          <div className="w-full " id="chart"></div>
         </div>
       </div>
     </>
