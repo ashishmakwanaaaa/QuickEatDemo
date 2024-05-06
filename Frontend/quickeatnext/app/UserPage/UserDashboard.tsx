@@ -500,19 +500,23 @@ const AdminDashboard = () => {
                     isRTL={false}
                     showArrows={false}
                     pagination={false}
-                    itemsToShow={3}
+                    itemsToShow={2}
+                    itemsToScroll={2}
                   >
                     {categoryLabels.map((label, index) => (
                       <div
                         style={{ backgroundColor: data[index].color }}
                         key={index}
-                        className="flex text-white text-xs text-center font-normal items-center mr-2 rounded-full p-1"
+                        className="flex text-white text-xs text-center w-full font-normal items-center mr-2 rounded-full p-1"
                       >
                         {label}
                       </div>
                     ))}
                   </Carousel>
                 </div>
+                <p className="text-xs font-bold text-black text-center">
+                  category wise data
+                </p>
               </>
             )}
           </div>
