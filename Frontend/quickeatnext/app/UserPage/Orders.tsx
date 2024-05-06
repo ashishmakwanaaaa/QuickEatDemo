@@ -76,10 +76,10 @@ const Orders = ({ id }: { id: string }) => {
   const [selectedItem, setSelectedItem] = useState<SelectedItemType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [open2, setOpen2] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const StateContext = useContext(StateLogin);
   const dispatch = useAppDispatch();
   const items: ItemType[] = useSelector((state: item) => state.item.items);
+  const loading = useSelector((state: item) => state.item.loading);
   const user = useSelector((state: user) => state.user.user);
   const userId = user._id;
   const router = useRouter();
@@ -129,7 +129,6 @@ const Orders = ({ id }: { id: string }) => {
   console.log(typeof customer.userId);
 
   useEffect(() => {
-    setLoading(true);
     dispatch(
       fetchItems({
         userId,
@@ -138,7 +137,6 @@ const Orders = ({ id }: { id: string }) => {
         category: "",
       })
     );
-    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
 
   const handleRemoveItem = async (item: SelectedItemType) => {
@@ -181,7 +179,6 @@ const Orders = ({ id }: { id: string }) => {
 
         const data = await response.json();
         console.log(data);
-        dispatch(fetchItems(userId) as any);
       } else {
         // If item quantity is 1, remove the item from the cart
         updatedItems = selectedItem.filter(
@@ -206,14 +203,6 @@ const Orders = ({ id }: { id: string }) => {
 
         const data = await response.json();
         console.log(data);
-        dispatch(
-          fetchItems({
-            userId,
-            search: "",
-            sort: "",
-            category: "",
-          })
-        );
       }
     } catch (error) {
       console.log(error);
@@ -273,14 +262,7 @@ const Orders = ({ id }: { id: string }) => {
 
       const data = await response.json();
       console.log(data);
-      dispatch(
-        fetchItems({
-          userId,
-          search: "",
-          sort: "",
-          category: "",
-        })
-      );
+
       console.log(data);
     } catch (error) {
       console.log(error);
@@ -424,7 +406,7 @@ const Orders = ({ id }: { id: string }) => {
 
   return (
     <>
-      <div className="font-[Poppins]  p-2 flex flex-col gap-4 w-full h-full">
+      <div className="font-[Poppins]  p-2 flex flex-col gap-4 w-[1100px] h-full">
         <div className="flex flex-row gap-3 items-center justify-between rounded-xl  border-b-2 border-gray-500">
           {loading ? (
             <>
@@ -557,7 +539,7 @@ const Orders = ({ id }: { id: string }) => {
         style={{ borderRadius: "2rem", padding: "10px" }}
         aria-describedby="alert-dialog-slide-description"
       >
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 font-[Poppins]">
           <DialogTitle
             style={{
               cursor: "move",
@@ -668,33 +650,35 @@ const Orders = ({ id }: { id: string }) => {
                 Go Back
               </Button>
             </DialogActions>
-            <DialogActions>
-              <Button
-                style={{
-                  border: "1px solid #FFA500",
-                  color: "#FFA500",
-                  marginRight: "10px",
-                  borderRadius: "5px",
-                  padding: "8px 16px",
-                  transition: "background-color 0.3s, color 0.3s",
-                }}
-                onClick={CreateOrderForCash}
-              >
-                PAY WITH CASH
-              </Button>
-              <Button
-                onClick={CreateOrder}
-                style={{
-                  backgroundColor: "#FFA500",
-                  color: "#FFFFFF",
-                  borderRadius: "5px",
-                  padding: "8px 16px",
-                  transition: "background-color 0.3s, color 0.3s",
-                }}
-              >
-                PAY ONLINE
-              </Button>
-            </DialogActions>
+            {selectedItem.length > 0 && (
+              <DialogActions>
+                <Button
+                  style={{
+                    border: "1px solid #FFA500",
+                    color: "#FFA500",
+                    marginRight: "10px",
+                    borderRadius: "5px",
+                    padding: "8px 16px",
+                    transition: "background-color 0.3s, color 0.3s",
+                  }}
+                  onClick={CreateOrderForCash}
+                >
+                  PAY WITH CASH
+                </Button>
+                <Button
+                  onClick={CreateOrder}
+                  style={{
+                    backgroundColor: "#FFA500",
+                    color: "#FFFFFF",
+                    borderRadius: "5px",
+                    padding: "8px 16px",
+                    transition: "background-color 0.3s, color 0.3s",
+                  }}
+                >
+                  PAY ONLINE
+                </Button>
+              </DialogActions>
+            )}
           </div>
         </div>
       </Dialog>

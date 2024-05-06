@@ -41,7 +41,6 @@ const PaymentList = () => {
   const [rows, setRows] = useState<PaymentType[]>([]);
   const [data, setData] = useState<PaymentType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const [order, setOrder] = useState<OrderDataType[]>([]);
   const [filteredRow, setFilteredRows] = useState<PaymentType[]>([]);
   const [invoiceid, setInvoiceId] = useState<number>(0);
@@ -51,6 +50,7 @@ const PaymentList = () => {
   const payments: PaymentType[] = useSelector(
     (state: payment) => state.payment.payments
   );
+  const loading = useSelector((state: payment) => state.payment.loading);
   const [selectedDates, setSelectedDates] = useState<
     [Dayjs | null, Dayjs | null]
   >([null, null]);
@@ -104,9 +104,7 @@ const PaymentList = () => {
   console.log(StateContext);
   let currentDate = new Date().toJSON().slice(0, 10);
   useEffect(() => {
-    setLoading(true);
     dispatch(fetchPayments(userId));
-    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   useEffect(() => {
     if (!payments || payments.length === 0) {

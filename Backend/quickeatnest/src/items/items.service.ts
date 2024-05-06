@@ -14,9 +14,9 @@ import { UploadApiErrorResponse, UploadApiResponse, v2 } from 'cloudinary';
 export class ItemsService {
   constructor(@InjectModel('items') private readonly itemsmodel: Model<Item>) {
     v2.config({
-      cloud_name: 'dldwipqbn',
-      api_key: '766732588576553',
-      api_secret: 'zmqNc-v0VBN4Ms5UyMBZNi13s6w',
+      cloud_name: process.env.cloudname,
+      api_key: process.env.cloudinaryapikey,
+      api_secret: process.env.cloudinaryapisecretkey,
     });
   }
 

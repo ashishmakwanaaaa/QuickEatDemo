@@ -53,9 +53,9 @@ const ItemList = () => {
   const [option, setOption] = useState<string>("Filter");
   const { Option } = Select;
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const items: ItemType[] = useSelector((state: item) => state.item.items);
+  const itemloading = useSelector((state: item) => state.item.loading);
   const categories: CategoryType[] = useSelector(
     (state: category) => state.category.categories
   );
@@ -193,7 +193,6 @@ const ItemList = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
     dispatch(
       fetchItems({
         userId,
@@ -202,12 +201,9 @@ const ItemList = () => {
         category: selectedCategory,
       })
     );
-    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId, query, option, selectedCategory]);
   useEffect(() => {
-    setLoading(true);
     dispatch(fetchCategories(userId));
-    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   const filteredItems: ItemType[] =
     items && items.length > 0
@@ -284,13 +280,25 @@ const ItemList = () => {
                   onClick={() => {
                     setSelectedCategory(category.categoryname);
                   }}
-                  className={`text-sm text-center ${
+                  className={`text-sm text-center flex items-center gap-2 ${
                     selectedCategory === category.categoryname
                       ? "bg-red-500 p-1 text-white rounded-md "
                       : ""
                   }`}
                 >
                   {category.categoryname}
+                  {selectedCategory === category.categoryname && (
+                    <p
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedCategory("");
+                        console.log(selectedCategory);
+                      }}
+                      className="bg-black font-bold flex items-center justify-center text-white rounded-full w-5 h-5 p-2 text-sm"
+                    >
+                      x
+                    </p>
+                  )}
                 </button>
               </>
             </div>
@@ -298,7 +306,7 @@ const ItemList = () => {
         </Carousel>
       </div>
 
-      {loading ? (
+      {itemloading ? (
         <>
           {Array.from({ length: 3 }).map((_, index) => (
             <div
@@ -582,7 +590,12 @@ const ItemList = () => {
             </div>
           ) : (
             <div className="m-auto ">
-              <h1 className="text-center mt-48 text-2xl text-bold text-orange-600">
+              <img
+                className="w-72 h-72 mx-auto"
+                src="https://cdn.dribbble.com/users/1753953/screenshots/3818675/animasi-emptystate.gif"
+                alt=""
+              />
+              <h1 className="text-center text-2xl text-bold text-orange-600">
                 Oops......There is no food item of this category
               </h1>
             </div>

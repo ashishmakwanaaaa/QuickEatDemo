@@ -10,7 +10,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { DataGrid } from "@mui/x-data-grid";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { fetchCustomerById } from "../../lib/actions/customerAction";
 import { fetchSpecificOrder } from "../../lib/actions/orderAction";
 import { customer, order } from "../../lib/reducers";
@@ -21,7 +21,7 @@ import { useAppDispatch } from "lib/store";
 const CustomerProfile = ({ id }: { id: string }) => {
   const [customerorder, setCustomerOrder] = useState<OrderDataType[]>([]);
   const [open, setOpen] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const loading = useSelector((state: customer) => state.customer.loading);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const specificorder = useSelector((state: order) => state.order.orders);
@@ -29,9 +29,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
     (state: customer) => state.customer.specificcustomer
   );
   useEffect(() => {
-    setLoading(true);
     dispatch(fetchCustomerById(id));
-    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -89,13 +87,13 @@ const CustomerProfile = ({ id }: { id: string }) => {
     },
     {
       field: "customername",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "Customer Name",
       width: 150,
     },
     {
       field: "customeremail",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "Email",
       width: 220,
     },
@@ -107,7 +105,7 @@ const CustomerProfile = ({ id }: { id: string }) => {
     },
     {
       field: "amount",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       headerName: "Total Amount",
       width: 120,
     },

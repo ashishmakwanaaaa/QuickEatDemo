@@ -31,14 +31,11 @@ export interface CategoryType {
 }
 
 const CategoriesList = () => {
-  const StateContext = useContext(StateLogin);
-  const [loading, setLoading] = useState<boolean>(false);
   const user = useSelector((state: user) => state.user.user);
   const [open, setOpen] = useState<boolean>(false);
   const [open1, setOpen1] = useState<boolean>(false);
   const [Categoryid, setCategorieid] = useState<string>("");
   const userId = user._id;
-  console.log(userId);
   const [input, setInput] = useState<CategoryType>({
     categoryname: "",
     image:
@@ -55,10 +52,9 @@ const CategoriesList = () => {
   const categories = useSelector(
     (state: category) => state.category.categories
   );
+  const loading = useSelector((state: category) => state.category.loading);
   useEffect(() => {
-    setLoading(true);
     dispatch(fetchCategories(userId));
-    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   console.log(categories);
 
@@ -202,13 +198,13 @@ const CategoriesList = () => {
     {
       field: "id",
       headerName: "ID",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       width: 200,
     },
     {
       field: "name",
       headerName: "Category Name",
-      cellClassName:"dark:text-white",
+      cellClassName: "dark:text-white",
       width: 200,
     },
     {

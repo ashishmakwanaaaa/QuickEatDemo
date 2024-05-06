@@ -298,7 +298,7 @@ const AdminPage = () => {
   console.log(monthlyData);
   return (
     <>
-      <div className="flex flex-col gap-2 font-[Poppins] cursor-pointer">
+      <div className="flex flex-col gap-2 font-[Poppins] cursor-pointer mr-10 mt-[-10px]">
         <div className="flex flex-row gap-4 p-2">
           {loading ? (
             Array.from({ length: 5 }).map((_, index) => (
@@ -386,7 +386,7 @@ const AdminPage = () => {
                     <FaUsers />
                   </p>
                 </div>
-                <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-1/2">
+                <div className="flex flex-col gap-1 p-2 h-1/2 items-start w-full">
                   <p className="text-black text-md font-bold dark:text-gray-300">
                     <Counter
                       targetValue={user.length.toString().padStart(2, "0")}

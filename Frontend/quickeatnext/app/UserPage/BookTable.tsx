@@ -17,7 +17,7 @@ import {
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useSelector } from "react-redux";
-import { user } from "../../lib/reducers";
+import { payment, user } from "../../lib/reducers";
 import { Dayjs } from "dayjs";
 import { FaTableColumns } from "react-icons/fa6";
 
@@ -42,9 +42,9 @@ const BookTable = () => {
   const [editMode, setEditMode] = useState<boolean>(true);
   const [bookedtable, setbookedtable] = useState<number[]>([]);
   const [open, setOpen] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const user = useSelector((state: user) => state.user.user);
+  const loading = useSelector((state: payment) => state.user.loading);
   console.log(user._id);
   const [bookingdetails, setbookingdetails] = useState<bookingdetailstype>({
     userId: user._id,
@@ -166,12 +166,10 @@ const BookTable = () => {
     // Check if the user is available
     if (user) {
       // Set userId in bookingdetails state
-      setLoading(true);
       setbookingdetails((prevDetails) => ({
         ...prevDetails,
         userId: user._id,
       }));
-      setTimeout(() => setLoading(false), 2000);
     }
 
     // Retrieve layout and booked chairs data from local storage
