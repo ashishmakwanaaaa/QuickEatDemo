@@ -248,7 +248,7 @@ const Navbar = () => {
       {/* Left side */}
       {!user.isActive ? (
         <>
-          <div className="flex items-center cursor-pointer ">
+          <div className="flex items-center cursor-pointer animate-bounce">
             <span className="text-black  font-bold text-3xl">
               Quick
               <span className="text-orange-500 shadow-orange text-3xl">

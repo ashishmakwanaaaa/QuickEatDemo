@@ -6,6 +6,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import MoneyIcon from "@mui/icons-material/Money";
 import ApexCharts from "apexcharts";
+import Carousel from "@itseasy21/react-elastic-carousel";
 import { useContext, useEffect, useState } from "react";
 import { Customer } from "./CustomerList";
 
@@ -69,7 +70,6 @@ const AdminDashboard = () => {
   >([]);
   const [monthlydata, setMonthlydata] = useState<any[]>([]);
   const [filterdata, setfilterdata] = useState<PaymentType[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const [selectedMonth, setSelectedMonth] = useState<number | string>(
     new Date().getMonth() + 1
   );
@@ -85,6 +85,7 @@ const AdminDashboard = () => {
   const userId = user._id;
   const dispatch = useAppDispatch();
   const items = useSelector((state: item) => state.item.items);
+  const loading = useSelector((state: payment) => state.payment.loading);
   const customers: Customer[] = useSelector(
     (state: customer) => state.customer.customer
   );
@@ -114,12 +115,9 @@ const AdminDashboard = () => {
       .toFixed(2);
   console.log(typeof totalAmount);
   useEffect(() => {
-    setLoading(true);
     dispatch(fetchCustomer(userId));
-    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   useEffect(() => {
-    setLoading(true);
     dispatch(
       fetchItems({
         userId,
@@ -128,23 +126,18 @@ const AdminDashboard = () => {
         category: "",
       })
     );
-    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   useEffect(() => {
-    setLoading(true);
     dispatch(fetchPayments(userId));
-    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
   useEffect(() => {
     async function top5sellingitems() {
-      setLoading(true);
       try {
         const response = await fetch(
           `http://localhost:5000/orders/top5sellingitems/${userId}`
         );
         const data = await response.json();
         setTop5sellingItems(data.top5items);
-        setTimeout(() => setLoading(false), 2000);
       } catch (error) {
         window.alert(error);
       }
@@ -276,6 +269,9 @@ const AdminDashboard = () => {
       };
       data.push(itemData);
     });
+  console.log(data);
+  const categoryLabels = top5sellingItems.map((item) => item._id);
+
   const lables = [
     "January",
     "February",
@@ -298,7 +294,7 @@ const AdminDashboard = () => {
     cutout: data.map((item) => item.cutout),
   };
   const finalData = {
-    labels: data.map((item) => item.label),
+    // labels: categoryLabels,
     datasets: [
       {
         data: data.map((item) => Math.round(item.value)),
@@ -411,8 +407,8 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <div className="dark:bg-gray-900 dark:text-gray-500 w-full font-poppins bg-gray-100 mt-[-10px] p-4 md:p-8 text-white">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-[-25px]">
+      <div className="dark:bg-gray-900 dark:text-gray-500 w-full font-poppins bg-gray-100 mt-[-10px] p-2 md:p-4 text-white">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-[-12px]">
           {loading ? (
             Array.from({ length: 5 }).map((_, index) => (
               <div
@@ -490,20 +486,37 @@ const AdminDashboard = () => {
             </>
           )}
         </div>
-        <div className="flex flex-row gap-10 justify-between w-full h-full mt-5 z-20 ml-4">
-          <div className="flex ml-[-25px] flex-col items-center shadow-2xl rounded-xl justify-center h-[270px] w-[400px] gap-8">
+        <div className="flex flex-row gap-12 justify-between w-full h-full mt-2 z-20 ml-4">
+          <div className="flex ml-[-20px] dark:bg-gray-800 flex-col items-center shadow-2xl rounded-xl justify-center h-[270px] w-[400px]">
             {loading ? (
               <div className="animate-pulse bg-gray-300 rounded-xl w-[400px] h-[270px] ml-[60px]"></div>
             ) : (
-              <div className="rounded-lg h-[200px]">
-                <Doughnut data={finalData} options={options} />
-                <h1 className="text-center mt-2 text-sm capitalize text-orange-500 font-bold">
-                  Categories Wise Data
-                </h1>
-              </div>
+              <>
+                <div className="rounded-lg h-[200px]">
+                  <Doughnut data={finalData} options={options} />
+                </div>
+                <div className="flex flex-row gap-2 p-2 text-black text-sm w-full">
+                  <Carousel
+                    isRTL={false}
+                    showArrows={false}
+                    pagination={false}
+                    itemsToShow={3}
+                  >
+                    {categoryLabels.map((label, index) => (
+                      <div
+                        style={{ backgroundColor: data[index].color }}
+                        key={index}
+                        className="flex text-white text-xs text-center font-normal items-center mr-2 rounded-full p-1"
+                      >
+                        {label}
+                      </div>
+                    ))}
+                  </Carousel>
+                </div>
+              </>
             )}
           </div>
-          <div className="flex flex-col items-end rounded-lg h-[270px] p-4 justify-center shadow-2xl mr-4">
+          <div className="flex flex-col items-end rounded-lg h-[270px] p-4 justify-center dark:bg-gray-800 dark:text-white shadow-2xl mr-4">
             {loading ? (
               <div className="animate-pulse bg-gray-300 rounded-xl w-[500px] h-[270px]"></div>
             ) : (
@@ -555,7 +568,7 @@ const AdminDashboard = () => {
             )}
           </div>
         </div>
-        <div className="text-black shadow-2xl rounded-lg">
+        <div className="text-black shadow-2xl mt-2 rounded-lg dark:bg-gray-800 dark:text-white">
           <div className="w-full " id="chart"></div>
         </div>
       </div>

@@ -50,7 +50,6 @@ const CustomerList = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [editCustomer, setEditCustomer] = useState<Customer>({} as Customer);
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
 
   const getRandomColor = (): string => {
     return "#" + Math.floor(Math.random() * 16777215).toString(16);
@@ -61,6 +60,7 @@ const CustomerList = () => {
   const customerData: Customer[] = useSelector(
     (state: customer) => state.customer.customer
   );
+  const loading = useSelector((state: customer) => state.customer.loading);
   console.log(customerData);
   const handleClickOpen = async (id: string) => {
     console.log(id);
@@ -182,9 +182,7 @@ const CustomerList = () => {
     }
   };
   useEffect(() => {
-    setLoading(true);
     dispatch(fetchCustomer(userId));
-    setTimeout(() => setLoading(false), 2000);
   }, [dispatch, userId]);
 
   const columns: GridColDef[] = [

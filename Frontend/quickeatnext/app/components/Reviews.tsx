@@ -60,7 +60,14 @@ const ReviewPage = () => {
                       </p>
                     </div>
                     <div className="flex flex-col items-center gap-4 p-2 drop-shadow-2xl rounded-2xl ">
-                      <p className="text-sm text-gray-900 ">{review.message}</p>
+                      <p className="text-sm text-gray-900 ">
+                        {" "}
+                        <span className="text-5xl text-black font-bold">
+                          &ldquo;
+                        </span>{" "}
+                        {review.message}
+                      </p>
+
                       <Rating name="read-only" value={review.star} readOnly />
                     </div>
                   </div>
