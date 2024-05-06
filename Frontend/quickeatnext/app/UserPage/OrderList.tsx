@@ -206,8 +206,8 @@ const OrderListPage = () => {
           {loading ? (
             <>
               <div className="animate-pulse bg-gray-300 rounded-md h-10 w-1/2 ml-36"></div>
-              <div className="animate-pulse bg-orange-400 rounded-md h-10 w-10"></div>
-              <div className="animate-pulse bg-red-500 rounded-md h-10 w-10"></div>
+              <div className="animate-pulse bg-orange-400 rounded-full h-10 w-10"></div>
+              <div className="animate-pulse bg-red-500 rounded-full h-10 w-10"></div>
             </>
           ) : (
             <>
@@ -219,13 +219,13 @@ const OrderListPage = () => {
                 />
               </LocalizationProvider>
               <button
-                className="bg-orange-400 text-white w-10 h-10 rounded-md"
+                className="bg-orange-400 text-white w-10 h-10 p-2 flex items-center justify-center rounded-full"
                 onClick={filterRowsByDate}
               >
                 <VisibilityIcon />
               </button>
               <button
-                className="bg-red-500 text-white w-10 h-10 rounded-md"
+                className="bg-red-500 text-white w-10 h-10 p-2 flex items-center justify-center rounded-full"
                 onClick={() => {
                   setRows(data);
                   setSelectedDates([null, null]);

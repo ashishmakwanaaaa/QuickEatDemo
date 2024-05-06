@@ -629,11 +629,6 @@ const Navbar = () => {
             className="text-white font-[Poppins] text-center font-bold text-xl mb-4 p-4 rounded-b-3xl bg-orange-600"
           >
             QUICK-CHAT
-            {!user.isAdmin && (
-              <p className="text-sm text-green-400">
-                {online ? "online" : "offline"}
-              </p>
-            )}
           </h1>
           <div className="overflow-y-auto h-full mb-4 ">
             {Object.keys(groupMessageByDate).map((date, index) => (
