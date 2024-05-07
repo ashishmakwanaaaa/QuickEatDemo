@@ -13,7 +13,6 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { Select } from "antd";
 import Swal from "sweetalert2";
-import StateLogin from "../LoginState/logincontext";
 import { useSelector, useDispatch } from "react-redux";
 import "aos/dist/aos.css";
 import AOS from "aos";
@@ -43,7 +42,6 @@ const ItemList = () => {
       once: true,
     });
   }, []);
-  const StateContext = useContext(StateLogin);
   const user = useSelector((state: user) => state.user.user);
   console.log(user);
   const userId = user._id;
@@ -205,29 +203,7 @@ const ItemList = () => {
   useEffect(() => {
     dispatch(fetchCategories(userId));
   }, [dispatch, userId]);
-  const filteredItems: ItemType[] =
-    items && items.length > 0
-      ? items
-          .filter((item) => item.itemname.toLowerCase().includes(query))
-          .filter(
-            (item) =>
-              selectedCategory === "" || item.itemcategory === selectedCategory
-          )
-          .sort((a, b) => {
-            switch (option) {
-              case "Price Highest":
-                return b.price - a.price;
-              case "Price Lowest":
-                return a.price - b.price;
-              case "Qty Highest":
-                return b.quantity - a.quantity;
-              case "Qty Lowest":
-                return a.quantity - b.quantity;
-              default:
-                return 0;
-            }
-          })
-      : [];
+
 
   return (
     <div className="font-[Poppins] flex flex-col gap-6 w-[68rem]">

@@ -84,8 +84,6 @@ const BookTable = () => {
     // If the dropped item is a chair, calculate its position relative to the table
     let newItem;
     if (type === "chair" && items.length > 0 && items[0].type === "table2") {
-      const tableX = items[0].x;
-      const tableY = items[0].y;
       const chairX = offsetX - 10; // Adjust for chair size
       const chairY = offsetY - 10; // Adjust for chair size
       newItem = { type, id: Math.random(), x: chairX, y: chairY };
