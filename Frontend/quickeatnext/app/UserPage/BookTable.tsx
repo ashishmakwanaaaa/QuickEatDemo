@@ -39,6 +39,7 @@ interface bookingdetailstype {
 
 const BookTable = () => {
   const [items, setItems] = useState<ItemTypeTableBooking[]>([]);
+  const [currentItems, setCurrentItems] = useState<ItemTypeTableBooking[]>([]);
   const [editMode, setEditMode] = useState<boolean>(true);
   const [bookedtable, setbookedtable] = useState<number[]>([]);
   const [open, setOpen] = useState<boolean>(false);
@@ -46,6 +47,10 @@ const BookTable = () => {
   const user = useSelector((state: user) => state.user.user);
   const loading = useSelector((state: payment) => state.user.loading);
   console.log(user._id);
+
+  useEffect(() => {
+    setCurrentItems([...items]);
+  }, []);
   const [bookingdetails, setbookingdetails] = useState<bookingdetailstype>({
     userId: user._id,
     TableId: "TABLE" + Math.floor(Math.random() * 1000),
@@ -82,7 +87,7 @@ const BookTable = () => {
     const offsetY = e.pageY - containerRect.top;
 
     // If the dropped item is a chair, calculate its position relative to the table
-    let newItem;
+    let newItem: ItemTypeTableBooking;
     if (type === "chair" && items.length > 0 && items[0].type === "table2") {
       const chairX = offsetX - 10; // Adjust for chair size
       const chairY = offsetY - 10; // Adjust for chair size
@@ -91,7 +96,7 @@ const BookTable = () => {
       newItem = { type, id: Math.random(), x: offsetX, y: offsetY };
     }
 
-    setItems([...items, newItem]);
+    setItems((prev) => [...prev, newItem]);
   };
 
   const handleRemove = (id: any) => {
@@ -110,7 +115,12 @@ const BookTable = () => {
     setOpen(false);
   };
 
+  const handleCancle = () => {
+    setItems([...currentItems]);
+  };
+
   const handleSave = async () => {
+    setCurrentItems([...items]);
     setEditMode(false);
     localStorage.setItem(
       `layout_${bookingdetails.userId}`,
@@ -257,13 +267,13 @@ const BookTable = () => {
             <div className="flex flex-row gap-2">
               <div className="flex items-center justify-center flex-row gap-1">
                 <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-                <p className="text-xs text-orange-400 font-[Poppins] text-start">
+                <p className="text-sm text-orange-400 font-[Poppins] text-start">
                   Booked
                 </p>
               </div>
               <div className="flex items-center justify-center flex-row gap-1">
                 <div className="w-2 h-2 bg-white rounded-full"></div>
-                <p className="text-xs text-white font-[Poppins] text-start">
+                <p className="text-sm text-white font-[Poppins] text-start">
                   Available
                 </p>
               </div>
@@ -274,7 +284,7 @@ const BookTable = () => {
                 onClick={handleSave}
                 disabled={!editMode}
                 className={`bg-green-700 ${
-                  !editMode ? "cursor-not-allowed" : "cursor-pointer"
+                  !editMode ? "cursor-not-allowed hidden" : "cursor-pointer"
                 }  text-white p-2 text-center text-sm rounded-md font-[Poppins]`}
               >
                 Save
@@ -283,10 +293,16 @@ const BookTable = () => {
                 onClick={handleEdit}
                 disabled={editMode}
                 className={`bg-blue-500 ${
-                  editMode ? "cursor-not-allowed" : "cursor-pointer"
+                  editMode ? "cursor-not-allowed hidden" : "cursor-pointer"
                 } text-white p-2 text-center text-sm rounded-md font-[Poppins]`}
               >
                 Edit
+              </button>
+              <button
+                onClick={handleCancle}
+                className={`bg-red-700 cursor-pointer text-white p-2 text-center text-sm rounded-md font-[Poppins]`}
+              >
+                Cancle
               </button>
               <div
                 className="flex items-center text-sm   border-2 border-white p-2 rounded-lg"
