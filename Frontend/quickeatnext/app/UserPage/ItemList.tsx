@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
-
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -57,6 +58,21 @@ const ItemList = () => {
   const categories: CategoryType[] = useSelector(
     (state: category) => state.category.categories
   );
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
+
+  const indexOfLastCustomer = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastCustomer - itemsPerPage;
+  const currentItems = items?.slice(indexOfFirstItem, indexOfLastCustomer);
+
+  const totalPages = Math.ceil(items?.length / itemsPerPage);
+
+  const paginate = (pageNumber: number) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
 
   const handleClickOpen = (item: React.SetStateAction<ItemType>) => {
     setOpen(true);
@@ -204,7 +220,6 @@ const ItemList = () => {
     dispatch(fetchCategories(userId));
   }, [dispatch, userId]);
 
-
   return (
     <div className="font-[Poppins] flex flex-col gap-6 w-[68rem]">
       <div className="flex flex-row justify-between items-center">
@@ -307,9 +322,9 @@ const ItemList = () => {
         </>
       ) : (
         <>
-          {items && items.length > 0 ? (
+          {currentItems && currentItems.length > 0 ? (
             <div className="overflow-y-auto h-[550px] p-3 mt-5">
-              {items.map((item, index) => {
+              {currentItems.map((item, index) => {
                 return (
                   <div
                     className="grid grid-cols-12 mt-5 gap-4 p-2 rounded-2xl dark:bg-gray-800"
@@ -576,6 +591,47 @@ const ItemList = () => {
               </h1>
             </div>
           )}
+          <div className="mt-4 text-sm flex items-end justify-end">
+            <button
+              className={`mx-2 p-2  border-2 border-orange-500 text-orange-500 ${
+                currentPage === 1
+                  ? "opacity-50 cursor-not-allowed  rounded-md shadow-lg"
+                  : " rounded-md shadow-lg"
+              }`}
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <KeyboardArrowLeftIcon />
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+              (pageNumber) => (
+                <button
+                  key={pageNumber}
+                  className={`mx-2 p-2 border ${
+                    currentPage === pageNumber
+                      ? "bg-orange-600 text-white rounded-full w-10 shadow-lg"
+                      : "hover:bg-orange-600 hover:text-white rounded-full w-10 shadow-lg"
+                  }`}
+                  onClick={() => paginate(pageNumber)}
+                >
+                  {pageNumber}
+                </button>
+              )
+            )}
+
+            <button
+              className={`mx-2 p-2 border-2 border-orange-500 text-orange-500 ${
+                currentPage === totalPages
+                  ? "opacity-50 cursor-not-allowed rounded-md shadow-lg"
+                  : "rounded-md shadow-lg"
+              }`}
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRightIcon />
+            </button>
+          </div>
         </>
       )}
     </div>

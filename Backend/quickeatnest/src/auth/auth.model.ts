@@ -4,7 +4,7 @@ export class User {
   @Prop()
   restaurantname: string;
 
-  @Prop()
+  @Prop() 
   ownername: string;
 
   @Prop()
