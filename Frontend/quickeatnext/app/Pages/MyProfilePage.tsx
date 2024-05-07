@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Swal from "sweetalert2";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import LoginContext from "../LoginState/logincontext";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -177,9 +178,17 @@ const MyProfilePage = () => {
     <>
       <Navbar />
       <div className="flex flex-col h-full font-[Poppins] p-2 justify-center ">
-        <h1 className="text-2xl font-bold  text-center">My Profile</h1>
+        <div className="flex justify-between shadow-2xl ">
+          <div
+            onClick={() => router.push("/dashboard")}
+            className="bg-orange-600 rounded-full w-8 h-8 flex items-center justify-center text-white cursor-pointer"
+          >
+            <KeyboardBackspaceIcon />
+          </div>
+          <h1 className="text-2xl font-bold  text-center">My Profile</h1>
+        </div>
         <hr className="border mt-3" />
-        <div className="flex flex-row rounded-md gap-6 justify-center items-center bg-[url('https://t3.ftcdn.net/jpg/03/55/60/70/360_F_355607062_zYMS8jaz4SfoykpWz5oViRVKL32IabTP.jpg')] bg-no-repeat bg-cover">
+        <div className="flex flex-row rounded-md gap-6 justify-center items-center h-[550px] bg-[url('https://t3.ftcdn.net/jpg/03/55/60/70/360_F_355607062_zYMS8jaz4SfoykpWz5oViRVKL32IabTP.jpg')] bg-no-repeat bg-cover">
           <div className="flex flex-row  w-[250px] justify-center items-center">
             {/* Upload Photo Section */}
             <div className="flex flex-col justify-center items-center gap-5">
