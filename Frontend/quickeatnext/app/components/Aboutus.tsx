@@ -27,7 +27,7 @@ const AboutUs = () => {
 
         <div className="relative flex flex-col ml-10">
           <p
-            className="text-lg md:text-xl mb-6 text-orange-500 pl-4 font-bold"
+            className="text-lg md:text-md mb-6 text-orange-500 pl-4 font-bold"
             data-aos="fade-right"
           >
             &rarr; QuickEat is on a mission to redefine your dining experience.
@@ -35,7 +35,7 @@ const AboutUs = () => {
             right to your doorstep.
           </p>
           <p
-            className="text-lg md:text-xl mb-6 text-black pl-4 font-bold"
+            className="text-lg md:text-md mb-6 text-black pl-4 font-bold"
             data-aos="fade-right"
           >
             &rarr; Our dedication to customer satisfaction drives everything we
@@ -43,7 +43,7 @@ const AboutUs = () => {
             services, we strive to exceed your expectations.
           </p>
           <p
-            className="text-lg md:text-xl text-orange-500 pl-4 font-bold"
+            className="text-lg md:text-md text-orange-500 pl-4 font-bold"
             data-aos="fade-right"
           >
             &rarr; Join us on this gastronomic journey where every bite tells a

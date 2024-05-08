@@ -422,14 +422,14 @@ const AdminDashboard = () => {
             ))
           ) : (
             <>
-              <div className="flex flex-col gap-6 items-center bg-red-500 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-red-500 shadow-2xl h-44">
+              <div className="flex flex-col gap-6 items-center bg-gradient-to-t from-transparent to-red-700 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-red-500 shadow-md h-44">
                 <h4 className="text-md md:text-md text-white dark:text-red-500">
                   Customers
                 </h4>
                 <div className="rounded-full p-2 bg-white dark:bg-red-900">
                   <IoPeople color="red" />
                 </div>
-                <p className="text-3xl text-white dark:text-red-500">
+                <p className="text-3xl text-red-500 dark:text-red-500">
                   <Counter
                     targetValue={
                       customers && customers.length > 0 ? customers.length : 0
@@ -437,49 +437,49 @@ const AdminDashboard = () => {
                   />
                 </p>
               </div>
-              <div className="flex flex-col gap-6 items-center bg-green-500 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-green-500 shadow-2xl h-44">
+              <div className="flex flex-col gap-6 items-center bg-gradient-to-t from-transparent to-green-700 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-green-500 shadow-md h-44">
                 <h4 className="text-md md:text-md text-white dark:text-green-600">
                   FoodItems
                 </h4>
                 <div className="bg-white dark:bg-green-900  p-2 rounded-full">
                   <IoFastFood color="green" />
                 </div>
-                <p className="text-3xl text-white dark:text-green-600">
+                <p className="text-3xl text-green-600 dark:text-green-600">
                   <Counter
                     targetValue={items && items.length > 0 ? items.length : 0}
                   />
                 </p>
               </div>
-              <div className="flex flex-col gap-7 items-center bg-blue-400 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-blue-400 shadow-2xl h-44">
+              <div className="flex flex-col gap-7 items-center bg-gradient-to-t from-transparent to-blue-700 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-blue-400 shadow-md h-44">
                 <h4 className="text-md md:text-md text-white dark:text-blue-400">
                   Total Sales
                 </h4>
-                <div className="bg-white dark:bg-blue-400 rounded-full p-1 flex justify-center items-center w-9 h-10">
+                <div className="bg-white dark:bg-blue-400 rounded-full p-1 flex justify-center items-center w-9 h-12">
                   <MonetizationOnIcon style={{ color: "blue" }} />
                 </div>
-                <p className="text-3xl text-white dark:text-blue-400">
+                <p className="text-3xl text-blue-600 dark:text-blue-400">
                   &#x20B9; <Counter targetValue={totalAmount} />
                 </p>
               </div>
-              <div className="flex flex-col gap-6 items-center bg-orange-400 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-orange-400 shadow-2xl h-44">
+              <div className="flex flex-col gap-6 items-center bg-gradient-to-t from-transparent to-orange-600 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-orange-400 shadow-md h-44">
                 <h4 className="text-md md:text-md text-white dark:text-orange-500">
                   Card Sales
                 </h4>
                 <div className="rounded-full p-2 bg-white dark:bg-orange-900 w-10 h-10 flex justify-center items-center">
                   <CreditCardIcon style={{ color: "orange" }} />
                 </div>
-                <p className="text-3xl text-white dark:text-orange-500">
+                <p className="text-3xl text-orange-600 dark:text-orange-500">
                   &#x20B9; <Counter targetValue={totalCardAmount} />
                 </p>
               </div>
-              <div className="flex flex-col gap-6 items-center bg-purple-400 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-purple-400 shadow-2xl h-44">
+              <div className="flex flex-col gap-6 items-center bg-gradient-to-t from-transparent to-purple-700 dark:bg-gray-800 dark:border-none text-black p-4 rounded-xl border-b-4 border-purple-400 shadow-md h-44">
                 <h4 className="text-md md:text-md text-white dark:text-purple-500">
                   Cash Sales
                 </h4>
                 <div className="bg-white dark:bg-purple-500 rounded-full p-2 w-10 h-10 flex justify-center items-center">
                   <MoneyIcon style={{ color: "purple" }} />
                 </div>
-                <p className="text-3xl text-white dark:text-purple-500">
+                <p className="text-3xl text-purple-500 dark:text-purple-500">
                   &#x20B9; <Counter targetValue={totalCashAmount} />
                 </p>
               </div>
@@ -492,7 +492,7 @@ const AdminDashboard = () => {
               <div className="animate-pulse bg-gray-300 rounded-xl w-[400px] h-[270px] ml-[60px]"></div>
             ) : (
               <>
-                <div className="rounded-lg h-[200px]">
+                <div className="rounded-lg h-[200px] ">
                   <Doughnut data={finalData} options={options} />
                 </div>
                 <div className="flex flex-row gap-2 p-2 text-black text-sm w-full">
@@ -573,7 +573,7 @@ const AdminDashboard = () => {
           </div>
         </div>
         <div className="text-black shadow-2xl mt-2 rounded-lg dark:bg-gray-800 dark:text-white">
-          <div className="w-full " id="chart"></div>
+          <div className="w-full" id="chart"></div>
         </div>
       </div>
     </>
