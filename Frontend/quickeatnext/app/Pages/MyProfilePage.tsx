@@ -180,7 +180,11 @@ const MyProfilePage = () => {
       <div className="flex flex-col h-full font-[Poppins] p-2 justify-center ">
         <div className="flex justify-between shadow-2xl ">
           <div
-            onClick={() => router.push("/dashboard")}
+            onClick={() => {
+              user.isAdmin
+                ? router.push("/adminside")
+                : router.push("/dashboard");
+            }}
             className="bg-orange-600 rounded-full w-8 h-8 flex items-center justify-center text-white cursor-pointer"
           >
             <KeyboardBackspaceIcon />
@@ -370,36 +374,38 @@ const MyProfilePage = () => {
               Save Profile
             </button>
           </div>
-          <div className="flex flex-col gap-2">
-            <button
-              onClick={GiveReview}
-              className="bg-blue-500 w-1/2 drop-shadow-2xl text-white rounded-md hover:bg-blue-800 transform duration-300 p-2 "
-            >
-              Add Review
-            </button>
-            <textarea
-              placeholder="Give Feedback Here............."
-              className="rounded-xl p-2 text-gray-500 drop-shadow-2xl"
-              name=""
-              value={reviewData.message}
-              onChange={(e) =>
-                setReviewData({ ...reviewData, message: e.target.value })
-              }
-              id=""
-              cols={20}
-              rows={7}
-            ></textarea>
-            <Rating
-              name="simple-controlled"
-              value={reviewData.star}
-              onChange={(e: any) => {
-                setReviewData({ ...reviewData, star: e.target.value });
-              }}
-              // onChange={(event, newValue) => {
-              //   setValue(newValue);
-              // }}
-            />
-          </div>
+          {!user.isAdmin && (
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={GiveReview}
+                className="bg-blue-500 w-1/2 drop-shadow-2xl text-white rounded-md hover:bg-blue-800 transform duration-300 p-2 "
+              >
+                Add Review
+              </button>
+              <textarea
+                placeholder="Give Feedback Here............."
+                className="rounded-xl p-2 text-gray-500 drop-shadow-2xl"
+                name=""
+                value={reviewData.message}
+                onChange={(e) =>
+                  setReviewData({ ...reviewData, message: e.target.value })
+                }
+                id=""
+                cols={20}
+                rows={7}
+              ></textarea>
+              <Rating
+                name="simple-controlled"
+                value={reviewData.star}
+                onChange={(e: any) => {
+                  setReviewData({ ...reviewData, star: e.target.value });
+                }}
+                // onChange={(event, newValue) => {
+                //   setValue(newValue);
+                // }}
+              />
+            </div>
+          )}
         </div>
       </div>
     </>

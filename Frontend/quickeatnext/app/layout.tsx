@@ -19,10 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <style>
+      {/* <style>
         @import
         url('https://fonts.googleapis.com/css?family=Poppins:400,700,900');
-      </style>
+      </style> */}
       <body className={inter.className}>
         <Providers>
         

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty, Min } from 'class-validator';
 import { Multer } from 'multer';
 
 export class UserSignUpDto {
@@ -13,6 +13,7 @@ export class UserSignUpDto {
   emailid: string;
 
   @IsNotEmpty()
+  @Min(6)
   password: string;
 
   @IsNotEmpty()
