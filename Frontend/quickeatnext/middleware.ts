@@ -1,6 +1,4 @@
-import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextRequest, NextResponse } from "next/server";
-import * as jose from "jose";
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token");

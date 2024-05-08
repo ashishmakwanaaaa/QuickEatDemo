@@ -35,6 +35,7 @@ const CategoriesList = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [open1, setOpen1] = useState<boolean>(false);
   const [Categoryid, setCategorieid] = useState<string>("");
+  const [query, setQuery] = useState<string>("");
   const userId = user._id;
   const [input, setInput] = useState<CategoryType>({
     categoryname: "",
@@ -238,7 +239,7 @@ const CategoriesList = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-10 items-center justify-center w-[68rem]">
+      <div className="flex flex-col gap-10 mt-4 items-center justify-center w-[68rem]">
         {loading ? (
           <>
             <div className="animate-pulse flex justify-between w-full p-4">
@@ -248,27 +249,40 @@ const CategoriesList = () => {
             <div className="animate-pulse bg-gray-300 rounded-lg w-[1000px] h-[600px]"></div>
           </>
         ) : (
-          <div className="flex flex-col items-end mt-10">
-            <div className="flex justify-between gap-[420px]">
+          <div className="flex flex-col items-end">
+            <div className="flex justify-between gap-[380px] h-10">
               <h1 className="font-bold text-start">Category Details</h1>
-              <button
-                onClick={handleClickOpen}
-                className="text-black text-sm bg-orange-500 p-2 rounded-md hover:border hover:border-orange-500 hover:text-orange-500 w-48 hover:bg-transparent transform duration-300"
-              >
-                ADD CATEGORY +
-              </button>
+              <div className="flex flex-row gap-2">
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  className="border text-sm border-orange-500 rounded-lg p-2 w-full"
+                  placeholder="Search Category Here"
+                />
+                <button
+                  onClick={handleClickOpen}
+                  className="text-black text-sm bg-orange-500 p-2 rounded-md hover:border hover:border-orange-500 hover:text-orange-500 w-48 hover:bg-transparent transform duration-300"
+                >
+                  ADD CATEGORY
+                </button>
+              </div>
             </div>
             {categories && categories.length > 0 && (
               <div className="w-full h-full p-2 mt-2">
                 <DataGrid
                   style={{ fontFamily: "Poppins" }}
-                  rows={categories.map((category, index) => ({
-                    _id: category._id,
-                    id: index + 1,
-                    name: category.categoryname,
-                    delete: "Delete",
-                    edit: "Edit",
-                  }))}
+                  rows={categories
+                    .filter((category) =>
+                      category.categoryname.toLowerCase().includes(query)
+                    )
+                    .map((category, index) => ({
+                      _id: category._id,
+                      id: index + 1,
+                      name: category.categoryname,
+                      delete: "Delete",
+                      edit: "Edit",
+                    }))}
                   columns={columns}
                   pagination
                   pageSizeOptions={[
