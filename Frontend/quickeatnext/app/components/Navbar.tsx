@@ -252,7 +252,7 @@ const Navbar = () => {
             onClick={() => {
               router.push("/");
             }}
-            className="flex items-center cursor-pointer animate-bounce"
+            className="flex items-center cursor-pointer"
           >
             <span className="text-black  font-bold text-3xl">
               Quick

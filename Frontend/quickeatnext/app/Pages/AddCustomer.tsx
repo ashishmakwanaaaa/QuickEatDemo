@@ -49,12 +49,12 @@ const AddCustomer = () => {
       });
       console.log(StateContext);
       {
-        StateContext.login && router.push("/dashboard");
+        user.isActive && router.push("/dashboard");
       }
     } else {
       Swal.fire({
         width: "50%",
-        text: "Error:       " + data.message,
+        text: "Error:  " + data.message,
         icon: "error",
         timer: 1000,
       });
