@@ -78,7 +78,7 @@ const SignUp = (): React.JSX.Element => {
       //   long: "",
       //   confirmpassword: "",
       // });
-      // router.push("/login");
+      router.push("/login");
     } else {
       Swal.fire({
         icon: "error",
