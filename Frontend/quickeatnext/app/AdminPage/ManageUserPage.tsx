@@ -79,7 +79,7 @@ const ManageUserPage = () => {
   };
   return (
     <>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-3 w-[1100px]">
         {users.map((user: User, index: number) => {
           const alluserpayment = allpayments[user._id];
           console.log(alluserpayment);
@@ -90,7 +90,7 @@ const ManageUserPage = () => {
                   <div className="overflow-hidden rounded-lg h-full">
                     <img
                       src={`http://localhost:5000/uploads/${user.resimage}`}
-                      className="rounded-lg cursor-pointer object-cover h-full hover:scale-100 transform duration-300"
+                      className="rounded-lg cursor-pointer object-cover h-full w-full hover:scale-100 transform duration-300"
                       alt={user.restaurantname} // Make sure to include alt attribute for accessibility
                     />
                     <div className="absolute bottom-0 left-0 w-full">
