@@ -45,7 +45,10 @@ export class CategoryService {
 
   async getAllCatories(userid: string) {
     try {
-      let categories = await this.categorymodel.find({ userId: userid });
+      let categories = await this.categorymodel.find({
+        userId: userid,
+        isdeleted: false,
+      });
       if (categories.length === 0) {
         return { message: 'Empty Data' };
       }
@@ -65,8 +68,14 @@ export class CategoryService {
       if (!category) {
         throw new NotFoundException();
       }
-      await category.deleteOne();
-
+      const newcategory = await this.categorymodel.findByIdAndUpdate(
+        id,
+        {
+          isdeleted: true,
+        },
+        { new: true },
+      );
+      await newcategory.save();
       return { message: 'Deleted Successfully', category };
     } catch (error) {
       console.log(error);
